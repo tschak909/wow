@@ -22,26 +22,102 @@
 #include "wow.h"
 
 /**
+ * pal_fade_to(unsigned to) - smoothly fade palette
+ * to the given brightness value.
+ */
+void pal_fade_to(unsigned to)
+{
+	if(!to) music_stop();
+
+	while(bright!=to)
+	{
+		delay(4);
+		if(bright<to) ++bright; else --bright;
+		pal_bright(bright);
+	}
+
+	if(!bright)
+	{
+		ppu_off();
+		set_vram_update(NULL);
+		scroll(0,0);
+	}
+}
+
+
+/**
+ * attract_score() - show scores
+ */
+void attract_scores(void)
+{
+  vram_adr(NAMETABLE_C);
+  vram_fill(0,1024);
+
+  pal_bright(0);
+
+  // Dump scores into nametable A
+  vram_adr(NAMETABLE_A);
+  vram_unrle(wow_scores);
+  pal_bg(palette);
+  pal_spr(palette);
+  ppu_on_all();
+  ppu_wait_frame();
+  bank_spr(1);
+  bank_bg(0);
+  pal_fade_to(4);
+
+  while(1)
+    {
+      ppu_wait_frame();
+      ++frame_cnt;
+      if (frame_cnt==255) break;
+    }
+
+  pal_fade_to(0);
+  
+}
+
+/**
  * attract_mode() - shown while game isn't playing
  */
-void attract_mode(void)
+void attract_monsters(void)
 {
   // Clear nametable C
   vram_adr(NAMETABLE_C);
   vram_fill(0,1024);
 
+  pal_bright(0);
+  
   // Dump monster screen into nametable A
   vram_adr(NAMETABLE_A);
   vram_unrle(wow_monsters);
   pal_bg(palette);
-  ppu_on_bg();
-  delay(20);
+  pal_spr(palette);
+  ppu_on_all();
+  ppu_wait_frame();
+  bank_spr(1);
+  bank_bg(0);
+
+  spr=0;
+  spr = oam_meta_spr(120,8,spr,metasprite_list[0]);
+  spr = oam_meta_spr(120,36,spr,metasprite_list[1]);
+  spr = oam_meta_spr(120,68,spr,metasprite_list[2]);
+  spr = oam_meta_spr(120,100,spr,metasprite_list[6]);
+  spr = oam_meta_spr(120,132,spr,metasprite_list[5]);
+  spr = oam_meta_spr(120,164,spr,metasprite_list[3]);
+  spr = oam_meta_spr(120,204,spr,metasprite_list[4]);
+
+  pal_fade_to(4);
   
   while(1)
     {
       ppu_wait_frame();
+      ++frame_cnt;
+      if (frame_cnt==255) break;
     }
-  
+
+  pal_fade_to(0);
+  oam_clear();
 }
 
 /**
@@ -51,6 +127,7 @@ void main(void)
 {
   while(1)
     {
-      attract_mode();
+      attract_scores();
+      attract_monsters();
     }
 }

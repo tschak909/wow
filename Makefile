@@ -23,4 +23,4 @@ clean:
 	rm -f $(NAME).nes *.o $(NAME).s 
 
 run: $(NAME).nes
-	fceux $(NAME).nes
+	fceux $(NAME).nes &
