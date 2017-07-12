@@ -29,15 +29,20 @@
 /* Nametables */
 #include "wow-monsters.h"
 #include "wow-scores.h"
+#include "wow_dungeon.h"
 
 /******************************************************
  * Constants                                          *
  ******************************************************/
 
+#define YELLOW_SPAWN_X 208
+#define YELLOW_SPAWN_Y 169
+
 /* Palettes */
 const unsigned char palette[16]={ 0x0f,0x11,0x16,0x3a,0x0f,0x16,0x21,0x31,0x0f,0x3a,0x16,0x11,0x0f,0x0c,0x1c,0x2c };
 
 /* Metasprites */
+
 const unsigned char metasprite_data[]={
 
 	  0,  0,0x17,0|OAM_FLIP_H,
@@ -94,6 +99,46 @@ const unsigned char metasprite_data[]={
 	  8,  8,0x20,2|OAM_FLIP_H,
 	  0, 16,0x31,2|OAM_FLIP_H,
 	  8, 16,0x30,2|OAM_FLIP_H,
+	128,
+
+	  8,  0,0x12,2|OAM_FLIP_H,
+	  0,  0,0x13,2|OAM_FLIP_H,
+	  8,  8,0x22,2|OAM_FLIP_H,
+	  0,  8,0x23,2|OAM_FLIP_H,
+	  8, 16,0x32,2|OAM_FLIP_H,
+	  0, 16,0x33,2|OAM_FLIP_H,
+	128,
+
+	  8,  0,0x14,2|OAM_FLIP_H,
+	  0,  0,0x15,2|OAM_FLIP_H,
+	  8,  8,0x24,2|OAM_FLIP_H,
+	  0,  8,0x25,2|OAM_FLIP_H,
+	  8, 16,0x34,2|OAM_FLIP_H,
+	  0, 16,0x35,2|OAM_FLIP_H,
+	128,
+
+	 16,  8,0xa0,2|OAM_FLIP_H,
+	 16,  0,0x90,2|OAM_FLIP_H,
+	  8,  8,0xa1,2|OAM_FLIP_H,
+	  8,  0,0x91,2|OAM_FLIP_H,
+	  0,  8,0xa2,2|OAM_FLIP_H,
+	  0,  0,0x92,2|OAM_FLIP_H,
+	128,
+
+	 16,  8,0x80,2|OAM_FLIP_H,
+	 16,  0,0x70,2|OAM_FLIP_H,
+	  8,  0,0x71,2|OAM_FLIP_H,
+	  8,  8,0x81,2|OAM_FLIP_H,
+	  0,  0,0x72,2|OAM_FLIP_H,
+	  0,  8,0x82,2|OAM_FLIP_H,
+	128,
+
+	 16,  8,0x83,2|OAM_FLIP_H,
+	 16,  0,0x73,2|OAM_FLIP_H,
+	  8,  8,0x84,2|OAM_FLIP_H,
+	  8,  0,0x74,2|OAM_FLIP_H,
+	  0,  8,0x85,2|OAM_FLIP_H,
+	  0,  0,0x75,2|OAM_FLIP_H,
 	128
 
 };
@@ -105,7 +150,12 @@ const unsigned char* const metasprite_list[]={
 	metasprite_data+75,
 	metasprite_data+100,
 	metasprite_data+125,
-	metasprite_data+150
+	metasprite_data+150,
+	metasprite_data+175,
+	metasprite_data+200,
+	metasprite_data+225,
+	metasprite_data+250,
+	metasprite_data+275
 };
 
 /******************************************************
