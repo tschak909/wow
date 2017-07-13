@@ -31,6 +31,9 @@
 #include "wow-scores.h"
 #include "wow_dungeon.h"
 
+/* Dungeons */
+#include "dungeon1.h"
+
 /******************************************************
  * Constants                                          *
  ******************************************************/
@@ -162,14 +165,14 @@ const unsigned char* const metasprite_list[]={
  * Variables                                          *
  ******************************************************/
 
-
 /******************************************************
  * Zero Page Variables                                *
  ******************************************************/
 #pragma bssseg (push,"ZEROPAGE")
 #pragma dataseg(push,"ZEROPAGE")
 
-static unsigned char i,j;               // Index counters
-static unsigned char spr,ptr;           // Pointers
+static unsigned char i,j,b;             // Index counters or temporary
+static unsigned char spr;                 // Pointers
 static unsigned char frame_cnt;         // Frame counter (up to 256 frames)
 static unsigned char bright;            // Brightness counter.
+static unsigned char* dungeon;

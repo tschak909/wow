@@ -62,24 +62,208 @@ void attract_dungeontest(void)
   pal_bg(palette);
   pal_spr(palette);
   vram_adr(NTADR_A(0,0));
+
+  // ULDR
+  // 1111
+
+  dungeon=(char*)dungeon1;
   
+  b=0;  // dungeon array index
+
   for (i=0;i<6;++i)
     {
       for (j=0;j<10;++j)
-	{
-	  vram_adr(NTADR_A((j*3)+1,(i*3)+1));
-	  vram_put(0x74);
-	  vram_put(0x63);
-	  vram_put(0x75);
-	  vram_adr(NTADR_A((j*3)+1,(i*3)+2));
-	  vram_put(0x65);
+  	{
+	  /* Tile 1 */
+  	  vram_adr(NTADR_A((j*3)+1,(i*3)+1));
+	  if (( (dungeon[b] & 1<<7) ) && ( (dungeon[b] & 1<<6) ))            /* UP AND LEFT */
+	    {
+	      if ( (dungeon[b] & 1<<3) )                          /* LEFT WITH TELEPORT */
+		{
+		  vram_put(0x73);                                    
+		}
+	      else
+		{
+		  vram_put(0x74);                               
+		}
+	    }
+	  else if ( (dungeon[b] & 1<<7) )                           /* UP */
+	    {
+	      vram_put(0x63);
+	    }
+	  else if ( (dungeon[b] & 1<<6) )                           /* LEFT */
+	    {
+	      if ( (dungeon[b] & 1<<3) )                          /* LEFT WITH TELEPORT */
+		{
+		  vram_put(0x73);                                    
+		}
+	      else
+		{
+		  vram_put(0x65);                               
+		}
+	    }
+	  else
+	    {
+	      vram_put(0x00);
+	    }
+
+	  // Tile 2
+	  if (dungeon[b] & (1<<7))            /* UP */
+	    {
+	      vram_put(0x63);
+	    }
+	  else
+	    {
+	      vram_put(0x00);
+	    }
+	  
+	  // Tile 3
+	  if (( (dungeon[b] & 1<<7) ) && ( (dungeon[b] & 1<<4) ))            /* UP AND RIGHT */
+	    {
+	      if ( (dungeon[b] & 1<<3) )                          /* RIGHT WITH TELEPORT */
+		{
+		  vram_put(0x98);
+		}
+	      else
+		{
+		  vram_put(0x75);
+		}
+	    }
+	  else if ( (dungeon[b] & 1<<7) )                           /* UP */
+	    {
+	      vram_put(0x63);
+	    }
+	  else if ( (dungeon[b] & 1<<4) )                           /* RIGHT */
+	    {
+	      if ( (dungeon[b] & 1<<3) )                          /* RIGHT WITH TELEPORT */
+		{
+		  vram_put(0x98);
+		}
+	      else
+		{
+		  vram_put(0x66);
+		}
+	    }
+	  else
+	    {
+	      vram_put(0x00);
+	    }
+
+  	  vram_adr(NTADR_A((j*3)+1,(i*3)+2));
+	  // Tile 4
+	  if (dungeon[b] & (1<<6))            /* LEFT */
+	    {
+	      if (dungeon[b] & (1<<3))      /* LEFT WITH TELEPORT */
+		{
+		  vram_put(0x73);
+		}
+	      else
+		{
+		  vram_put(0x65);
+		}
+	    }
+	  else
+	    {
+	      vram_put(0x00);
+	    }
+
+	  // Tile 5 is always empty.
 	  vram_put(0x00);
-	  vram_put(0x66);
+
+	  // Tile 6
+	  if (dungeon[b] & (1<<4))            /* RIGHT */
+	    {
+	      if (dungeon[b] & (1<<3))      /* RIGHT WITH TELEPORT */
+		{
+		  vram_put(0x98);
+		}
+	      else
+		{
+		  vram_put(0x66);
+		}
+	    }
+	  else
+	    {
+	      vram_put(0x00);
+	    }
+	  
+
 	  vram_adr(NTADR_A((j*3)+1,(i*3)+3));
-	  vram_put(0x76);
-	  vram_put(0x64);
-	  vram_put(0x77);
-	}
+	  // Tile 7
+	  if (( (dungeon[b] & 1<<6) ) && ( (dungeon[b] & 1<<5) ))            /* LEFT AND DOWN */
+	    {
+	      if ( (dungeon[b] & 1<<3) )                          /* LEFT WITH TELEPORT */
+		{
+		  vram_put(0x73);
+		}
+	      else
+		{
+		  vram_put(0x76);
+		}
+	    }
+	  else if ( (dungeon[b] & 1<<6) )                           /* LEFT */
+	    {
+	      if ( (dungeon[b] & 1<<3) )                          /* LEFT WITH TELEPORT */
+		{
+		  vram_put(0x73);
+		}
+	      else
+		{
+		  vram_put(0x65);
+		}
+	    }
+	  else if ( (dungeon[b] & 1<<5) )                           /* DOWN */
+	    {
+	      vram_put(0x64);
+	    }
+	  else
+	    {
+	      vram_put(0x00);
+	    }
+
+	  // Tile 8
+	  if (dungeon[b] & (1<<5))            /* DOWN */
+	    {
+	      vram_put(0x64);
+	    }
+	  else
+	    {
+	      vram_put(0x00);
+	    }
+
+	  // Tile 9
+	  if (( (dungeon[b] & 1<<4) ) && ( (dungeon[b] & 1<<5) ))            /* DOWN AND RIGHT */
+	    {
+	      if ( (dungeon[b] & 1<<3) )                          /* RIGHT WITH TELEPORT */
+		{
+		  vram_put(0x98);
+		}
+	      else
+		{
+		  vram_put(0x77);
+		}
+	    }
+	  else if ( (dungeon[b] & 1<<5) )                           /* DOWN */
+	    {
+	      vram_put(0x64);
+	    }
+	  else if ( (dungeon[b] & 1<<4) )                           /* RIGHT */
+	    {
+	      if ( (dungeon[b] & 1<<3) )                          /* RIGHT WITH TELEPORT */
+		{
+		  vram_put(0x98);
+		}
+	      else
+		{
+		  vram_put(0x66);
+		}
+	    }
+	  else
+	    {
+	      vram_put(0x00);
+	    }
+	  ++b;	  	  
+  	}
     }
 
   ppu_on_all();
