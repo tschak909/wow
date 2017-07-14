@@ -274,6 +274,11 @@ void attract_dungeontest(void)
   spr=0;
 
   // 208, 169 - Yellow Player spawn.
+  spr = oam_meta_spr(22,9,spr,metasprite_list[5]);
+  spr = oam_meta_spr(180,80,spr,metasprite_list[6]);
+  spr = oam_meta_spr(50,34,spr,metasprite_list[0]);
+  spr = oam_meta_spr(120,81,spr,metasprite_list[1]);
+  spr = oam_meta_spr(78,81,spr,metasprite_list[2]);
   /* spr = oam_meta_spr(YELLOW_SPAWN_X,YELLOW_SPAWN_Y,spr,metasprite_list[6]); */
   /* spr = oam_meta_spr(22,9,spr,metasprite_list[9]); */
   /* spr = oam_meta_spr(51,9,spr,metasprite_list[5]); */

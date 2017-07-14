@@ -142,6 +142,22 @@ const unsigned char metasprite_data[]={
 	  8,  0,0x74,2|OAM_FLIP_H,
 	  0,  8,0x85,2|OAM_FLIP_H,
 	  0,  0,0x75,2|OAM_FLIP_H,
+	128,
+
+	  0,  0,0x18,0,
+	  8,  0,0x19,0,
+	  0,  8,0x28,0,
+	  8,  8,0x29,0,
+	  0, 16,0x38,0,
+	  8, 16,0x39,0,
+	128,
+
+	  0,  0,0x16,0,
+	  8,  0,0x17,0,
+	  0,  8,0x26,0,
+	  8,  8,0x27,0,
+	  0, 16,0x36,0,
+	  8, 16,0x37,0,
 	128
 
 };
@@ -158,7 +174,9 @@ const unsigned char* const metasprite_list[]={
 	metasprite_data+200,
 	metasprite_data+225,
 	metasprite_data+250,
-	metasprite_data+275
+	metasprite_data+275,
+	metasprite_data+300,
+	metasprite_data+325
 };
 
 /******************************************************
