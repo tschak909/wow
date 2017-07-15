@@ -44,6 +44,58 @@ void pal_fade_to(unsigned to)
 	}
 }
 
+/**
+ * put_text() - Put text in str to adr length b
+ * a = tile offset for current line
+ * b = length
+ * c = conversion offset subtracted from ASCII value
+ * d = current character
+ *
+ * Why is this routine so wonky? The characters are
+ * double height in the CHR-ROM.
+ */
+void put_text(void)
+{
+  a=c=d=0;
+  vram_adr(adr);
+  for (i=0;i<2;++i)
+    {
+      for (j=0;j<b;++j)
+  	{
+	  d=str[j];
+	  if ((d>0x5B) && (d<0x55))
+	    {
+	      c=0x36;
+	    }
+	  else if ((d>0x45) && (d<0x56))
+	    {
+	      c=0x26;
+	    }
+	  else if ((d>0x40) && (d<0x46))
+	    {
+	      c=0x36;
+	    }
+	  else if ((d>0x29) && (d<0x40))
+	    {
+	      c=0x2F; // Needed because charset doesn't have '@'
+	    }
+	  else if (d==0x20)
+	    {
+	      c=0x20; // Get tiles 0x00 and 0x10 for space.
+	    }
+	  else
+	    {
+	      c=0x16;
+	    }
+  	  vram_put(d-c+a);
+  	}
+      a=a+0x10;  // second part of letter is 16 cells apart.
+      vram_adr(adr+0x20);
+    }
+
+
+}
+
 
 /**
  * attract_dungeontest() - show scores
@@ -266,6 +318,12 @@ void attract_dungeontest(void)
   	}
     }
 
+  // Print dungeon name
+  str=(char*)dungeon1_name;
+  b=dungeon1_name_len;
+  adr = NTADR_A(11,20);
+  put_text();
+  
   ppu_on_all();
   ppu_wait_frame();
   bank_spr(1);
@@ -353,22 +411,20 @@ void attract_monsters(void)
   spr = oam_meta_spr(120,8,spr,metasprite_list[0]);
   spr = oam_meta_spr(120,36,spr,metasprite_list[1]);
   spr = oam_meta_spr(120,68,spr,metasprite_list[2]);
-  spr = oam_meta_spr(120,100,spr,metasprite_list[6]);
   spr = oam_meta_spr(120,132,spr,metasprite_list[5]);
   spr = oam_meta_spr(120,164,spr,metasprite_list[3]);
   spr = oam_meta_spr(120,204,spr,metasprite_list[4]);
-
+  
   pal_fade_to(4);
+
+  i=0;
   
   while(1)
     {
       ppu_wait_frame();
       ++frame_cnt;
-      if (frame_cnt==255) break;
     }
 
-  pal_fade_to(0);
-  oam_clear();
 }
 
 /**

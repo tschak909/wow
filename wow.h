@@ -189,8 +189,10 @@ const unsigned char* const metasprite_list[]={
 #pragma bssseg (push,"ZEROPAGE")
 #pragma dataseg(push,"ZEROPAGE")
 
-static unsigned char i,j,b;             // Index counters or temporary
-static unsigned char spr;                 // Pointers
+static unsigned char i,j,a,b,c,d;          // Index counters or temporary
+static unsigned char spr;                // Pointers
 static unsigned char frame_cnt;         // Frame counter (up to 256 frames)
 static unsigned char bright;            // Brightness counter.
 static unsigned char* dungeon;
+static unsigned int adr;                // Address
+static unsigned char* str;              // String
