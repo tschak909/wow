@@ -174,7 +174,7 @@ void attract_dungeontest(void)
 	    {
 	      if ( (dungeon[b] & 1<<3) )                          /* RIGHT WITH TELEPORT */
 		{
-		  vram_put(0x98);
+		  vram_put(0x78);
 		}
 	      else
 		{
@@ -189,7 +189,7 @@ void attract_dungeontest(void)
 	    {
 	      if ( (dungeon[b] & 1<<3) )                          /* RIGHT WITH TELEPORT */
 		{
-		  vram_put(0x98);
+		  vram_put(0x78);
 		}
 	      else
 		{
@@ -227,7 +227,7 @@ void attract_dungeontest(void)
 	    {
 	      if (dungeon[b] & (1<<3))      /* RIGHT WITH TELEPORT */
 		{
-		  vram_put(0x98);
+		  vram_put(0x78);
 		}
 	      else
 		{
@@ -288,7 +288,7 @@ void attract_dungeontest(void)
 	    {
 	      if ( (dungeon[b] & 1<<3) )                          /* RIGHT WITH TELEPORT */
 		{
-		  vram_put(0x98);
+		  vram_put(0x78);
 		}
 	      else
 		{
@@ -303,7 +303,7 @@ void attract_dungeontest(void)
 	    {
 	      if ( (dungeon[b] & 1<<3) )                          /* RIGHT WITH TELEPORT */
 		{
-		  vram_put(0x98);
+		  vram_put(0x78);
 		}
 	      else
 		{
