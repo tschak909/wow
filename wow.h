@@ -234,6 +234,13 @@ void attract_scores(void);
 void attract_monsters(void);
 
 /**
+ * set_door(player, openclose)
+ * player = Player 0 (blue) or Player 1 (yellow) door.
+ * openclose = 0 for open, 1 for close.
+ */
+void set_door(unsigned char player, unsigned char openclose);
+
+/**
  * clear_update_buffer() - Clear the update buffer
  */
 void clear_update_buffer(void);
