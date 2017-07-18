@@ -19,6 +19,9 @@
  *
  ******************************************************/
 
+#ifndef WOW_H
+#define WOW_H
+
 /******************************************************
  * Includes                                           *
  ******************************************************/
@@ -27,12 +30,13 @@
 #include "neslib.h"
 
 /* Nametables */
-#include "wow-monsters.h"
-#include "wow-scores.h"
+#include "wow_monsters.h"
+#include "wow_scores.h"
 #include "wow_dungeon.h"
 
 /* Dungeons */
 #include "dungeon1.h"
+#include "dungeons.h"
 
 /******************************************************
  * Constants                                          *
@@ -40,6 +44,10 @@
 
 #define YELLOW_SPAWN_X 208
 #define YELLOW_SPAWN_Y 169
+
+/* Door update, three tiles. */
+#define NT_UPD_DOOR_BLUE 0
+#define NT_UPD_DOOR_YELLOW 7 
 
 /* Palettes */
 const unsigned char palette[16]={ 0x0f,0x11,0x16,0x3a,0x0f,0x16,0x21,0x31,0x0f,0x3a,0x16,0x11,0x0f,0x0c,0x1c,0x2c };
@@ -183,6 +191,9 @@ const unsigned char* const metasprite_list[]={
  * Variables                                          *
  ******************************************************/
 
+/* Update Buffer */
+static unsigned char update_buffer[48]; 
+
 /******************************************************
  * Zero Page Variables                                *
  ******************************************************/
@@ -193,6 +204,49 @@ static unsigned char i,j,a,b,c,d;          // Index counters or temporary
 static unsigned char spr;                // Pointers
 static unsigned char frame_cnt;         // Frame counter (up to 256 frames)
 static unsigned char bright;            // Brightness counter.
-static unsigned char* dungeon;
 static unsigned int adr;                // Address
 static unsigned char* str;              // String
+static const unsigned char* dungeon;         // Dungeon pointer.
+/****************************************************
+ * Prototypes                                       *
+ ****************************************************/
+
+/**
+ * pal_fade_to(unsigned to) - smoothly fade palette
+ * to the given brightness value.
+ */
+void pal_fade_to(unsigned to);
+
+/**
+ * run_dungeon() - dungeon code
+ * dungeon_num - Dungeon Number to run
+ */
+void run_dungeon(unsigned char dungeon_num);
+
+/**
+ * attract_score() - show scores
+ */
+void attract_scores(void);
+
+/**
+ * attract_monsters() - shown while game isn't playing
+ */
+void attract_monsters(void);
+
+/**
+ * clear_update_buffer() - Clear the update buffer
+ */
+void clear_update_buffer(void);
+
+/**
+ * init() - just as it says.
+ */
+void init(void);
+
+
+#endif /* WOW_H */
+
+/* Notes */
+
+// ULDR
+// 1111
