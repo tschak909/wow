@@ -50,7 +50,7 @@
 #define NT_UPD_DOOR_YELLOW 7 
 
 /* Palettes */
-const unsigned char palette[16]={ 0x0f,0x11,0x16,0x3a,0x0f,0x16,0x21,0x31,0x0f,0x3a,0x16,0x11,0x0f,0x0c,0x1c,0x2c };
+const unsigned char palette[16]={ 0x0f,0x11,0x16,0x28,0x0f,0x16,0x21,0x31,0x0f,0x28,0x16,0x11,0x0f,0x0c,0x1c,0x2c };
 
 /* Metasprites */
 
@@ -239,6 +239,12 @@ void attract_monsters(void);
  * openclose = 0 for open, 1 for close.
  */
 void set_door(unsigned char player, unsigned char openclose);
+
+/**
+ * set_teleport(openclose)
+ * openclose = 0 for open, 1 for close
+ */
+void set_teleport(unsigned char openclose);
 
 /**
  * clear_update_buffer() - Clear the update buffer

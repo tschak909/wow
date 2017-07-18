@@ -330,8 +330,8 @@ void run_dungeon(unsigned char dungeon_num)
   
   pal_fade_to(4);
 
-  set_door(1,0);
-
+  /* set_door(1,0); */
+  set_teleport(0);
   a=spr=0;
   i=0;
   
@@ -344,7 +344,7 @@ void run_dungeon(unsigned char dungeon_num)
 	  /* ++i; */
 	  /* i=i&1; */
 	  /* set_door(0,i); */
-	  frame_cnt=0;
+	  break;
 	}
     }
 
@@ -433,6 +433,34 @@ void attract_monsters(void)
 }
 
 /**
+ * set_teleport(openclose)
+ * openclose = 0 for open, 1 for close
+ */
+void set_teleport(unsigned char openclose)
+{
+  // Clear the update buffer
+  clear_update_buffer();
+
+  // Set the addresses for the two teleport regions.
+  update_buffer[0]=MSB(NTADR_A(1,7))|NT_UPD_VERT;
+  update_buffer[1]=LSB(NTADR_A(1,7));
+  update_buffer[2]=3;
+
+  update_buffer[6]=MSB(NTADR_A(30,7))|NT_UPD_VERT;
+  update_buffer[7]=LSB(NTADR_A(30,7));
+  update_buffer[8]=3;
+
+  // and fill in the tiles in the data section.
+  update_buffer[3]=(openclose==0?0x73:0x79);
+  update_buffer[4]=(openclose==0?0x73:0x79);
+  update_buffer[5]=(openclose==0?0x73:0x79);
+
+  update_buffer[9]=(openclose==0?0x78:0x7A);
+  update_buffer[10]=(openclose==0?0x78:0x7A);
+  update_buffer[11]=(openclose==0?0x78:0x7A);  
+}
+
+/**
  * set_door(player, openclose)
  * player = Player 0 (blue) or Player 1 (yellow) door.
  * openclose = 0 for open, 1 for close.
@@ -516,8 +544,8 @@ void main(void)
   
   while(1)
     {
-      /* attract_scores();  */
-      /* attract_monsters();  */
+      /* attract_scores(); */
+      /* attract_monsters(); */
       run_dungeon(1);
     }
 }
