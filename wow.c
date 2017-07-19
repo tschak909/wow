@@ -330,8 +330,9 @@ void run_dungeon(unsigned char dungeon_num)
   
   pal_fade_to(4);
 
-  /* set_door(1,0); */
-  set_teleport(0);
+  set_door(0,0);
+  ppu_wait_frame();
+  set_teleport(1);
   a=spr=0;
   i=0;
   
@@ -544,8 +545,8 @@ void main(void)
   
   while(1)
     {
-      /* attract_scores(); */
-      /* attract_monsters(); */
+      attract_scores(); 
+      attract_monsters(); 
       run_dungeon(1);
     }
 }
