@@ -332,7 +332,6 @@ void run_dungeon(unsigned char dungeon_num)
 
   set_door(0,0);
   ppu_wait_frame();
-  update_scores();
   a=spr=0;
   i=0;
   
@@ -340,13 +339,9 @@ void run_dungeon(unsigned char dungeon_num)
     {
       ppu_wait_frame();
       ++frame_cnt;
-      if (frame_cnt==255)
-	{
-	  /* ++i; */
-	  /* i=i&1; */
-	  /* set_door(0,i); */
-	  break;
-	}
+      add_points(0);
+      add_points(1);
+      update_scores();
     }
 
   pal_fade_to(0);
@@ -521,6 +516,38 @@ void set_door(unsigned char player, unsigned char openclose)
 }
 
 /**
+ * add_points(player)
+ * player = scoreX to add points in score0 to
+ */
+void add_points(unsigned char player)
+{
+  ptr=(player==0 ? score1 : score2);
+  a=0; // clear carry
+  
+  for (i=7;i-->0; )
+    {
+      score0[i]=(score0[i])-1;
+      ptr[i]=(ptr[i])-1;
+    }
+
+  // Add each piece
+  for (i=7;i-->0; )
+    {
+      ptr[i]=score0[i]+ptr[i]+a;
+      a=(ptr[i]>9);
+      if (a)
+  	ptr[i]-=10;
+    }
+  
+  for (i=7;i-->0; )
+    {
+      score0[i]=score0[i]+1;
+      ptr[i]=(ptr[i])+1;
+    }
+
+}
+
+/**
  * update_scores() - Update the score data for both players
  */
 void update_scores(void)
@@ -580,8 +607,8 @@ void main(void)
   
   while(1)
     {
-      attract_scores(); 
-      attract_monsters(); 
+      /* attract_scores();  */
+      /* attract_monsters();  */
       run_dungeon(1);
     }
 }

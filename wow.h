@@ -195,9 +195,9 @@ const unsigned char* const metasprite_list[]={
 static unsigned char update_buffer[48]; 
 
 /* Score registers */
-static unsigned char score0[7]={0,0,0,0,0,0,0};
-static unsigned char score1[7]={0,0,0,0,0,0,0};
-static unsigned char score2[7]={0,0,0,0,0,0,0};
+static unsigned char score0[7]={1,1,1,1,1,1,2};
+static unsigned char score1[7]={1,1,1,1,1,1,1};
+static unsigned char score2[7]={1,1,1,1,1,1,1};
 
 /******************************************************
  * Zero Page Variables                                *
@@ -211,7 +211,8 @@ static unsigned char frame_cnt;         // Frame counter (up to 256 frames)
 static unsigned char bright;            // Brightness counter.
 static unsigned int adr;                // Address
 static unsigned char* str;              // String
-static const unsigned char* dungeon;         // Dungeon pointer.
+static unsigned char* dungeon;         // Dungeon pointer.
+static unsigned char* ptr;             // Generic reusable pointer.
 /****************************************************
  * Prototypes                                       *
  ****************************************************/
@@ -265,6 +266,12 @@ void init(void);
  * update_scores() - Update the score data for both players
  */
 void update_scores(void);
+
+/**
+ * add_points(player)
+ * player = scoreX to add points in score0 to
+ */
+void add_points(unsigned char player);
 
 
 #endif /* WOW_H */
