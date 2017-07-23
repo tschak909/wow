@@ -332,7 +332,7 @@ void run_dungeon(unsigned char dungeon_num)
 
   set_door(0,0);
   ppu_wait_frame();
-  set_teleport(1);
+  update_scores();
   a=spr=0;
   i=0;
   
@@ -518,6 +518,41 @@ void set_door(unsigned char player, unsigned char openclose)
       update_buffer[11]=0x75;                  
     }
   
+}
+
+/**
+ * update_scores() - Update the score data for both players
+ */
+void update_scores(void)
+{
+  // Clear the update buffer
+  clear_update_buffer();
+
+  // Set the addresses for the update regions.
+  update_buffer[0]=MSB(NTADR_A(2,25))|NT_UPD_HORZ;           // Blue player Line 1
+  update_buffer[1]=LSB(NTADR_A(2,25));
+  update_buffer[2]=7;
+
+  update_buffer[10]=MSB(NTADR_A(2,26))|NT_UPD_HORZ;          // Blue player Line 2
+  update_buffer[11]=LSB(NTADR_A(2,26));
+  update_buffer[12]=7;
+
+  update_buffer[20]=MSB(NTADR_A(23,25))|NT_UPD_HORZ;         // Yellow player Line 1
+  update_buffer[21]=LSB(NTADR_A(23,25));
+  update_buffer[22]=7;
+
+  update_buffer[30]=MSB(NTADR_A(23,26))|NT_UPD_HORZ;        // Yellow player Line 2
+  update_buffer[31]=LSB(NTADR_A(23,26));
+  update_buffer[32]=7;
+
+  // and finally, set the data for each.
+  for (i=0;i<7;++i)
+    {
+      update_buffer[i+3]=score1[i];
+      update_buffer[i+13]=score1[i]+16;
+      update_buffer[i+23]=score2[i];
+      update_buffer[i+33]=score2[i]+16;
+    }
 }
 
 /**

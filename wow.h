@@ -194,6 +194,11 @@ const unsigned char* const metasprite_list[]={
 /* Update Buffer */
 static unsigned char update_buffer[48]; 
 
+/* Score registers */
+static unsigned char score0[7]={0,0,0,0,0,0,0};
+static unsigned char score1[7]={0,0,0,0,0,0,0};
+static unsigned char score2[7]={0,0,0,0,0,0,0};
+
 /******************************************************
  * Zero Page Variables                                *
  ******************************************************/
@@ -255,6 +260,11 @@ void clear_update_buffer(void);
  * init() - just as it says.
  */
 void init(void);
+
+/**
+ * update_scores() - Update the score data for both players
+ */
+void update_scores(void);
 
 
 #endif /* WOW_H */
