@@ -191,13 +191,24 @@ const unsigned char* const metasprite_list[]={
  * Variables                                          *
  ******************************************************/
 
-/* Update Buffer */
+/* BG Update Buffer */
 static unsigned char update_buffer[48]; 
 
 /* Score registers */
 static unsigned char score0[7]={1,1,1,1,1,1,2};
 static unsigned char score1[7]={1,1,1,1,1,1,1};
 static unsigned char score2[7]={1,1,1,1,1,1,1};
+
+/**
+ * 8 objects on screen, two players and 6 enemies.
+ *
+ * [0] - Sprite X position
+ * [1] - Sprite Y position
+ * [2] - Sprite Type - (worrior, burwor, thurwor, gorwor... Bit 7 means empty.)
+ * [3] - Dungeon X coordinate
+ * [4] - Dungeon Y coordinate
+ */
+static unsigned char stamps[40];
 
 /******************************************************
  * Zero Page Variables                                *
@@ -272,6 +283,16 @@ void update_scores(void);
  * player = scoreX to add points in score0 to
  */
 void add_points(unsigned char player);
+
+/**
+ * clear_stamps() - Clear the on screen stamp buffer
+ */
+void clear_stamps(void);
+
+/**
+ * update_stamps() - Update the on-screen stamps
+ */
+void update_stamps(void);
 
 
 #endif /* WOW_H */

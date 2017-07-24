@@ -404,13 +404,14 @@ void attract_monsters(void)
   bank_bg(0);
 
   spr=0;
-  spr = oam_meta_spr(120,8,spr,metasprite_list[0]);
-  spr = oam_meta_spr(120,36,spr,metasprite_list[1]);
-  spr = oam_meta_spr(120,68,spr,metasprite_list[2]);
-  spr = oam_meta_spr(120,98,spr,metasprite_list[6]);
-  spr = oam_meta_spr(120,132,spr,metasprite_list[5]);
-  spr = oam_meta_spr(120,164,spr,metasprite_list[3]);
-  spr = oam_meta_spr(120,204,spr,metasprite_list[4]);
+  // Temporarily comment out the sprites in the attract page until we can get the sprites ordered and ready.
+  /* spr = oam_meta_spr(120,8,spr,metasprite_list[0]); */
+  /* spr = oam_meta_spr(120,36,spr,metasprite_list[1]); */
+  /* spr = oam_meta_spr(120,68,spr,metasprite_list[2]); */
+  /* spr = oam_meta_spr(120,98,spr,metasprite_list[6]); */
+  /* spr = oam_meta_spr(120,132,spr,metasprite_list[5]); */
+  /* spr = oam_meta_spr(120,164,spr,metasprite_list[3]); */
+  /* spr = oam_meta_spr(120,204,spr,metasprite_list[4]); */
   
   pal_fade_to(4);
 
@@ -583,6 +584,14 @@ void update_scores(void)
 }
 
 /**
+ * clear_stamps() - Clear the on screen stamp buffer
+ */
+void clear_stamps(void)
+{
+  memfill(&stamps,0,sizeof(stamps));
+}
+
+/**
  * clear_update_buffer() - Clear the update buffer
  */
 void clear_update_buffer(void)
@@ -591,11 +600,31 @@ void clear_update_buffer(void)
 }
 
 /**
+ * update_stamps() - Update the on-screen stamps
+ */
+void update_stamps(void)
+{
+  spr=0;
+  for (i=0;i<sizeof(stamps);i+=5)
+    {
+      if (stamps[i+2]&(1<<7))
+	{
+	  spr = oam_meta_spr(0xf8,0xf8,spr,metasprite_list[stamps[i+2]&0x80]);
+	}
+      else
+	{
+	  spr = oam_meta_spr(stamps[i],stamps[i+1],spr,metasprite_list[stamps[i+2]&0x80]);
+	}
+    }
+}
+
+/**
  * init() - just as it says.
  */
 void init(void)
 {
   clear_update_buffer();
+  clear_stamps();
 }
 
 /**
