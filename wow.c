@@ -58,6 +58,22 @@ void pal_fade_to(unsigned to)
 }
 
 /**
+ * dungeon_red() - Turn dungeon red
+ */
+void dungeon_red()
+{
+  pal_col(1,0x16);
+}
+
+/**
+ * dungeon_blue() - Turn dungeon blue
+ */
+void dungeon_blue()
+{
+  pal_col(1,0x11);
+}
+
+/**
  * run_dungeon() - dungeon code
  * dungeon_num - Dungeon Number to run
  */
