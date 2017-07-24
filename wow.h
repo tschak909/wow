@@ -235,6 +235,12 @@ static unsigned char* ptr;             // Generic reusable pointer.
 void pal_fade_to(unsigned to);
 
 /**
+ * double_score_win() - turn screen colors and set "DOUBLE SCORE" text on radar.
+ */
+void double_score_win(void);
+
+
+/**
  * run_dungeon() - dungeon code
  * dungeon_num - Dungeon Number to run
  */
