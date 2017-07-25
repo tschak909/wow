@@ -21,7 +21,7 @@
 	.export _vram_adr,_vram_put,_vram_fill,_vram_inc,_vram_unrle
 	.export _set_vram_update,_flush_vram_update
 	.export _memcpy,_memfill,_delay
-	.export _div6,_div10
+	.export _div24
 
 
 ;NMI handler
@@ -1222,35 +1222,18 @@ _delay:
 
 	rts
 
-;; void __fastcall__ div6(unsigned char d);
-_div6:	lsr
-	sta  TEMP
+;; void __fastcall__ div24(unsigned char d);
+_div24: lsr
 	lsr
 	lsr
-	adc  TEMP
+	sta   TEMP
+	lsr
+	lsr
+	adc   TEMP
 	ror
 	lsr
-	adc  TEMP
+	adc   TEMP
 	ror
-	lsr
-	adc  TEMP
-	ror
-	lsr
-	rts
-
-;; void __fastcall__ div10(unsigned char d)
-_div10:  lsr
-	sta  TEMP
-	lsr
-	adc  TEMP
-	ror
-	lsr
-	lsr
-	adc  TEMP
-	ror
-	adc  TEMP
-	ror
-	lsr
 	lsr
 	rts
 	

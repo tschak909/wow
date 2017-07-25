@@ -247,13 +247,10 @@ void __fastcall__ memfill(void *dst,unsigned char value,unsigned int len);
 
 //delay for N frames
 
-void __fastcall__ delay(unsigned char frames);
+unsigned char __fastcall__ delay(unsigned char frames);
 
-//Divide by 6
-void __fastcall__ div6(unsigned char d);
-
-//Divide by 10
-void __fastcall__ div10(unsigned char d);
+//Divide by 24
+unsigned char __fastcall__ div24(unsigned char d);
 
 
 #define PAD_A			0x80

@@ -389,7 +389,7 @@ void run_dungeon(unsigned char dungeon_num)
   	  ++b;
   	}
     }
-
+  
   // Point to vram update buffer for further updates.
   set_vram_update(update_buffer);
   
@@ -404,8 +404,6 @@ void run_dungeon(unsigned char dungeon_num)
   ppu_wait_frame();
   a=spr=0;
   i=0;
-
-  spr=oam_meta_spr(224,9,spr,metasprite_list[0]);
   
   while(1)
     {
