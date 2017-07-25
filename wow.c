@@ -397,8 +397,6 @@ void run_dungeon(unsigned char dungeon_num)
   ppu_wait_frame();
   bank_spr(1);
   bank_bg(0);
-
-  spr=0;
   
   pal_fade_to(4);
 
@@ -406,16 +404,13 @@ void run_dungeon(unsigned char dungeon_num)
   ppu_wait_frame();
   a=spr=0;
   i=0;
+
+  spr=oam_meta_spr(224,9,spr,metasprite_list[0]);
   
   while(1)
     {
       ppu_wait_frame();
       ++frame_cnt;
-      double_score_win();
-      delay(150);
-      /* add_points(0); */
-      /* add_points(1); */
-      /* update_scores(); */
     }
 
   pal_fade_to(0);

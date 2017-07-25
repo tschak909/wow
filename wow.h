@@ -53,138 +53,29 @@
 const unsigned char palette[16]={ 0x0f,0x11,0x16,0x28,0x0f,0x16,0x21,0x31,0x0f,0x28,0x16,0x11,0x0f,0x0c,0x1c,0x2c };
 
 /* Metasprites */
-
 const unsigned char metasprite_data[]={
 
-	  0,  0,0x17,0|OAM_FLIP_H,
-	  8,  0,0x16,0|OAM_FLIP_H,
-	  0,  8,0x27,0|OAM_FLIP_H,
-	  8,  8,0x26,0|OAM_FLIP_H,
-	  0, 16,0x37,0|OAM_FLIP_H,
-	  8, 16,0x36,0|OAM_FLIP_H,
+	  0,  0,0x00,0,
+	  8,  0,0x01,0,
+	  0,  8,0x10,0,
+	  8,  8,0x11,0,
+	  0, 16,0x20,0,
+	  8, 16,0x21,0,
 	128,
 
-	  0,  0,0x1d,2|OAM_FLIP_H,
-	  8,  0,0x1c,2|OAM_FLIP_H,
-	  0,  8,0x2d,2|OAM_FLIP_H,
-	  8,  8,0x2c,2|OAM_FLIP_H,
-	  0, 16,0x3d,2|OAM_FLIP_H,
-	  8, 16,0x3c,2|OAM_FLIP_H,
-	128,
-
-	  0,  0,0x43,1|OAM_FLIP_H,
-	  8,  0,0x42,1|OAM_FLIP_H,
-	  0,  8,0x53,1|OAM_FLIP_H,
-	  8,  8,0x52,1|OAM_FLIP_H,
-	  0, 16,0x63,1|OAM_FLIP_H,
-	  8, 16,0x62,1|OAM_FLIP_H,
-	128,
-
-	  8,  0,0x4a,2|OAM_FLIP_H,
-	  0,  0,0x4b,2|OAM_FLIP_H,
-	  8,  8,0x5a,2|OAM_FLIP_H,
-	  0,  8,0x5b,2|OAM_FLIP_H,
-	  0, 16,0x6b,2|OAM_FLIP_H,
-	  8, 16,0x6a,2|OAM_FLIP_H,
-	128,
-
-	  0,  0,0x4e,2,
-	  8,  0,0x4f,2,
-	  0,  8,0x5e,2,
-	  8,  8,0x5f,2,
-	  0, 16,0x6e,2,
-	  8, 16,0x6f,2,
-	128,
-
-	  0,  0,0x11,0|OAM_FLIP_H,
-	  8,  0,0x10,0|OAM_FLIP_H,
-	  0,  8,0x21,0|OAM_FLIP_H,
-	  8,  8,0x20,0|OAM_FLIP_H,
-	  0, 16,0x31,0|OAM_FLIP_H,
-	  8, 16,0x30,0|OAM_FLIP_H,
-	128,
-
-	  0,  0,0x11,2|OAM_FLIP_H,
-	  8,  0,0x10,2|OAM_FLIP_H,
-	  0,  8,0x21,2|OAM_FLIP_H,
-	  8,  8,0x20,2|OAM_FLIP_H,
-	  0, 16,0x31,2|OAM_FLIP_H,
-	  8, 16,0x30,2|OAM_FLIP_H,
-	128,
-
-	  8,  0,0x12,2|OAM_FLIP_H,
-	  0,  0,0x13,2|OAM_FLIP_H,
-	  8,  8,0x22,2|OAM_FLIP_H,
-	  0,  8,0x23,2|OAM_FLIP_H,
-	  8, 16,0x32,2|OAM_FLIP_H,
-	  0, 16,0x33,2|OAM_FLIP_H,
-	128,
-
-	  8,  0,0x14,2|OAM_FLIP_H,
-	  0,  0,0x15,2|OAM_FLIP_H,
-	  8,  8,0x24,2|OAM_FLIP_H,
-	  0,  8,0x25,2|OAM_FLIP_H,
-	  8, 16,0x34,2|OAM_FLIP_H,
-	  0, 16,0x35,2|OAM_FLIP_H,
-	128,
-
-	 16,  8,0xa0,2|OAM_FLIP_H,
-	 16,  0,0x90,2|OAM_FLIP_H,
-	  8,  8,0xa1,2|OAM_FLIP_H,
-	  8,  0,0x91,2|OAM_FLIP_H,
-	  0,  8,0xa2,2|OAM_FLIP_H,
-	  0,  0,0x92,2|OAM_FLIP_H,
-	128,
-
-	 16,  8,0x80,2|OAM_FLIP_H,
-	 16,  0,0x70,2|OAM_FLIP_H,
-	  8,  0,0x71,2|OAM_FLIP_H,
-	  8,  8,0x81,2|OAM_FLIP_H,
-	  0,  0,0x72,2|OAM_FLIP_H,
-	  0,  8,0x82,2|OAM_FLIP_H,
-	128,
-
-	 16,  8,0x83,2|OAM_FLIP_H,
-	 16,  0,0x73,2|OAM_FLIP_H,
-	  8,  8,0x84,2|OAM_FLIP_H,
-	  8,  0,0x74,2|OAM_FLIP_H,
-	  0,  8,0x85,2|OAM_FLIP_H,
-	  0,  0,0x75,2|OAM_FLIP_H,
-	128,
-
-	  0,  0,0x18,0,
-	  8,  0,0x19,0,
-	  0,  8,0x28,0,
-	  8,  8,0x29,0,
-	  0, 16,0x38,0,
-	  8, 16,0x39,0,
-	128,
-
-	  0,  0,0x16,0,
-	  8,  0,0x17,0,
-	  0,  8,0x26,0,
-	  8,  8,0x27,0,
-	  0, 16,0x36,0,
-	  8, 16,0x37,0,
+	  0,  0,0x04,0,
+	  8,  0,0x05,0,
+	  0,  8,0x14,0,
+	  8,  8,0x15,0,
+	  0, 16,0x24,0,
+	  8, 16,0x25,0,
 	128
 
 };
 
 const unsigned char* const metasprite_list[]={
 	metasprite_data+0,
-	metasprite_data+25,
-	metasprite_data+50,
-	metasprite_data+75,
-	metasprite_data+100,
-	metasprite_data+125,
-	metasprite_data+150,
-	metasprite_data+175,
-	metasprite_data+200,
-	metasprite_data+225,
-	metasprite_data+250,
-	metasprite_data+275,
-	metasprite_data+300,
-	metasprite_data+325
+	metasprite_data+25
 };
 
 /******************************************************
@@ -233,6 +124,16 @@ static unsigned char* ptr;             // Generic reusable pointer.
  * to the given brightness value.
  */
 void pal_fade_to(unsigned to);
+
+/**
+ * dungeon_red() - Turn dungeon red
+ */
+void dungeon_red();
+
+/**
+ * dungeon_blue() - Turn dungeon blue
+ */
+void dungeon_blue();
 
 /**
  * double_score_win() - turn screen colors and set "DOUBLE SCORE" text on radar.
