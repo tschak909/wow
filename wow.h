@@ -52,31 +52,8 @@
 /* Palettes */
 const unsigned char palette[16]={ 0x0f,0x11,0x16,0x28,0x0f,0x16,0x21,0x31,0x0f,0x28,0x16,0x11,0x0f,0x0c,0x1c,0x2c };
 
-/* Metasprites */
-const unsigned char metasprite_data[]={
-
-	  0,  0,0x00,0,
-	  8,  0,0x01,0,
-	  0,  8,0x10,0,
-	  8,  8,0x11,0,
-	  0, 16,0x20,0,
-	  8, 16,0x21,0,
-	128,
-
-	  0,  0,0x04,0,
-	  8,  0,0x05,0,
-	  0,  8,0x14,0,
-	  8,  8,0x15,0,
-	  0, 16,0x24,0,
-	  8, 16,0x25,0,
-	128
-
-};
-
-const unsigned char* const metasprite_list[]={
-	metasprite_data+0,
-	metasprite_data+25
-};
+/* metasprites */
+#include "metasprites.h"
 
 /******************************************************
  * Variables                                          *
@@ -197,9 +174,9 @@ void add_points(unsigned char player);
 void clear_stamps(void);
 
 /**
- * update_stamps() - Update the on-screen stamps
+ * place_stamps() - Update the on-screen stamps
  */
-void update_stamps(void);
+void place_stamps(void);
 
 
 #endif /* WOW_H */

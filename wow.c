@@ -667,16 +667,17 @@ void clear_update_buffer(void)
 }
 
 /**
- * update_stamps() - Update the on-screen stamps
+ * place_stamps() - Update the on-screen stamps
  */
-void update_stamps(void)
+void place_stamps(void)
 {
   spr=0;
+  oam_clear();
   for (i=0;i<sizeof(stamps);i+=5)
     {
       if (stamps[i+2]&(1<<7))
 	{
-	  spr = oam_meta_spr(0xf8,0xf8,spr,metasprite_list[stamps[i+2]&0x80]);
+	  continue;
 	}
       else
 	{
