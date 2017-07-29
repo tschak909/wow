@@ -55,6 +55,9 @@ const unsigned char palette[16]={ 0x0f,0x11,0x16,0x28,0x0f,0x16,0x21,0x31,0x0f,0
 /* metasprites */
 #include "metasprites.h"
 
+/* metasprite animations */
+#include "metasprite_animations.h"
+
 /******************************************************
  * Variables                                          *
  ******************************************************/
@@ -73,10 +76,12 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
  * [0] - Sprite X position
  * [1] - Sprite Y position
  * [2] - Sprite Type - (worrior, burwor, thurwor, gorwor... Bit 7 means empty.)
- * [3] - Dungeon X coordinate
- * [4] - Dungeon Y coordinate
+ * [3] - Sprite frame (0 to 3)
+ * [4] - Sprite number of frames to delay
+ * [5] - Dungeon Box X coordinate
+ * [6] - Dungeon Box Y coordinate
  */
-static unsigned char stamps[40];
+static unsigned char stamps[48]; // 8 slots
 
 /******************************************************
  * Zero Page Variables                                *

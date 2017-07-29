@@ -472,13 +472,13 @@ void attract_monsters(void)
 
   spr=0;
   // Temporarily comment out the sprites in the attract page until we can get the sprites ordered and ready.
-  /* spr = oam_meta_spr(120,8,spr,metasprite_list[0]); */
-  /* spr = oam_meta_spr(120,36,spr,metasprite_list[1]); */
-  /* spr = oam_meta_spr(120,68,spr,metasprite_list[2]); */
-  /* spr = oam_meta_spr(120,98,spr,metasprite_list[6]); */
-  /* spr = oam_meta_spr(120,132,spr,metasprite_list[5]); */
-  /* spr = oam_meta_spr(120,164,spr,metasprite_list[3]); */
-  /* spr = oam_meta_spr(120,204,spr,metasprite_list[4]); */
+  spr = oam_meta_spr(120,8,spr,metasprite_list[21]);
+  spr = oam_meta_spr(120,36,spr,metasprite_list[33]);
+  spr = oam_meta_spr(120,68,spr,metasprite_list[45]);
+  spr = oam_meta_spr(120,98,spr,metasprite_list[67]);
+  spr = oam_meta_spr(120,132,spr,metasprite_list[5]);
+  spr = oam_meta_spr(120,164,spr,metasprite_list[58]);
+  spr = oam_meta_spr(120,204,spr,metasprite_list[83]);
   
   pal_fade_to(4);
 
@@ -704,8 +704,8 @@ void main(void)
   
   while(1)
     {
-      /* attract_scores();  */
-      /* attract_monsters();  */
+      attract_scores();
+      attract_monsters();
       run_dungeon(1);
     }
 }
