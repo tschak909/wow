@@ -42,6 +42,10 @@
  * Constants                                          *
  ******************************************************/
 
+/* States */
+#define OPEN 0
+#define CLOSED 1
+
 #define YELLOW_SPAWN_X 208
 #define YELLOW_SPAWN_Y 169
 
@@ -97,6 +101,10 @@ static unsigned int adr;                // Address
 static unsigned char* str;              // String
 static unsigned char* dungeon;         // Dungeon pointer.
 static unsigned char* ptr;             // Generic reusable pointer.
+static unsigned char blue_door_state;  // Blue door state
+static unsigned char yellow_door_state; // Yellow door state
+static unsigned char teleport_state;   // Teleport state
+
 /****************************************************
  * Prototypes                                       *
  ****************************************************/
@@ -140,11 +148,9 @@ void attract_scores(void);
 void attract_monsters(void);
 
 /**
- * set_door(player, openclose)
- * player = Player 0 (blue) or Player 1 (yellow) door.
- * openclose = 0 for open, 1 for close.
+ * update_doors()
  */
-void set_door(unsigned char player, unsigned char openclose);
+void update_doors();
 
 /**
  * set_teleport(openclose)

@@ -400,16 +400,51 @@ void run_dungeon(unsigned char dungeon_num)
   
   pal_fade_to(4);
 
-  set_door(0,0);
-  ppu_wait_frame();
   a=spr=0;
   i=0;
+
+  // At this point, we loop around and handle frame scheduling
   
+  ////////////////////////////////////////////////////////////
+
   while(1)
     {
+
+      // Set Game State
+
+      /* blue_door_state=CLOSED; */
+      /* yellow_door_state=CLOSED; */
+      /* add_points(0); */
+      /* teleport_state=CLOSED; */
+      
+      // End Set Game State
+
       ppu_wait_frame();
       ++frame_cnt;
+
+      // VRAM update scheduler
+      
+      a=frame_cnt&0x03;
+      switch (a)
+	{
+	case 0:
+	  update_doors();
+	  break;
+	case 1:
+	  update_scores();
+	  break;
+	case 2:
+	  set_teleport(teleport_state);
+	  break;
+	case 3:
+	  break;
+	}
+
+      // End VRAM update scheduler
+      
     }
+
+  ////////////////////////////////////////////////////////////
 
   pal_fade_to(0);
   oam_clear();
@@ -525,62 +560,38 @@ void set_teleport(unsigned char openclose)
 }
 
 /**
- * set_door(player, openclose)
- * player = Player 0 (blue) or Player 1 (yellow) door.
- * openclose = 0 for open, 1 for close.
+ * set_doors()
  */
-void set_door(unsigned char player, unsigned char openclose)
+void update_doors()
 {
   // Clear the update buffer
   clear_update_buffer();
 
-  // Set the addresses for the two rows of tiles that make up the door
-  update_buffer[0]=(player==0?MSB(NTADR_A(1,18))|NT_UPD_HORZ:MSB(NTADR_A(28,18))|NT_UPD_HORZ);
-  update_buffer[1]=(player==0?LSB(NTADR_A(1,18)):LSB(NTADR_A(28,18)));
+  // Update VRAM reflecting door states, two rows, two sets of 3 tiles each row.
+  update_buffer[0]=MSB(NTADR_A(1,18))|NT_UPD_HORZ;
+  update_buffer[1]=LSB(NTADR_A(1,18));
   update_buffer[2]=3;
-
-  update_buffer[6]=(player==0?MSB(NTADR_A(1,19))|NT_UPD_HORZ:MSB(NTADR_A(28,19))|NT_UPD_HORZ);
-  update_buffer[7]=(player==0?LSB(NTADR_A(1,19)):LSB(NTADR_A(28,19)));
+  update_buffer[3]=(blue_door_state==0?0x65:0x76);
+  update_buffer[4]=(blue_door_state==0?0x00:0x64);
+  update_buffer[5]=(blue_door_state==0?0x00:0x64);
+  update_buffer[6]=MSB(NTADR_A(28,18))|NT_UPD_HORZ;
+  update_buffer[7]=LSB(NTADR_A(28,18));
   update_buffer[8]=3;
-  
-  // And then set the tiles for each update depending on desired door state.
-  if (openclose==0 && player==0)
-    {
-      update_buffer[3]=0x65;
-      update_buffer[4]=0x00;
-      update_buffer[5]=0x00;
-      update_buffer[9]=0x65;
-      update_buffer[10]=0x00;
-      update_buffer[11]=0x00;
-    }
-  else if (openclose==1 && player==0)
-    {
-      update_buffer[3]=0x76;
-      update_buffer[4]=0x64;
-      update_buffer[5]=0x64;
-      update_buffer[9]=0x74;
-      update_buffer[10]=0x63;
-      update_buffer[11]=0x63;      
-    }
-  else if (openclose==0 && player==1)
-    {
-      update_buffer[3]=0x00;
-      update_buffer[4]=0x00;
-      update_buffer[5]=0x66;
-      update_buffer[9]=0x00;
-      update_buffer[10]=0x00;
-      update_buffer[11]=0x66;            
-    }
-  else if (openclose==1 && player==1)
-    {
-      update_buffer[3]=0x64;
-      update_buffer[4]=0x64;
-      update_buffer[5]=0x77;
-      update_buffer[9]=0x63;
-      update_buffer[10]=0x63;
-      update_buffer[11]=0x75;                  
-    }
-  
+  update_buffer[9]=(yellow_door_state==0?0x00:0x64);
+  update_buffer[10]=(yellow_door_state==0?0x00:0x64);
+  update_buffer[11]=(yellow_door_state==0?0x66:0x77);
+  update_buffer[12]=MSB(NTADR_A(1,19))|NT_UPD_HORZ;
+  update_buffer[13]=LSB(NTADR_A(1,19));
+  update_buffer[14]=3;
+  update_buffer[15]=(blue_door_state==0?0x65:0x74);
+  update_buffer[16]=(blue_door_state==0?0x00:0x63);
+  update_buffer[17]=(blue_door_state==0?0x00:0x63);
+  update_buffer[18]=MSB(NTADR_A(28,19))|NT_UPD_HORZ;
+  update_buffer[19]=LSB(NTADR_A(28,19));
+  update_buffer[20]=3;
+  update_buffer[21]=(yellow_door_state==0?0x00:0x63);
+  update_buffer[22]=(yellow_door_state==0?0x00:0x63);
+  update_buffer[23]=(yellow_door_state==0?0x66:0x75);
 }
 
 /**
@@ -704,8 +715,8 @@ void main(void)
   
   while(1)
     {
-      attract_scores();
-      attract_monsters();
+      /* attract_scores(); */
+      /* attract_monsters(); */
       run_dungeon(1);
     }
 }
