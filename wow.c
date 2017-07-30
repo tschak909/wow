@@ -148,7 +148,7 @@ void setup_enemy_sprites(void)
       
       stamps[STAMP_X(i)]=PIXEL_BOX_X(a);
       stamps[STAMP_Y(i)]=PIXEL_BOX_Y(b);
-      stamps[STAMP_TYPE(i)]=12;
+      stamps[STAMP_TYPE(i)]=20;
       stamps[STAMP_STATE(i)]=0; // Default to right
       stamps[STAMP_FRAME(i)]=0; // First frame.
       stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
@@ -176,7 +176,65 @@ void animate_stamps(void)
 	}
     }
 }
-  
+
+/**
+ * get_radar_tile_byte()
+ * Get a radar tile given the b (X) c (Y) and d (Type)
+ */
+unsigned char get_radar_tile_byte()
+{
+  if ((b==0) && (c==0))
+    {
+      return 0x7E+sprite_radar_type[d];
+    }
+  else if ((b==9) && (c==0))
+    {
+      return 0x7F+sprite_radar_type[d];
+    }
+  else if (c==0)
+    {
+      return 0x82+sprite_radar_type[d];
+    }
+  else if ((b==0) && (c==5))
+    {
+      return 0x80+sprite_radar_type[d];
+    }
+  else if (c==5)
+    {
+      return 0x83+sprite_radar_type[d];
+    }
+  else
+    {
+      return 0x7D;
+    }
+
+  return 0x4c; // For error checking.
+}
+
+ /**
+ * update_radar()
+ * a = the current update buffer subscript
+ * b = the box X to check with get_radar_tile_byte()
+ * c = the box Y to check with get_radar_tile_byte()
+ */
+void update_radar()
+{
+  clear_update_buffer();
+  a=0xff;
+  for (i=2;i<8;++i)
+    {
+      if (stamps[STAMP_TYPE(i)]!=0xff)
+  	{
+	  update_buffer[++a]=MSB(NTADR_A(NT_RADAR_OFF_X+div24(stamps[STAMP_X(i)]),NT_RADAR_OFF_Y+div24(stamps[STAMP_Y(i)])));
+	  update_buffer[++a]=LSB(NTADR_A(NT_RADAR_OFF_X+div24(stamps[STAMP_X(i)]),NT_RADAR_OFF_Y+div24(stamps[STAMP_Y(i)])));
+	  b=div24(stamps[STAMP_X(i)]);
+	  c=div24(stamps[STAMP_Y(i)]);
+	  d=stamps[STAMP_TYPE(i)];
+	  update_buffer[++a]=get_radar_tile_byte();
+  	}
+    }
+}
+
 /**
  * run_dungeon() - dungeon code
  * dungeon_num - Dungeon Number to run
@@ -460,7 +518,7 @@ void run_dungeon(unsigned char dungeon_num)
 
   while(1)
     {
-
+      
       // Set Game State
 
       /* blue_door_state=CLOSED; */
@@ -469,7 +527,7 @@ void run_dungeon(unsigned char dungeon_num)
       /* teleport_state=CLOSED; */
 
       /* animate_stamps(); */
-      
+       
       // End Set Game State
 
       ppu_wait_frame();
@@ -492,6 +550,7 @@ void run_dungeon(unsigned char dungeon_num)
 	  set_teleport(teleport_state);
 	  break;
 	case 3:
+	  update_radar();
 	  break;
 	}
 
@@ -561,7 +620,6 @@ void attract_monsters(void)
   bank_bg(0);
 
   spr=0;
-  // Temporarily comment out the sprites in the attract page until we can get the sprites ordered and ready.
   spr = oam_meta_spr(120,8,spr,metasprite_list[21]);
   spr = oam_meta_spr(120,36,spr,metasprite_list[33]);
   spr = oam_meta_spr(120,68,spr,metasprite_list[45]);
@@ -747,7 +805,8 @@ void update_stamps(void)
 	}
       else
 	{
-	  spr = oam_meta_spr(stamps[STAMP_X(i)],stamps[STAMP_Y(i)],spr,metasprite_list[20]);
+	  a=stamps[STAMP_TYPE(i)]+stamps[STAMP_STATE(i)]+stamps[STAMP_FRAME(i)];
+	  spr = oam_meta_spr(stamps[STAMP_X(i)],stamps[STAMP_Y(i)],spr,metasprite_list[a]);
 	}
     }
 }

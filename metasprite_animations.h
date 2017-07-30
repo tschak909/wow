@@ -111,4 +111,8 @@ const unsigned char metasprite_animation_type[]={
 #define STAMP_TYPE_WORLUK           24
 #define STAMP_TYPE_YELLOW_WORRIOR   26
 
+const unsigned char sprite_radar_type[]={
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,12,12,12,12,6,6,0,0,0,0,0,0,0,0,0,0,0,0
+};
+
 #endif /* METASPRITE_ANIMATIONS_H */
