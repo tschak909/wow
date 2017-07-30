@@ -53,66 +53,11 @@ const unsigned char metasprite_animation_data[]={
   69,73,77,77, // Worrior Yellow Down Shooting
 };
 
-const unsigned char* const metasprite_animation_list[]={
-  metasprite_animation_data+0,   // [0]  Worrior Blue Right
-  metasprite_animation_data+4,   // [1]  Worrior Blue Right Idle
-  metasprite_animation_data+8,   // [2]  Worrior Blue Left
-  metasprite_animation_data+12,  // [3]  Worrior Blue Left Idle
-  metasprite_animation_data+16,  // [4]  Worrior Blue Up
-  metasprite_animation_data+20,  // [5]  Worrior Blue Up Idle
-  metasprite_animation_data+24,  // [6]  Worrior Blue Down
-  metasprite_animation_data+28,  // [7]  Worrior Blue Down Idle
-  metasprite_animation_data+32,  // [8]  Worrior Blue Right Shooting
-  metasprite_animation_data+36,  // [9]  Worrior Blue Left Shooting
-  metasprite_animation_data+40,  // [10] Worrior Blue Up Shooting
-  metasprite_animation_data+44,  // [11] Worrior Blue Down Shooting
-  // -------------------------------------------------
-  metasprite_animation_data+48,  // [12] Burwor Right
-  metasprite_animation_data+52,  // [13] Burwor Left
-  metasprite_animation_data+56,  // [14] Burwor Up
-  metasprite_animation_data+60,  // [15] Burwor Down
-  // -------------------------------------------------
-  metasprite_animation_data+64,  // [16] Gorwor Right
-  metasprite_animation_data+68,  // [17] Gorwor Left
-  metasprite_animation_data+72,  // [18] Gorwor Up
-  metasprite_animation_data+76,  // [19] Gorwor Down
-  // -------------------------------------------------
-  metasprite_animation_data+80,  // [20] Thorwor Right
-  metasprite_animation_data+84,  // [21] Thorwor Left
-  metasprite_animation_data+88,  // [22] Thorwor Up
-  metasprite_animation_data+92,  // [23] Thorwor Down
-  // -------------------------------------------------
-  metasprite_animation_data+96,  // [24] Worluk Right-Left
-  metasprite_animation_data+100, // [25] Worluk Up-Down
-  // -------------------------------------------------
-  metasprite_animation_data+104, // [26] Worrior Yellow Right
-  metasprite_animation_data+108, // [27] Worrior Yellow Right Idle
-  metasprite_animation_data+112, // [28] Worrior Yellow Left
-  metasprite_animation_data+116, // [29] Worrior Yellow Left Idle
-  metasprite_animation_data+120, // [30] Worrior Yellow Up
-  metasprite_animation_data+124, // [31] Worrior Yellow Up Idle
-  metasprite_animation_data+128, // [32] Worrior Yellow Down
-  metasprite_animation_data+132, // [33] Worrior Yellow Down Idle
-  metasprite_animation_data+136, // [34] Worrior Yellow Right Shooting
-  metasprite_animation_data+140, // [35] Worrior Yellow Left Shooting
-  metasprite_animation_data+144, // [36] Worrior Yellow Up Shooting
-  metasprite_animation_data+148  // [37] Worrior Yellow Down Shooting
-  // ------------------------------------------------
-};
-
-const unsigned char metasprite_animation_type[]={
-  0,12,16,20,24,26
-};
-
 #define STAMP_TYPE_BLUE_WORRIOR     0
-#define STAMP_TYPE_BURWOR           12
-#define STAMP_TYPE_GORWOR           16
-#define STAMP_TYPE_THORWOR          20
-#define STAMP_TYPE_WORLUK           24
-#define STAMP_TYPE_YELLOW_WORRIOR   26
-
-const unsigned char sprite_radar_type[]={
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,12,12,12,12,6,6,0,0,0,0,0,0,0,0,0,0,0,0
-};
+#define STAMP_TYPE_BURWOR           48
+#define STAMP_TYPE_GORWOR           64
+#define STAMP_TYPE_THORWOR          80
+#define STAMP_TYPE_WORLUK           96
+#define STAMP_TYPE_YELLOW_WORRIOR   104
 
 #endif /* METASPRITE_ANIMATIONS_H */

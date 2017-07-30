@@ -90,7 +90,7 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
  * [6] - Dungeon Box X coordinate
  * [7] - Dungeon Box Y coordinate
  */
-static unsigned char stamps[48];                  // 8 slots
+static unsigned char stamps[64];                  // 8 slots
 
 #define STAMP_NUM_FIELDS     8                    // Number of fields in each stamp slot
 #define STAMP_NUM_SLOTS      8                    // Number of slots in stamp structure

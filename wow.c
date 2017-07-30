@@ -148,8 +148,8 @@ void setup_enemy_sprites(void)
       
       stamps[STAMP_X(i)]=PIXEL_BOX_X(a);
       stamps[STAMP_Y(i)]=PIXEL_BOX_Y(b);
-      stamps[STAMP_TYPE(i)]=20;
-      stamps[STAMP_STATE(i)]=0; // Default to right
+      stamps[STAMP_TYPE(i)]=STAMP_TYPE_BURWOR;
+      stamps[STAMP_STATE(i)]=1; // Default to right
       stamps[STAMP_FRAME(i)]=0; // First frame.
       stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
       stamps[STAMP_BOX_X(i)]=div24(stamps[STAMP_X(i)]);
@@ -169,6 +169,8 @@ void animate_stamps(void)
       if ((i>1) && (stamps[STAMP_DELAY(i)]==0))
 	{
 	  stamps[STAMP_FRAME(i)]=(stamps[STAMP_FRAME(i)]+1)&0x03;
+	  if (i>1) // Delay only applies to enemies.
+	    stamps[STAMP_DELAY(i)]=4;
 	}
       else
 	{
@@ -183,32 +185,36 @@ void animate_stamps(void)
  */
 unsigned char get_radar_tile_byte()
 {
-  if ((b==0) && (c==0))
+
+  switch(d)
     {
-      return 0x7E+sprite_radar_type[d];
+    case STAMP_TYPE_BURWOR:
+      j=0;
+      break;
+    case STAMP_TYPE_GORWOR:
+      j=3;
+      break;
+    case STAMP_TYPE_THORWOR:
+      j=6;
+      break;
+    case STAMP_TYPE_WORLUK:
+      j=3;
+      break;
+    default:
+      j=9;  // For invisible enemies: TODO: adjust chr map a bit.
+      break;
     }
-  else if ((b==9) && (c==0))
+
+  if (c==0)
     {
-      return 0x7F+sprite_radar_type[d];
-    }
-  else if (c==0)
-    {
-      return 0x82+sprite_radar_type[d];
-    }
-  else if ((b==0) && (c==5))
-    {
-      return 0x80+sprite_radar_type[d];
+      j+=1;
     }
   else if (c==5)
     {
-      return 0x83+sprite_radar_type[d];
+      j+=2;
     }
-  else
-    {
-      return 0x7D;
-    }
-
-  return 0x4c; // For error checking.
+  
+  return 0x7B+j; // For error checking.
 }
 
  /**
@@ -526,7 +532,7 @@ void run_dungeon(unsigned char dungeon_num)
       /* add_points(0); */
       /* teleport_state=CLOSED; */
 
-      /* animate_stamps(); */
+      animate_stamps();
        
       // End Set Game State
 
@@ -805,7 +811,7 @@ void update_stamps(void)
 	}
       else
 	{
-	  a=stamps[STAMP_TYPE(i)]+stamps[STAMP_STATE(i)]+stamps[STAMP_FRAME(i)];
+	  a=metasprite_animation_data[stamps[STAMP_TYPE(i)]+stamps[STAMP_STATE(i)*4]+stamps[STAMP_FRAME(i)]];
 	  spr = oam_meta_spr(stamps[STAMP_X(i)],stamps[STAMP_Y(i)],spr,metasprite_list[a]);
 	}
     }
