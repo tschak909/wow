@@ -130,6 +130,54 @@ void double_score_win(void)
 }
 
 /**
+ * setup_enemy_sprites() - Set up enemy sprite spawn points
+ */
+void setup_enemy_sprites(void)
+{
+  for (i=2;i<8;i++)
+    {
+    randx:
+      a=rand8()&0x0f;
+      if (a>9)
+	goto randx;
+
+    randy:
+      b=rand8()&0x07;
+      if (b>5)
+	goto randy;
+      
+      stamps[STAMP_X(i)]=PIXEL_BOX_X(a);
+      stamps[STAMP_Y(i)]=PIXEL_BOX_Y(b);
+      stamps[STAMP_TYPE(i)]=12;
+      stamps[STAMP_STATE(i)]=0; // Default to right
+      stamps[STAMP_FRAME(i)]=0; // First frame.
+      stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
+      stamps[STAMP_BOX_X(i)]=div24(stamps[STAMP_X(i)]);
+      stamps[STAMP_BOX_Y(i)]=div24(stamps[STAMP_Y(i)]);
+      
+    }
+}
+
+/**
+ * animate_stamps() - increment the frame counters of each sprite, (0-7)
+ * applying delay to the non-player sprites (2-7)
+ */
+void animate_stamps(void)
+{
+  for (i=0;i<STAMP_NUM_SLOTS;++i)
+    {
+      if ((i>1) && (stamps[STAMP_DELAY(i)]==0))
+	{
+	  stamps[STAMP_FRAME(i)]=(stamps[STAMP_FRAME(i)]+1)&0x03;
+	}
+      else
+	{
+	  --stamps[STAMP_DELAY(i)];
+	}
+    }
+}
+  
+/**
  * run_dungeon() - dungeon code
  * dungeon_num - Dungeon Number to run
  */
@@ -400,6 +448,9 @@ void run_dungeon(unsigned char dungeon_num)
   
   pal_fade_to(4);
 
+  // Set up the stamps for this initial run of the dungeon.
+  setup_enemy_sprites();
+  
   a=spr=0;
   i=0;
 
@@ -416,12 +467,16 @@ void run_dungeon(unsigned char dungeon_num)
       /* yellow_door_state=CLOSED; */
       /* add_points(0); */
       /* teleport_state=CLOSED; */
+
+      /* animate_stamps(); */
       
       // End Set Game State
 
       ppu_wait_frame();
       ++frame_cnt;
 
+      update_stamps();
+      
       // VRAM update scheduler
       
       a=frame_cnt&0x03;
@@ -678,21 +733,21 @@ void clear_update_buffer(void)
 }
 
 /**
- * place_stamps() - Update the on-screen stamps
+ * update_stamps() - Update the on-screen stamps
  */
-void place_stamps(void)
+void update_stamps(void)
 {
   spr=0;
   oam_clear();
-  for (i=0;i<sizeof(stamps);i+=5)
+  for (i=0;i<8;i++)
     {
-      if (stamps[i+2]&(1<<7))
+      if (stamps[STAMP_X(i)] == 0)
 	{
 	  continue;
 	}
       else
 	{
-	  spr = oam_meta_spr(stamps[i],stamps[i+1],spr,metasprite_list[stamps[i+2]&0x80]);
+	  spr = oam_meta_spr(stamps[STAMP_X(i)],stamps[STAMP_Y(i)],spr,metasprite_list[20]);
 	}
     }
 }

@@ -79,13 +79,31 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
  *
  * [0] - Sprite X position
  * [1] - Sprite Y position
- * [2] - Sprite Type - (worrior, burwor, thurwor, gorwor... Bit 7 means empty.)
- * [3] - Sprite frame (0 to 3)
- * [4] - Sprite number of frames to delay
- * [5] - Dungeon Box X coordinate
- * [6] - Dungeon Box Y coordinate
+ * [2] - Sprite type (worrior, burwor, thurwor, gorwor...)
+ * [3] - Sprite State - (left, right, up, down.. shooting, etc.) 
+ * [4] - Sprite frame (0 to 3)
+ * [5] - Sprite number of frames to delay
+ * [6] - Dungeon Box X coordinate
+ * [7] - Dungeon Box Y coordinate
  */
-static unsigned char stamps[48]; // 8 slots
+static unsigned char stamps[48];                  // 8 slots
+
+#define STAMP_NUM_FIELDS     8                    // Number of fields in each stamp slot
+#define STAMP_NUM_SLOTS      8                    // Number of slots in stamp structure
+#define STAMP_CENTER_BIAS_X  12                   // Offset to apply to box multiply to center sprite (X)
+#define STAMP_CENTER_BIAS_Y  10                   // Offset to apply to box multiply to center sprite (Y)
+#define STAMP_NUM(x)         (x*STAMP_NUM_FIELDS) // Stamp Number
+#define STAMP_X(x)           (STAMP_NUM(x)+0)     // Stamp Field: X pixel position
+#define STAMP_Y(x)           (STAMP_NUM(x)+1)     // Stamp Field: Y pixel position
+#define STAMP_TYPE(x)        (STAMP_NUM(x)+2)     // Stamp Field: Type
+#define STAMP_STATE(x)       (STAMP_NUM(x)+3)     // Stamp Field: state (which frames to use).
+#define STAMP_FRAME(x)       (STAMP_NUM(x)+4)     // Stamp Field: Current frame
+#define STAMP_DELAY(x)       (STAMP_NUM(x)+5)     // Stamp Field: Delay
+#define STAMP_BOX_X(x)       (STAMP_NUM(x)+6)     // Stamp Field: Box X
+#define STAMP_BOX_Y(x)       (STAMP_NUM(x)+7)     // Stamp Field: Box Y
+
+#define PIXEL_BOX_X(x)       ((x*24)+STAMP_CENTER_BIAS_X)          // Convert Box X coordinates to pixels
+#define PIXEL_BOX_Y(x)       ((x*24)+STAMP_CENTER_BIAS_Y)          // Convert Box Y coordinates to pixels
 
 /******************************************************
  * Zero Page Variables                                *
@@ -185,9 +203,9 @@ void add_points(unsigned char player);
 void clear_stamps(void);
 
 /**
- * place_stamps() - Update the on-screen stamps
+ * update_stamps() - Update the on-screen stamps
  */
-void place_stamps(void);
+void update_stamps(void);
 
 
 #endif /* WOW_H */

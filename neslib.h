@@ -252,6 +252,11 @@ unsigned char __fastcall__ delay(unsigned char frames);
 //Divide by 24
 unsigned char __fastcall__ div24(unsigned char d);
 
+//Divide by 10
+unsigned char __fastcall__ div10(unsigned char d);
+
+//Divide by 6
+unsigned char __fastcall__ div6(unsigned char d);
 
 #define PAD_A			0x80
 #define PAD_B			0x40
