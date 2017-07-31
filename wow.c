@@ -185,7 +185,6 @@ void animate_stamps(void)
  */
 unsigned char get_radar_tile_byte()
 {
-
   switch(d)
     {
     case STAMP_TYPE_BURWOR:
@@ -207,11 +206,32 @@ unsigned char get_radar_tile_byte()
 
   if (c==0)
     {
-      j+=1;
+      if (!radar_state)
+	{
+	  j=-0x0c;
+	}
+      else
+	{
+	  j+=1;
+	}
     }
   else if (c==5)
     {
-      j+=2;
+      if (!radar_state)
+	{
+	  j=-0x0b;
+	}
+      else
+	{
+	  j+=2;
+	}
+    }
+  else
+    {
+      if (!radar_state)
+	{
+	  j=0x00;
+	}
     }
   
   return 0x7B+j; // For error checking.
@@ -238,6 +258,68 @@ void update_radar()
 	  d=stamps[STAMP_TYPE(i)];
 	  update_buffer[++a]=get_radar_tile_byte();
   	}
+    }
+  radar_state=!radar_state;
+}
+
+/**
+ * move_monsters()
+ * Move the monsters
+ */
+void move_monsters()
+{
+  for (i=2;i<8;++i)
+    {
+      a=dungeon[(div24(stamps[STAMP_Y(i)]-10)*10)+(div24(stamps[STAMP_X(i)]-10))]; // Monster's current box
+
+      if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT) // Is Monster going right?
+	{
+	  if (!(a&1<<4))
+	    {
+	      stamps[STAMP_X(i)]+=1;
+	    }
+	  else
+	    {
+rm1:	      b=rand8()&0x03;
+	      stamps[STAMP_STATE(i)]=b;
+	    }
+	}
+      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT)
+	{
+	  if (!(a&1<<6))
+	    {
+	      stamps[STAMP_X(i)]-=1;
+	    }
+	  else
+	    {
+	    rm2: b=rand8()&0x03;
+	      stamps[STAMP_STATE(i)]=b;
+	    }
+	}
+      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_UP)
+	{
+	  if (!(a&1<<7))
+	    {
+	      stamps[STAMP_Y(i)]-=1;
+	    }
+	  else
+	    {
+	    rm3: b=rand8()&0x03;
+	      stamps[STAMP_STATE(i)]=b;
+	    }
+	}
+      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN)
+	{
+ 	  if (!(a&1<<5))
+	    {
+	      stamps[STAMP_Y(i)]+=1;
+	    }
+	  else
+	    {
+	    rm4: b=rand8()&0x03;
+	      stamps[STAMP_STATE(i)]=b;
+	    }
+	}
     }
 }
 
@@ -533,7 +615,8 @@ void run_dungeon(unsigned char dungeon_num)
       /* teleport_state=CLOSED; */
 
       animate_stamps();
-       
+      move_monsters();
+      
       // End Set Game State
 
       ppu_wait_frame();
@@ -548,12 +631,15 @@ void run_dungeon(unsigned char dungeon_num)
 	{
 	case 0:
 	  update_doors();
+	  update_radar();
 	  break;
 	case 1:
 	  update_scores();
+	  update_radar();
 	  break;
 	case 2:
 	  set_teleport(teleport_state);
+	  update_radar();
 	  break;
 	case 3:
 	  update_radar();

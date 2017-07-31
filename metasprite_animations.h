@@ -36,8 +36,10 @@ const unsigned char metasprite_animation_data[]={
   46,50,54,54, // Thorwor Up
   47,51,55,55, // Thorwor Down
   // -------------------------------------------
-  56,58,60,60, // Worluk Right-Left
-  57,59,61,61, // Worluk Up-Down
+  56,58,60,60, // Worluk (Right) Right-Left
+  56,58,60,60, // Worluk (Left) Right-Left
+  57,59,61,61, // Worluk (Up) Up-Down
+  57,59,61,61, // Workup (Down) Up-Down
   // -------------------------------------------
   62,66,70,70, // Worrior Yellow Right
   62,62,62,62, // Worrior Yellow Right Idle
@@ -59,5 +61,10 @@ const unsigned char metasprite_animation_data[]={
 #define STAMP_TYPE_THORWOR          80
 #define STAMP_TYPE_WORLUK           96
 #define STAMP_TYPE_YELLOW_WORRIOR   104
+
+#define STATE_MONSTER_RIGHT         0
+#define STATE_MONSTER_LEFT          1
+#define STATE_MONSTER_UP            2
+#define STATE_MONSTER_DOWN          3
 
 #endif /* METASPRITE_ANIMATIONS_H */

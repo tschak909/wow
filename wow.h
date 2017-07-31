@@ -126,6 +126,7 @@ static unsigned char* ptr;             // Generic reusable pointer.
 static unsigned char blue_door_state;  // Blue door state
 static unsigned char yellow_door_state; // Yellow door state
 static unsigned char teleport_state;   // Teleport state
+static unsigned char radar_state;      // Drawn or cleared?
 
 /****************************************************
  * Prototypes                                       *
