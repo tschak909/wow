@@ -149,7 +149,7 @@ void setup_enemy_sprites(void)
       stamps[STAMP_X(i)]=PIXEL_BOX_X(a);
       stamps[STAMP_Y(i)]=PIXEL_BOX_Y(b);
       stamps[STAMP_TYPE(i)]=STAMP_TYPE_BURWOR;
-      stamps[STAMP_STATE(i)]=1; // Default to right
+      stamps[STAMP_STATE(i)]=0; // Default to right
       stamps[STAMP_FRAME(i)]=0; // First frame.
       stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
       stamps[STAMP_BOX_X(i)]=div24(stamps[STAMP_X(i)]);
@@ -811,7 +811,7 @@ void update_stamps(void)
 	}
       else
 	{
-	  a=metasprite_animation_data[stamps[STAMP_TYPE(i)]+stamps[STAMP_STATE(i)*4]+stamps[STAMP_FRAME(i)]];
+	  a=metasprite_animation_data[stamps[STAMP_TYPE(i)]+(stamps[STAMP_STATE(i)]*4)+stamps[STAMP_FRAME(i)]];
 	  spr = oam_meta_spr(stamps[STAMP_X(i)],stamps[STAMP_Y(i)],spr,metasprite_list[a]);
 	}
     }
