@@ -206,35 +206,49 @@ unsigned char get_radar_tile_byte()
 
   if (c==0)
     {
-      if (!radar_state)
-	{
-	  j=-0x0c;
-	}
-      else
-	{
-	  j+=1;
-	}
+      j+=1;
     }
   else if (c==5)
     {
-      if (!radar_state)
-	{
-	  j=-0x0b;
-	}
-      else
-	{
-	  j+=2;
-	}
+      j+=2;
     }
   else
     {
-      if (!radar_state)
-	{
-	  j=0x00;
-	}
+      // There was something here, not anymore.
     }
   
   return 0x7B+j; // For error checking.
+}
+
+/**
+ * clear_radar()
+ * Clear the radar display. This is a scorched earth update. let's see if it works.
+ */
+void clear_radar()
+{
+  clear_update_buffer();
+  a=0xff;
+  for (i=0;i<6;++i)
+    {
+      update_buffer[++a]=MSB(NTADR_A(11,22+i))|NT_UPD_HORZ;
+      update_buffer[++a]=LSB(NTADR_A(11,22+i));
+      update_buffer[++a]=10;
+	for (j=0;j<10;++j)
+	{
+	  if (i==0)
+	    {
+	      update_buffer[++a]=0x6F;
+	    }
+	  else if (i==5)
+	    {
+	      update_buffer[++a]=0x70;
+	    }
+	  else
+	    {
+	      update_buffer[++a]=0x00;
+	    }
+	}
+    }
 }
 
  /**
@@ -280,7 +294,7 @@ void move_monsters()
 	    }
 	  else
 	    {
-rm1:	      b=rand8()&0x03;
+	      b=rand8()&0x03;
 	      stamps[STAMP_STATE(i)]=b;
 	    }
 	}
@@ -292,7 +306,7 @@ rm1:	      b=rand8()&0x03;
 	    }
 	  else
 	    {
-	    rm2: b=rand8()&0x03;
+	      b=rand8()&0x03;
 	      stamps[STAMP_STATE(i)]=b;
 	    }
 	}
@@ -304,7 +318,7 @@ rm1:	      b=rand8()&0x03;
 	    }
 	  else
 	    {
-	    rm3: b=rand8()&0x03;
+	      b=rand8()&0x03;
 	      stamps[STAMP_STATE(i)]=b;
 	    }
 	}
@@ -316,7 +330,7 @@ rm1:	      b=rand8()&0x03;
 	    }
 	  else
 	    {
-	    rm4: b=rand8()&0x03;
+	      b=rand8()&0x03;
 	      stamps[STAMP_STATE(i)]=b;
 	    }
 	}
@@ -612,6 +626,7 @@ void run_dungeon(unsigned char dungeon_num)
       /* blue_door_state=CLOSED; */
       /* yellow_door_state=CLOSED; */
       /* add_points(0); */
+      /* add_points(1); */
       /* teleport_state=CLOSED; */
 
       animate_stamps();
@@ -634,15 +649,14 @@ void run_dungeon(unsigned char dungeon_num)
 	  update_radar();
 	  break;
 	case 1:
-	  update_scores();
-	  update_radar();
+	  clear_radar();
 	  break;
 	case 2:
 	  set_teleport(teleport_state);
 	  update_radar();
 	  break;
 	case 3:
-	  update_radar();
+	  update_scores();
 	  break;
 	}
 

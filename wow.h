@@ -71,7 +71,7 @@ const unsigned char palette[16]={ 0x0f,0x11,0x16,0x28,0x0f,0x16,0x21,0x31,0x0f,0
  ******************************************************/
 
 /* BG Update Buffer */
-static unsigned char update_buffer[48]; 
+static unsigned char update_buffer[80]; 
 
 /* Score registers */
 static unsigned char score0[7]={1,1,1,1,1,1,2};
