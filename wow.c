@@ -134,7 +134,7 @@ void double_score_win(void)
  */
 void setup_enemy_sprites(void)
 {
-  for (i=2;i<8;i++)
+  for (i=2;i<STAMP_NUM_SLOTS;i++)
     {
     randx:
       a=rand8()&0x0f;
@@ -152,9 +152,8 @@ void setup_enemy_sprites(void)
       stamps[STAMP_STATE(i)]=0; // Default to right
       stamps[STAMP_FRAME(i)]=0; // First frame.
       stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
-      stamps[STAMP_BOX_X(i)]=div24(stamps[STAMP_X(i)]);
-      stamps[STAMP_BOX_Y(i)]=div24(stamps[STAMP_Y(i)]);
-      
+      stamps[STAMP_FINE_X(i)]=0;
+      stamps[STAMP_FINE_Y(i)]=0;
     }
 }
 
@@ -282,56 +281,85 @@ void update_radar()
  */
 void move_monsters()
 {
-  for (i=2;i<8;++i)
+  for (i=2;i<STAMP_NUM_SLOTS;++i)
     {
-      a=dungeon[(div24(stamps[STAMP_Y(i)]-10)*10)+(div24(stamps[STAMP_X(i)]-10))]; // Monster's current box
+      // Get the box in a&b
+      a=div24(stamps[STAMP_X(i)]-8);
+      b=div24(stamps[STAMP_Y(i)]-8);
+      c=(b*10)+a; // C is now the box #
+      d=dungeon[c];
 
-      if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT) // Is Monster going right?
+      if (stamps[STAMP_STATE(i)] == STATE_MONSTER_RIGHT)
 	{
-	  if (!(a&1<<4))
+	  if (d&1<<4)
 	    {
-	      stamps[STAMP_X(i)]+=1;
+	      if (stamps[STAMP_X(i)]==PIXEL_BOX_X(a))
+		{
+		  stamps[STAMP_STATE(i)]=rand8()&0x03;
+		}
+	      else
+		{
+		  stamps[STAMP_X(i)]++;
+		}
 	    }
 	  else
 	    {
-	      b=rand8()&0x03;
-	      stamps[STAMP_STATE(i)]=b;
+	      stamps[STAMP_X(i)]++;
 	    }
 	}
-      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT)
+      else if (stamps[STAMP_STATE(i)] == STATE_MONSTER_LEFT)
 	{
-	  if (!(a&1<<6))
+	  if (d&1<<6)
 	    {
-	      stamps[STAMP_X(i)]-=1;
+	      if (stamps[STAMP_X(i)]==PIXEL_BOX_X(a))
+		{
+		  stamps[STAMP_STATE(i)]=rand8()&0x03;
+		}
+	      else
+		{
+		  stamps[STAMP_X(i)]--;
+		}
 	    }
 	  else
 	    {
-	      b=rand8()&0x03;
-	      stamps[STAMP_STATE(i)]=b;
+	      stamps[STAMP_X(i)]--;
+	    }
+	  
+	}
+      else if (stamps[STAMP_STATE(i)] == STATE_MONSTER_UP)
+	{
+	  if (d&1<<7)
+	    {
+	      if (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b))
+		{
+		  stamps[STAMP_STATE(i)]=rand8()&0x03;
+		}
+	      else
+		{
+		  stamps[STAMP_Y(i)]--;
+		}
+	    }
+	  else
+	    {
+	      stamps[STAMP_Y(i)]--;
 	    }
 	}
-      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_UP)
+      else if (stamps[STAMP_STATE(i)] == STATE_MONSTER_DOWN)
 	{
-	  if (!(a&1<<7))
+	  if (d&1<<5)
 	    {
-	      stamps[STAMP_Y(i)]-=1;
+	      if (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b))
+		{
+		  stamps[STAMP_STATE(i)]=rand8()&0x03;
+		}
+	      else
+		{
+		  stamps[STAMP_Y(i)]++;
+		}
 	    }
 	  else
 	    {
-	      b=rand8()&0x03;
-	      stamps[STAMP_STATE(i)]=b;
-	    }
-	}
-      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN)
-	{
- 	  if (!(a&1<<5))
-	    {
-	      stamps[STAMP_Y(i)]+=1;
-	    }
-	  else
-	    {
-	      b=rand8()&0x03;
-	      stamps[STAMP_STATE(i)]=b;
+	      stamps[STAMP_Y(i)]++;
 	    }
 	}
     }
@@ -903,7 +931,7 @@ void update_stamps(void)
 {
   spr=0;
   oam_clear();
-  for (i=0;i<8;i++)
+  for (i=0;i<STAMP_NUM_SLOTS;i++)
     {
       if (stamps[STAMP_X(i)] == 0)
 	{

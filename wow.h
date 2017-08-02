@@ -103,11 +103,13 @@ static unsigned char stamps[64];                  // 8 slots
 #define STAMP_STATE(x)       (STAMP_NUM(x)+3)     // Stamp Field: state (which frames to use).
 #define STAMP_FRAME(x)       (STAMP_NUM(x)+4)     // Stamp Field: Current frame
 #define STAMP_DELAY(x)       (STAMP_NUM(x)+5)     // Stamp Field: Delay
-#define STAMP_BOX_X(x)       (STAMP_NUM(x)+6)     // Stamp Field: Box X
-#define STAMP_BOX_Y(x)       (STAMP_NUM(x)+7)     // Stamp Field: Box Y
+#define STAMP_FINE_X(x)      (STAMP_NUM(x)+6)     // Stamp Field: Fine X offset relative to box
+#define STAMP_FINE_Y(x)      (STAMP_NUM(x)+7)     // Stamp Field: Fine Y offset relative to box 
 
-#define PIXEL_BOX_X(x)       ((x*24)+STAMP_CENTER_BIAS_X)          // Convert Box X coordinates to pixels
-#define PIXEL_BOX_Y(x)       ((x*24)+STAMP_CENTER_BIAS_Y)          // Convert Box Y coordinates to pixels
+#define PIXEL_BOX_X(x)       ((x*24)+STAMP_CENTER_BIAS_X)             // Convert Box X coordinates to pixels
+#define PIXEL_BOX_Y(x)       ((x*24)+STAMP_CENTER_BIAS_Y)             // Convert Box Y coordinates to pixels
+#define BOX_PIXEL_X(x)       (div24(x-STAMP_CENTER_BIAS_X))           // Convert Stamp X coordinates to Box X
+#define BOX_PIXEL_Y(y)       (div24(x-STAMP_CENTER_BIAS_Y))           // Convert Stamp Y coordinates to Box Y
 
 /******************************************************
  * Zero Page Variables                                *
