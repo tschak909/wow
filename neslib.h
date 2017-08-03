@@ -285,8 +285,8 @@ unsigned char __fastcall__ div6(unsigned char d);
 #define NAMETABLE_D		0x2c00
 
 #define NULL			0
-#define TRUE			1
 #define FALSE			0
+#define TRUE			!FALSE
 
 #define NT_UPD_HORZ		0x40
 #define NT_UPD_VERT		0x80

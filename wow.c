@@ -130,6 +130,36 @@ void double_score_win(void)
 }
 
 /**
+ * ready_blue_player() - Ready the blue player
+ */
+void ready_blue_player(void)
+{
+  stamps[STAMP_XTRA_A(1)]=TRUE; // Player is in the box.
+  stamps[STAMP_X(1)]=PIXEL_BOX_X(0);
+  stamps[STAMP_Y(1)]=PIXEL_BOX_Y(6)-1; // 6 is the special spawn box.
+  stamps[STAMP_TYPE(1)]=STAMP_TYPE_BLUE_WORRIOR;
+  stamps[STAMP_STATE(1)]=1; // Facing right Idle
+  stamps[STAMP_FRAME(1)]=0;
+  stamps[STAMP_DELAY(1)]=0;
+  blue_door_state=OPEN;
+}
+
+/**
+ * ready_yellow_player() - Ready the blue player
+ */
+void ready_yellow_player(void)
+{
+  stamps[STAMP_XTRA_A(0)]=TRUE;
+  stamps[STAMP_X(0)]=PIXEL_BOX_X(9);
+  stamps[STAMP_Y(0)]=PIXEL_BOX_Y(6)-1; // 6 is the special spawn box.
+  stamps[STAMP_TYPE(0)]=STAMP_TYPE_YELLOW_WORRIOR;
+  stamps[STAMP_STATE(0)]=3; // Facing left Idle
+  stamps[STAMP_FRAME(0)]=0;
+  stamps[STAMP_DELAY(0)]=0;
+  yellow_door_state=OPEN;
+}
+
+/**
  * setup_enemy_sprites() - Set up enemy sprite spawn points
  */
 void setup_enemy_sprites(void)
@@ -152,8 +182,6 @@ void setup_enemy_sprites(void)
       stamps[STAMP_STATE(i)]=0; // Default to right
       stamps[STAMP_FRAME(i)]=0; // First frame.
       stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
-      stamps[STAMP_FINE_X(i)]=0;
-      stamps[STAMP_FINE_Y(i)]=0;
     }
 }
 
@@ -165,7 +193,7 @@ void animate_stamps(void)
 {
   for (i=0;i<STAMP_NUM_SLOTS;++i)
     {
-      if ((i>1) && (stamps[STAMP_DELAY(i)]==0))
+      if (stamps[STAMP_DELAY(i)]==0)
 	{
 	  stamps[STAMP_FRAME(i)]=(stamps[STAMP_FRAME(i)]+1)&0x03;
 	  if (i>1) // Delay only applies to enemies.
@@ -363,6 +391,14 @@ void move_monsters()
 	    }
 	}
     }
+}
+
+/**
+ * move_players()
+ */
+void move_players()
+{
+  
 }
 
 /**
@@ -638,7 +674,8 @@ void run_dungeon(unsigned char dungeon_num)
 
   // Set up the stamps for this initial run of the dungeon.
   setup_enemy_sprites();
-  
+  ready_yellow_player();
+  ready_blue_player();
   a=spr=0;
   i=0;
 
@@ -651,14 +688,15 @@ void run_dungeon(unsigned char dungeon_num)
       
       // Set Game State
 
-      /* blue_door_state=CLOSED; */
-      /* yellow_door_state=CLOSED; */
+      /* blue_door_state=OPEN; */
+      /* yellow_door_state=OPEN; */
       /* add_points(0); */
       /* add_points(1); */
       /* teleport_state=CLOSED; */
 
       animate_stamps();
       move_monsters();
+      move_players();
       
       // End Set Game State
 
@@ -674,14 +712,14 @@ void run_dungeon(unsigned char dungeon_num)
 	{
 	case 0:
 	  update_doors();
-	  update_radar();
+	  /* update_radar(); */
 	  break;
 	case 1:
-	  clear_radar();
+	  /* clear_radar(); */
 	  break;
 	case 2:
 	  set_teleport(teleport_state);
-	  update_radar();
+	  /* update_radar(); */
 	  break;
 	case 3:
 	  update_scores();

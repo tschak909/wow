@@ -60,7 +60,7 @@ const unsigned char metasprite_animation_data[]={
 #define STAMP_TYPE_GORWOR           64
 #define STAMP_TYPE_THORWOR          80
 #define STAMP_TYPE_WORLUK           96
-#define STAMP_TYPE_YELLOW_WORRIOR   104
+#define STAMP_TYPE_YELLOW_WORRIOR   112
 
 #define STATE_MONSTER_RIGHT         0
 #define STATE_MONSTER_LEFT          1
