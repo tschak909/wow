@@ -207,75 +207,24 @@ void animate_stamps(void)
 }
 
 /**
- * get_radar_tile_byte()
- * Get a radar tile given the b (X) c (Y) and d (Type)
+ * stamp_type_to_radar() - Choose radar sprite to use 
  */
-unsigned char get_radar_tile_byte()
+unsigned char stamp_type_to_radar(unsigned char t)
 {
-  switch(d)
+  switch (t)
     {
     case STAMP_TYPE_BURWOR:
-      j=0;
+      a=0xC5;
       break;
     case STAMP_TYPE_GORWOR:
-      j=3;
+    case STAMP_TYPE_WORLUK:
+      a=0xC6;
       break;
     case STAMP_TYPE_THORWOR:
-      j=6;
-      break;
-    case STAMP_TYPE_WORLUK:
-      j=3;
-      break;
-    default:
-      j=9;  // For invisible enemies: TODO: adjust chr map a bit.
+      a=0xC7;
       break;
     }
-
-  if (c==0)
-    {
-      j+=1;
-    }
-  else if (c==5)
-    {
-      j+=2;
-    }
-  else
-    {
-      // There was something here, not anymore.
-    }
-  
-  return 0x7B+j; // For error checking.
-}
-
-/**
- * clear_radar()
- * Clear the radar display. This is a scorched earth update. let's see if it works.
- */
-void clear_radar()
-{
-  clear_update_buffer();
-  a=0xff;
-  for (i=0;i<6;++i)
-    {
-      update_buffer[++a]=MSB(NTADR_A(11,22+i))|NT_UPD_HORZ;
-      update_buffer[++a]=LSB(NTADR_A(11,22+i));
-      update_buffer[++a]=10;
-	for (j=0;j<10;++j)
-	{
-	  if (i==0)
-	    {
-	      update_buffer[++a]=0x6F;
-	    }
-	  else if (i==5)
-	    {
-	      update_buffer[++a]=0x70;
-	    }
-	  else
-	    {
-	      update_buffer[++a]=0x00;
-	    }
-	}
-    }
+  return a;
 }
 
  /**
@@ -286,21 +235,12 @@ void clear_radar()
  */
 void update_radar()
 {
-  clear_update_buffer();
-  a=0xff;
-  for (i=2;i<8;++i)
+  // Currently am hard-coding to place self immediately after the 8th player sprite slot.
+  spr=192;
+  for (i=2;i<STAMP_NUM_SLOTS;++i)
     {
-      if (stamps[STAMP_TYPE(i)]!=0xff)
-  	{
-	  update_buffer[++a]=MSB(NTADR_A(NT_RADAR_OFF_X+div24(stamps[STAMP_X(i)]),NT_RADAR_OFF_Y+div24(stamps[STAMP_Y(i)])));
-	  update_buffer[++a]=LSB(NTADR_A(NT_RADAR_OFF_X+div24(stamps[STAMP_X(i)]),NT_RADAR_OFF_Y+div24(stamps[STAMP_Y(i)])));
-	  b=div24(stamps[STAMP_X(i)]);
-	  c=div24(stamps[STAMP_Y(i)]);
-	  d=stamps[STAMP_TYPE(i)];
-	  update_buffer[++a]=get_radar_tile_byte();
-  	}
+      spr = oam_spr(STAMP_X_TO_RADAR(stamps[STAMP_X(i)]),STAMP_Y_TO_RADAR(stamps[STAMP_Y(i)]),stamp_type_to_radar(stamps[STAMP_TYPE(i)]),0,spr);
     }
-  radar_state=!radar_state;
 }
 
 /**
@@ -712,14 +652,13 @@ void run_dungeon(unsigned char dungeon_num)
 	{
 	case 0:
 	  update_doors();
-	  /* update_radar(); */
+	  update_radar();
 	  break;
 	case 1:
-	  /* clear_radar(); */
+	  update_radar();
 	  break;
 	case 2:
 	  set_teleport(teleport_state);
-	  /* update_radar(); */
 	  break;
 	case 3:
 	  update_scores();

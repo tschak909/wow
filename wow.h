@@ -96,6 +96,10 @@ static unsigned char stamps[64];                  // 8 slots
 #define STAMP_NUM_SLOTS      8                    // Number of slots in stamp structure
 #define STAMP_CENTER_BIAS_X  12                   // Offset to apply to box multiply to center sprite (X)
 #define STAMP_CENTER_BIAS_Y  10                   // Offset to apply to box multiply to center sprite (Y)
+
+#define RADAR_SPR_OFFSET_X   88                   // Radar sprite top-left offset X
+#define RADAR_SPR_OFFSET_Y   176                  // Radar sprite top-left offset Y
+
 #define STAMP_NUM(x)         (x*STAMP_NUM_FIELDS) // Stamp Number
 #define STAMP_X(x)           (STAMP_NUM(x)+0)     // Stamp Field: X pixel position
 #define STAMP_Y(x)           (STAMP_NUM(x)+1)     // Stamp Field: Y pixel position
@@ -109,7 +113,10 @@ static unsigned char stamps[64];                  // 8 slots
 #define PIXEL_BOX_X(x)       ((x*24)+STAMP_CENTER_BIAS_X)             // Convert Box X coordinates to pixels
 #define PIXEL_BOX_Y(x)       ((x*24)+STAMP_CENTER_BIAS_Y)             // Convert Box Y coordinates to pixels
 #define BOX_PIXEL_X(x)       (div24(x-STAMP_CENTER_BIAS_X))           // Convert Stamp X coordinates to Box X
-#define BOX_PIXEL_Y(y)       (div24(x-STAMP_CENTER_BIAS_Y))           // Convert Stamp Y coordinates to Box Y
+#define BOX_PIXEL_Y(x)       (div24(x-STAMP_CENTER_BIAS_Y))           // Convert Stamp Y coordinates to Box Y
+
+#define STAMP_X_TO_RADAR(x)  RADAR_SPR_OFFSET_X+BOX_PIXEL_X(x)          // Convert box position to radar sprite position
+#define STAMP_Y_TO_RADAR(x)  RADAR_SPR_OFFSET_Y+BOX_PIXEL_Y(x)          // Convert box position to radar sprite position
 
 /******************************************************
  * Zero Page Variables                                *
