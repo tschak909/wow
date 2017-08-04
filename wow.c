@@ -135,6 +135,7 @@ void double_score_win(void)
 void ready_blue_player(void)
 {
   stamps[STAMP_XTRA_A(1)]=TRUE; // Player is in the box.
+  stamps[STAMP_XTRA_B(1)]=3;    // Six seconds before eject.
   stamps[STAMP_X(1)]=PIXEL_BOX_X(0);
   stamps[STAMP_Y(1)]=PIXEL_BOX_Y(6)-1; // 6 is the special spawn box.
   stamps[STAMP_TYPE(1)]=STAMP_TYPE_BLUE_WORRIOR;
@@ -150,6 +151,7 @@ void ready_blue_player(void)
 void ready_yellow_player(void)
 {
   stamps[STAMP_XTRA_A(0)]=TRUE;
+  stamps[STAMP_XTRA_B(0)]=6;
   stamps[STAMP_X(0)]=PIXEL_BOX_X(9);
   stamps[STAMP_Y(0)]=PIXEL_BOX_Y(6)-1; // 6 is the special spawn box.
   stamps[STAMP_TYPE(0)]=STAMP_TYPE_YELLOW_WORRIOR;
@@ -338,7 +340,44 @@ void move_monsters()
  */
 void move_players()
 {
-  
+  a=0xff;
+  for (i=0;i<2;++i)
+    {
+      if (stamps[STAMP_XTRA_A(i)]==TRUE)
+	{
+	  // Player inside box.
+	  if (sec==0)  // One second has elapsed.
+	    {
+	      stamps[STAMP_XTRA_B(i)]--;
+	      if (stamps[STAMP_XTRA_B(i)]==0x00)
+		{
+		  stamps[STAMP_XTRA_A(i)]=FALSE;
+		}
+	    }
+	  else
+	    {
+	      // do nothing, for now.
+	    }
+	}
+      else
+	{
+	  // Player outside box.
+	  if (stamps[STAMP_XTRA_B(i)]==0x00)
+	    {
+	      // Eject player
+	      stamps[STAMP_Y(i)]=PIXEL_BOX_Y(5); // Place inside playfield.
+	      stamps[STAMP_XTRA_B(i)]=0xff; // Indicate player has been ejected.
+	      if (i==0)
+		{
+		  blue_door_state=CLOSED;
+		}
+	      else
+		{
+		  yellow_door_state=CLOSED;
+		}
+	    }
+	}
+    }
 }
 
 /**
@@ -641,10 +680,23 @@ void run_dungeon(unsigned char dungeon_num)
       // End Set Game State
 
       ppu_wait_frame();
-      ++frame_cnt;
-
-      update_stamps();
       
+      // Update counters
+      ++frame_cnt;
+      if (sec==0xff)
+	{
+	  sec=49;
+	}
+      else
+	{
+	  sec--;
+	}
+
+      // Update sprites
+      
+      update_stamps();
+      update_radar();
+     
       // VRAM update scheduler
       
       a=frame_cnt&0x03;
@@ -652,10 +704,9 @@ void run_dungeon(unsigned char dungeon_num)
 	{
 	case 0:
 	  update_doors();
-	  update_radar();
 	  break;
 	case 1:
-	  update_radar();
+	  update_box_timers();
 	  break;
 	case 2:
 	  set_teleport(teleport_state);
@@ -882,6 +933,32 @@ void update_scores(void)
       update_buffer[i+13]=score1[i]+16;
       update_buffer[i+23]=score2[i];
       update_buffer[i+33]=score2[i]+16;
+    }
+}
+
+/**
+ * update_box_timers() - Update the box timers, if active
+ */
+void update_box_timers(void)
+{
+  a=0xff;
+  clear_update_buffer();
+  for (i=0;i<2;++i)
+    {
+      update_buffer[++a]=MSB(NTADR_A((i==1?5:26),19))|NT_UPD_VERT;
+      update_buffer[++a]=LSB(NTADR_A((i==1?5:26),19));
+      update_buffer[++a]=2;
+      
+      if (stamps[STAMP_XTRA_A(i)]==TRUE)
+	{
+	  update_buffer[++a]=stamps[STAMP_XTRA_B(i)];
+	  update_buffer[++a]=stamps[STAMP_XTRA_B(i)]+0x10;
+	}
+      else
+	{
+	  update_buffer[++a]=0;
+	  update_buffer[++a]=0;
+	}
     }
 }
 

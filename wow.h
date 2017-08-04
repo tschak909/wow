@@ -115,8 +115,8 @@ static unsigned char stamps[64];                  // 8 slots
 #define BOX_PIXEL_X(x)       (div24(x-STAMP_CENTER_BIAS_X))           // Convert Stamp X coordinates to Box X
 #define BOX_PIXEL_Y(x)       (div24(x-STAMP_CENTER_BIAS_Y))           // Convert Stamp Y coordinates to Box Y
 
-#define STAMP_X_TO_RADAR(x)  RADAR_SPR_OFFSET_X+BOX_PIXEL_X(x)          // Convert box position to radar sprite position
-#define STAMP_Y_TO_RADAR(x)  RADAR_SPR_OFFSET_Y+BOX_PIXEL_Y(x)          // Convert box position to radar sprite position
+#define STAMP_X_TO_RADAR(x)  RADAR_SPR_OFFSET_X+BOX_PIXEL_X(x)*8          // Convert box position to radar sprite position
+#define STAMP_Y_TO_RADAR(x)  RADAR_SPR_OFFSET_Y+BOX_PIXEL_Y(x)*8          // Convert box position to radar sprite position
 
 /******************************************************
  * Zero Page Variables                                *
@@ -127,6 +127,7 @@ static unsigned char stamps[64];                  // 8 slots
 static unsigned char i,j,a,b,c,d;          // Index counters or temporary
 static unsigned char spr;                // Pointers
 static unsigned char frame_cnt;         // Frame counter (up to 256 frames)
+static unsigned char sec;               // counts from 49 to 0 (one second)
 static unsigned char bright;            // Brightness counter.
 static unsigned int adr;                // Address
 static unsigned char* str;              // String
@@ -135,7 +136,6 @@ static unsigned char* ptr;             // Generic reusable pointer.
 static unsigned char blue_door_state;  // Blue door state
 static unsigned char yellow_door_state; // Yellow door state
 static unsigned char teleport_state;   // Teleport state
-static unsigned char radar_state;      // Drawn or cleared?
 
 /****************************************************
  * Prototypes                                       *
@@ -220,6 +220,11 @@ void clear_stamps(void);
  * update_stamps() - Update the on-screen stamps
  */
 void update_stamps(void);
+
+/**
+ * update_box_timers() - Update the box timers, if active
+ */
+void update_box_timers(void);
 
 
 #endif /* WOW_H */
