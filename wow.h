@@ -80,19 +80,10 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
 
 /**
  * 8 objects on screen, two players and 6 enemies.
- *
- * [0] - Sprite X position
- * [1] - Sprite Y position
- * [2] - Sprite type (worrior, burwor, thurwor, gorwor...)
- * [3] - Sprite State - (left, right, up, down.. shooting, etc.) 
- * [4] - Sprite frame (0 to 3)
- * [5] - Sprite number of frames to delay
- * [6] - reserved
- * [7] - reserved
  */
-static unsigned char stamps[64];                  // 8 slots
+static unsigned char stamps[72];                  // 8 slots
 
-#define STAMP_NUM_FIELDS     8                    // Number of fields in each stamp slot
+#define STAMP_NUM_FIELDS     9                    // Number of fields in each stamp slot
 #define STAMP_NUM_SLOTS      8                    // Number of slots in stamp structure
 #define STAMP_CENTER_BIAS_X  12                   // Offset to apply to box multiply to center sprite (X)
 #define STAMP_CENTER_BIAS_Y  10                   // Offset to apply to box multiply to center sprite (Y)
@@ -105,10 +96,11 @@ static unsigned char stamps[64];                  // 8 slots
 #define STAMP_Y(x)           (STAMP_NUM(x)+1)     // Stamp Field: Y pixel position
 #define STAMP_TYPE(x)        (STAMP_NUM(x)+2)     // Stamp Field: Type
 #define STAMP_STATE(x)       (STAMP_NUM(x)+3)     // Stamp Field: state (which frames to use).
-#define STAMP_FRAME(x)       (STAMP_NUM(x)+4)     // Stamp Field: Current frame
-#define STAMP_DELAY(x)       (STAMP_NUM(x)+5)     // Stamp Field: Delay
-#define STAMP_XTRA_A(x)      (STAMP_NUM(x)+6)     // Stamp Field: Extra A (Player Timer)
-#define STAMP_XTRA_B(x)      (STAMP_NUM(x)+7)     // Stamp Field: Extra B (Player Pad Data)
+#define STAMP_LAST_STATE(x)  (STAMP_NUM(x)+4)
+#define STAMP_FRAME(x)       (STAMP_NUM(x)+5)     // Stamp Field: Current frame
+#define STAMP_DELAY(x)       (STAMP_NUM(x)+6)     // Stamp Field: Delay
+#define STAMP_XTRA_A(x)      (STAMP_NUM(x)+7)     // Stamp Field: Extra A (Player Timer)
+#define STAMP_XTRA_B(x)      (STAMP_NUM(x)+8)     // Stamp Field: Extra B (Player Pad Data)
 
 #define PLAYER_PAD(x)        (STAMP_XTRA_B(x))    // Alias for reading stored player pad value.
 
@@ -119,6 +111,12 @@ static unsigned char stamps[64];                  // 8 slots
 
 #define STAMP_X_TO_RADAR(x)  RADAR_SPR_OFFSET_X+BOX_PIXEL_X(x)*8          // Convert box position to radar sprite position
 #define STAMP_Y_TO_RADAR(x)  RADAR_SPR_OFFSET_Y+BOX_PIXEL_Y(x)*8          // Convert box position to radar sprite position
+
+#define BOX_WALL_RIGHT(x)    (x&1>>4)            // Box has right wall
+#define BOX_WALL_DOWN(x)     (x&1>>5)            // Box has down wall
+#define BOX_WALL_LEFT(x)     (x&1>>6)            // Box has left wall
+#define BOX_WALL_UP(x)       (x&1>>7)            // Box has up wall
+
 
 /******************************************************
  * Zero Page Variables                                *
