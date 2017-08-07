@@ -351,6 +351,91 @@ void move_monsters(void)
  */
 void handle_player_in_field(unsigned char x)
 {
+  if (stamps[STAMP_XTRA_B(x)] == 0x00)
+    {
+      // No movement, set last state to idle.
+      /* stamps[STAMP_STATE(x)]++; // Next state is always the corresponding idle state. */
+    }
+  else if (stamps[STAMP_XTRA_B(x)]&1<<0)
+    {
+      // Right
+      if (d&1<<4)
+	{
+	  // Right wall
+	  if (stamps[STAMP_X(x)] == PIXEL_BOX_X(a)) // In the box.
+	    {
+	      // Do Previous direction
+	    }
+	  else
+	    {
+	      stamps[STAMP_X(x)]++;
+	    }
+	}
+      else
+	{
+	  stamps[STAMP_X(x)]++;
+	}
+    }
+  else if (stamps[STAMP_XTRA_B(x)]&1<<1)
+    {
+      // Left
+      if (d&1<<6)
+	{
+	  // Right wall
+	  if (stamps[STAMP_X(x)] == PIXEL_BOX_X(a)) // In the box.
+	    {
+	      // Do Previous direction
+	    }
+	  else
+	    {
+	      stamps[STAMP_X(x)]--;
+	    }
+	}
+      else
+	{
+	  stamps[STAMP_X(x)]--;
+	}
+    }
+  else if (stamps[STAMP_XTRA_B(x)]&1<<2)
+    {
+      // Down
+      if (d&1<<5)
+	{
+	  // Right wall
+	  if (stamps[STAMP_Y(x)] == PIXEL_BOX_Y(b)) // In the box.
+	    {
+	      // Do Previous direction
+	    }
+	  else
+	    {
+	      stamps[STAMP_Y(x)]++;
+	    }
+	}
+      else
+	{
+	  stamps[STAMP_Y(x)]++;
+	}
+    }
+  else if (stamps[STAMP_XTRA_B(x)]&1<<3)
+    {
+      // Up
+      if (d&1<<7)
+	{
+	  // Right wall
+	  if (stamps[STAMP_Y(x)] == PIXEL_BOX_Y(b)) // In the box.
+	    {
+	      // Do Previous direction
+	    }
+	  else
+	    {
+	      stamps[STAMP_Y(x)]--;
+	    }
+	}
+      else
+	{
+	  stamps[STAMP_Y(x)]--;
+	}
+    }
 }
 
 /**
@@ -368,7 +453,7 @@ void handle_player_in_box(unsigned char x)
       else
 	{
 	  stamps[STAMP_Y(x)]=PIXEL_BOX_Y(6)-1; // 6 is the Y for the box.
-	  if (sec==0)
+	  if (sec==0) // 0 means approximately 1 second elapsed.
 	    stamps[STAMP_XTRA_A(x)]--;
 	}
     }
@@ -393,6 +478,7 @@ void move_players(void)
 {
   for (i=0;i<2;++i)
     {
+      get_current_box();
       stamps[STAMP_XTRA_B(i)]=pad_poll(i);
      
       if (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(6)-1)

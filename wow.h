@@ -107,8 +107,8 @@ static unsigned char stamps[64];                  // 8 slots
 #define STAMP_STATE(x)       (STAMP_NUM(x)+3)     // Stamp Field: state (which frames to use).
 #define STAMP_FRAME(x)       (STAMP_NUM(x)+4)     // Stamp Field: Current frame
 #define STAMP_DELAY(x)       (STAMP_NUM(x)+5)     // Stamp Field: Delay
-#define STAMP_XTRA_A(x)      (STAMP_NUM(x)+6)     // Stamp Field: Extra A (Player is in box)
-#define STAMP_XTRA_B(x)      (STAMP_NUM(x)+7)     // Stamp Field: Extra B (Reserved)
+#define STAMP_XTRA_A(x)      (STAMP_NUM(x)+6)     // Stamp Field: Extra A (Player Timer)
+#define STAMP_XTRA_B(x)      (STAMP_NUM(x)+7)     // Stamp Field: Extra B (Player Pad Data)
 
 #define PLAYER_PAD(x)        (STAMP_XTRA_B(x))    // Alias for reading stored player pad value.
 
