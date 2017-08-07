@@ -110,6 +110,8 @@ static unsigned char stamps[64];                  // 8 slots
 #define STAMP_XTRA_A(x)      (STAMP_NUM(x)+6)     // Stamp Field: Extra A (Player is in box)
 #define STAMP_XTRA_B(x)      (STAMP_NUM(x)+7)     // Stamp Field: Extra B (Reserved)
 
+#define PLAYER_PAD(x)        (STAMP_XTRA_B(x))    // Alias for reading stored player pad value.
+
 #define PIXEL_BOX_X(x)       ((x*24)+STAMP_CENTER_BIAS_X)             // Convert Box X coordinates to pixels
 #define PIXEL_BOX_Y(x)       ((x*24)+STAMP_CENTER_BIAS_Y)             // Convert Box Y coordinates to pixels
 #define BOX_PIXEL_X(x)       (div24(x-STAMP_CENTER_BIAS_X))           // Convert Stamp X coordinates to Box X
@@ -162,6 +164,39 @@ void dungeon_blue();
  */
 void double_score_win(void);
 
+/**
+ * handle_player_in_field()
+ * Handle when player is on the playfield
+ */
+void handle_player_in_field(unsigned char x);
+
+/**
+ * handle_player_in_box()
+ * Handle when player is in box.
+ */
+void handle_player_in_box(unsigned char x);
+
+/**
+ * move_players()
+ */
+void move_players(void);
+
+/**
+ * move_monsters()
+ * Move the monsters
+ */
+void move_monsters(void);
+
+/**
+ * get_current_box()
+ * Get the current dungeon box for player
+ * i = the stamp to return in a,b,c,d
+ * a = the X box
+ * b = the Y box
+ * c = the dungeon box #
+ * d = the box data.
+ */
+void get_current_box(void);
 
 /**
  * run_dungeon() - dungeon code

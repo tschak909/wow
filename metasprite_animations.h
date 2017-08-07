@@ -67,4 +67,13 @@ const unsigned char metasprite_animation_data[]={
 #define STATE_MONSTER_UP            2
 #define STATE_MONSTER_DOWN          3
 
+#define STATE_PLAYER_RIGHT          0
+#define STATE_PLAYER_RIGHT_IDLE     1
+#define STATE_PLAYER_LEFT           2
+#define STATE_PLAYER_LEFT_IDLE      3
+#define STATE_PLAYER_UP             4
+#define STATE_PLAYER_UP_IDLE        5
+#define STATE_PLAYER_DOWN           6
+#define STATE_PLAYER_DOWN_IDLE      7
+
 #endif /* METASPRITE_ANIMATIONS_H */

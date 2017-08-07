@@ -134,8 +134,7 @@ void double_score_win(void)
  */
 void ready_blue_player(void)
 {
-  stamps[STAMP_XTRA_A(1)]=TRUE; // Player is in the box.
-  stamps[STAMP_XTRA_B(1)]=3;    // Six seconds before eject.
+  stamps[STAMP_XTRA_A(1)]=3; // Player is in the box.
   stamps[STAMP_X(1)]=PIXEL_BOX_X(0);
   stamps[STAMP_Y(1)]=PIXEL_BOX_Y(6)-1; // 6 is the special spawn box.
   stamps[STAMP_TYPE(1)]=STAMP_TYPE_BLUE_WORRIOR;
@@ -150,8 +149,7 @@ void ready_blue_player(void)
  */
 void ready_yellow_player(void)
 {
-  stamps[STAMP_XTRA_A(0)]=TRUE;
-  stamps[STAMP_XTRA_B(0)]=6;
+  stamps[STAMP_XTRA_A(0)]=6;
   stamps[STAMP_X(0)]=PIXEL_BOX_X(9);
   stamps[STAMP_Y(0)]=PIXEL_BOX_Y(6)-1; // 6 is the special spawn box.
   stamps[STAMP_TYPE(0)]=STAMP_TYPE_YELLOW_WORRIOR;
@@ -246,19 +244,31 @@ void update_radar()
 }
 
 /**
+ * get_current_box()
+ * Get the current dungeon box for player
+ * i = the stamp to return in a,b,c,d
+ * a = the X box
+ * b = the Y box
+ * c = the dungeon box #
+ * d = the box data.
+ */
+void get_current_box(void)
+{
+  a=div24(stamps[STAMP_X(i)]-8);
+  b=div24(stamps[STAMP_Y(i)]-8);
+  c=(b*10)+a; // C is now the box #
+  d=dungeon[c];
+}
+
+/**
  * move_monsters()
  * Move the monsters
  */
-void move_monsters()
+void move_monsters(void)
 {
   for (i=2;i<STAMP_NUM_SLOTS;++i)
     {
-      // Get the box in a&b
-      a=div24(stamps[STAMP_X(i)]-8);
-      b=div24(stamps[STAMP_Y(i)]-8);
-      c=(b*10)+a; // C is now the box #
-      d=dungeon[c];
-
+      get_current_box();
       if (stamps[STAMP_STATE(i)] == STATE_MONSTER_RIGHT)
 	{
 	  if (d&1<<4)
@@ -336,46 +346,62 @@ void move_monsters()
 }
 
 /**
- * move_players()
+ * handle_player_in_field()
+ * Handle when player is on the playfield
  */
-void move_players()
+void handle_player_in_field(unsigned char x)
 {
-  a=0xff;
-  for (i=0;i<2;++i)
+}
+
+/**
+ * handle_player_in_box()
+ * Handle when player is in box.
+ */
+void handle_player_in_box(unsigned char x)
+{
+  if (stamps[STAMP_XTRA_A(x)]>0)
     {
-      if (stamps[STAMP_XTRA_A(i)]==TRUE)
+      if (stamps[STAMP_XTRA_B(x)] != 0)
 	{
-	  // Player inside box.
-	  if (sec==0)  // One second has elapsed.
-	    {
-	      stamps[STAMP_XTRA_B(i)]--;
-	      if (stamps[STAMP_XTRA_B(i)]==0x00)
-		{
-		  stamps[STAMP_XTRA_A(i)]=FALSE;
-		}
-	    }
-	  else
-	    {
-	      // do nothing, for now.
-	    }
+	  stamps[STAMP_XTRA_A(x)]=0;
 	}
       else
 	{
-	  // Player outside box.
-	  if (stamps[STAMP_XTRA_B(i)]==0x00)
-	    {
-	      // Eject player
-	      stamps[STAMP_Y(i)]=PIXEL_BOX_Y(5); // Place inside playfield.
-	      stamps[STAMP_XTRA_B(i)]=0xff; // Indicate player has been ejected.
-	      if (i==0)
-		{
-		  blue_door_state=CLOSED;
-		}
-	      else
-		{
-		  yellow_door_state=CLOSED;
-		}
-	    }
+	  stamps[STAMP_Y(x)]=PIXEL_BOX_Y(6)-1; // 6 is the Y for the box.
+	  if (sec==0)
+	    stamps[STAMP_XTRA_A(x)]--;
+	}
+    }
+  else
+    {
+      stamps[STAMP_Y(x)]=PIXEL_BOX_Y(5); // Pop out of box.
+      if (x==0)
+	{
+	  yellow_door_state=CLOSED;
+	}
+      else
+	{
+	  blue_door_state=CLOSED;
+	}
+    }
+}
+
+/**
+ * move_players()
+ */
+void move_players(void)
+{
+  for (i=0;i<2;++i)
+    {
+      stamps[STAMP_XTRA_B(i)]=pad_poll(i);
+     
+      if (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(6)-1)
+	{
+	  handle_player_in_box(i);
+	}
+      else
+	{
+	  handle_player_in_field(i);
 	}
     }
 }
@@ -949,10 +975,10 @@ void update_box_timers(void)
       update_buffer[++a]=LSB(NTADR_A((i==1?5:26),19));
       update_buffer[++a]=2;
       
-      if (stamps[STAMP_XTRA_A(i)]==TRUE)
+      if (stamps[STAMP_XTRA_A(i)]>0)
 	{
-	  update_buffer[++a]=stamps[STAMP_XTRA_B(i)];
-	  update_buffer[++a]=stamps[STAMP_XTRA_B(i)]+0x10;
+	  update_buffer[++a]=stamps[STAMP_XTRA_A(i)];
+	  update_buffer[++a]=stamps[STAMP_XTRA_A(i)]+0x10;
 	}
       else
 	{
