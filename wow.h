@@ -102,8 +102,13 @@ static unsigned char stamps[72];                  // 8 slots
 #define STAMP_XTRA_A(x)      (STAMP_NUM(x)+7)     // Stamp Field: Extra A (Player Timer)
 #define STAMP_XTRA_B(x)      (STAMP_NUM(x)+8)     // Stamp Field: Extra B (Player Pad Data)
 
-#define PLAYER_PAD(x)        (STAMP_XTRA_B(x))    // Alias for reading stored player pad value.
-
+#define PLAYER_PAD(x)        (stamps[STAMP_XTRA_B(x)])    // Alias for reading stored player pad value.
+#define PLAYER_PAD_RIGHT(x)  (PLAYER_PAD(x)&1<<0) // is player pressing right?
+#define PLAYER_PAD_LEFT(x)   (PLAYER_PAD(x)&1<<1) // is player pressing left?
+#define PLAYER_PAD_DOWN(x)   (PLAYER_PAD(x)&1<<2) // is player pressing down?
+#define PLAYER_PAD_UP(x)     (PLAYER_PAD(x)&1<<3) // is player pressing up?
+#define PLAYER_PAD_IDLE(x)   (PLAYER_PAD(x)==0x00)      // is player idle?
+  
 #define PIXEL_BOX_X(x)       ((x*24)+STAMP_CENTER_BIAS_X)             // Convert Box X coordinates to pixels
 #define PIXEL_BOX_Y(x)       ((x*24)+STAMP_CENTER_BIAS_Y)             // Convert Box Y coordinates to pixels
 #define BOX_PIXEL_X(x)       (div24(x-STAMP_CENTER_BIAS_X))           // Convert Stamp X coordinates to Box X
@@ -112,10 +117,10 @@ static unsigned char stamps[72];                  // 8 slots
 #define STAMP_X_TO_RADAR(x)  RADAR_SPR_OFFSET_X+BOX_PIXEL_X(x)*8          // Convert box position to radar sprite position
 #define STAMP_Y_TO_RADAR(x)  RADAR_SPR_OFFSET_Y+BOX_PIXEL_Y(x)*8          // Convert box position to radar sprite position
 
-#define BOX_WALL_RIGHT(x)    (x&1>>4)            // Box has right wall
-#define BOX_WALL_DOWN(x)     (x&1>>5)            // Box has down wall
-#define BOX_WALL_LEFT(x)     (x&1>>6)            // Box has left wall
-#define BOX_WALL_UP(x)       (x&1>>7)            // Box has up wall
+#define BOX_WALL_RIGHT(x)    (x&1<<4)            // Box has right wall
+#define BOX_WALL_DOWN(x)     (x&1<<5)            // Box has down wall
+#define BOX_WALL_LEFT(x)     (x&1<<6)            // Box has left wall
+#define BOX_WALL_UP(x)       (x&1<<7)            // Box has up wall
 
 
 /******************************************************
@@ -150,12 +155,12 @@ void pal_fade_to(unsigned to);
 /**
  * dungeon_red() - Turn dungeon red
  */
-void dungeon_red();
+void dungeon_red(void);
 
 /**
  * dungeon_blue() - Turn dungeon blue
  */
-void dungeon_blue();
+void dungeon_blue(void);
 
 /**
  * double_score_win() - turn screen colors and set "DOUBLE SCORE" text on radar.
@@ -166,13 +171,13 @@ void double_score_win(void);
  * handle_player_in_field()
  * Handle when player is on the playfield
  */
-void handle_player_in_field(unsigned char x);
+void handle_player_in_field(void);
 
 /**
  * handle_player_in_box()
  * Handle when player is in box.
  */
-void handle_player_in_box(unsigned char x);
+void handle_player_in_box(void);
 
 /**
  * move_players()

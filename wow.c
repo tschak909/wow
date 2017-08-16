@@ -233,7 +233,7 @@ unsigned char stamp_type_to_radar(unsigned char t)
  * b = the box X to check with get_radar_tile_byte()
  * c = the box Y to check with get_radar_tile_byte()
  */
-void update_radar()
+void update_radar(void)
 {
   // Currently am hard-coding to place self immediately after the 8th player sprite slot.
   spr=192;
@@ -254,10 +254,12 @@ void update_radar()
  */
 void get_current_box(void)
 {
-  a=div24(stamps[STAMP_X(i)]-8);
-  b=div24(stamps[STAMP_Y(i)]-8);
+  a=div24(stamps[STAMP_X(i)]+8);
+  b=div24(stamps[STAMP_Y(i)]+8);
   c=(b*10)+a; // C is now the box #
   d=dungeon[c];
+  score1[0]=div24(stamps[STAMP_X(0)]+8)+1;
+  score1[1]=div24(stamps[STAMP_Y(0)]+8)+1;
 }
 
 /**
@@ -346,121 +348,113 @@ void move_monsters(void)
 }
 
 /**
+ * handle_pad_idle()
+ */
+void handle_pad_idle(void)
+{
+  // Change to idle state if pad is idle.
+  switch(stamps[STAMP_LAST_STATE(i)])
+    {
+    case STATE_PLAYER_RIGHT:
+      stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT_IDLE;
+      break;
+    case STATE_PLAYER_LEFT:
+      stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT_IDLE;
+      break;
+    case STATE_PLAYER_UP:
+      stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_IDLE;
+      break;
+    case STATE_PLAYER_DOWN:
+      stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN_IDLE;
+      break;
+    }
+}
+
+/**
  * handle_player_in_field()
  * Handle when player is on the playfield
  */
-void handle_player_in_field(unsigned char x)
+void handle_player_in_field(void)
 {
-  if (stamps[STAMP_XTRA_B(x)] == 0x00)
+  if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
-      // No movement, set last state to idle.
-      /* stamps[STAMP_STATE(x)]++; // Next state is always the corresponding idle state. */
+      // We are aligned.
+      if (PLAYER_PAD_RIGHT(i) && !BOX_WALL_RIGHT(d))
+	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT;
+      else if (PLAYER_PAD_LEFT(i) && !BOX_WALL_LEFT(d))
+	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_LEFT;
+      else if (PLAYER_PAD_UP(i) && !BOX_WALL_UP(d))
+	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(d)]=STATE_PLAYER_UP;
+      else if (PLAYER_PAD_DOWN(i) && !BOX_WALL_DOWN(d))
+	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(d)]=STATE_PLAYER_DOWN;
+      else if (PLAYER_PAD_IDLE(i))
+	  handle_pad_idle();
+      
+      /* if (PLAYER_PAD_RIGHT(i) && BOX_WALL_RIGHT(d)) */
+      /* 	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT_IDLE; */
+      /* else if (PLAYER_PAD_LEFT(i) && BOX_WALL_LEFT(d)) */
+      /* 	stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT_IDLE; */
+      /* else if (PLAYER_PAD_UP(i) && BOX_WALL_UP(d)) */
+      /* 	stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_IDLE; */
+      /* else if (PLAYER_PAD_DOWN(i) && BOX_WALL_DOWN(d)) */
+      /* 	stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN_IDLE; */
+      
     }
-  else if (stamps[STAMP_XTRA_B(x)]&1<<0)
+  else
     {
-      // Right
-      if (d&1<<4)
-	{
-	  // Right wall
-	  if (stamps[STAMP_X(x)] == PIXEL_BOX_X(a)) // In the box.
-	    {
-	      // Do Previous direction
-	    }
-	  else
-	    {
-	      stamps[STAMP_X(x)]++;
-	    }
-	}
+      // We are not aligned.
+      if (PLAYER_PAD_IDLE(i))
+	handle_pad_idle();
+      else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT)
+	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT;
+      else if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT)
+	stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT;
+      else if (PLAYER_PAD_UP(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN)
+	stamps[STAMP_STATE(i)]=STATE_PLAYER_UP;
+      else if (PLAYER_PAD_DOWN(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP)
+	stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN;
       else
-	{
-	  stamps[STAMP_X(x)]++;
-	}
+	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];
     }
-  else if (stamps[STAMP_XTRA_B(x)]&1<<1)
-    {
-      // Left
-      if (d&1<<6)
-	{
-	  // Right wall
-	  if (stamps[STAMP_X(x)] == PIXEL_BOX_X(a)) // In the box.
-	    {
-	      // Do Previous direction
-	    }
-	  else
-	    {
-	      stamps[STAMP_X(x)]--;
-	    }
-	}
-      else
-	{
-	  stamps[STAMP_X(x)]--;
-	}
-    }
-  else if (stamps[STAMP_XTRA_B(x)]&1<<2)
-    {
-      // Down
-      if (d&1<<5)
-	{
-	  // Right wall
-	  if (stamps[STAMP_Y(x)] == PIXEL_BOX_Y(b)) // In the box.
-	    {
-	      // Do Previous direction
-	    }
-	  else
-	    {
-	      stamps[STAMP_Y(x)]++;
-	    }
-	}
-      else
-	{
-	  stamps[STAMP_Y(x)]++;
-	}
-    }
-  else if (stamps[STAMP_XTRA_B(x)]&1<<3)
-    {
-      // Up
-      if (d&1<<7)
-	{
-	  // Right wall
-	  if (stamps[STAMP_Y(x)] == PIXEL_BOX_Y(b)) // In the box.
-	    {
-	      // Do Previous direction
-	    }
-	  else
-	    {
-	      stamps[STAMP_Y(x)]--;
-	    }
-	}
-      else
-	{
-	  stamps[STAMP_Y(x)]--;
-	}
-    }
+  
+  // Handle state movement
+  if (stamps[STAMP_STATE(i)]==STATE_PLAYER_RIGHT)
+    stamps[STAMP_X(i)]++;
+  else if (stamps[STAMP_STATE(i)]==STATE_PLAYER_LEFT)
+    stamps[STAMP_X(i)]--;
+  else if (stamps[STAMP_STATE(i)]==STATE_PLAYER_UP)
+    stamps[STAMP_Y(i)]--;
+  else if (stamps[STAMP_STATE(i)]==STATE_PLAYER_DOWN)
+    stamps[STAMP_Y(i)]++;
+
+  // And set last state, if we aren't idle.
+  if (!PLAYER_PAD_IDLE(i))
+    stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];
 }
 
 /**
  * handle_player_in_box()
  * Handle when player is in box.
  */
-void handle_player_in_box(unsigned char x)
+void handle_player_in_box(void)
 {
-  if (stamps[STAMP_XTRA_A(x)]>0)
+  if (stamps[STAMP_XTRA_A(i)]>0)
     {
-      if (stamps[STAMP_XTRA_B(x)] != 0)
+      if (stamps[STAMP_XTRA_B(i)] != 0)
 	{
-	  stamps[STAMP_XTRA_A(x)]=0;
+	  stamps[STAMP_XTRA_A(i)]=0;
 	}
       else
 	{
-	  stamps[STAMP_Y(x)]=PIXEL_BOX_Y(6)-1; // 6 is the Y for the box.
+	  stamps[STAMP_Y(i)]=PIXEL_BOX_Y(6)-1; // 6 is the Y for the box.
 	  if (sec==0) // 0 means approximately 1 second elapsed.
-	    stamps[STAMP_XTRA_A(x)]--;
+	    stamps[STAMP_XTRA_A(i)]--;         // Decrement timer
 	}
     }
   else
     {
-      stamps[STAMP_Y(x)]=PIXEL_BOX_Y(5); // Pop out of box.
-      if (x==0)
+      stamps[STAMP_Y(i)]=PIXEL_BOX_Y(5); // Pop out of box.
+      if (i==0)
 	{
 	  yellow_door_state=CLOSED;
 	}
@@ -483,11 +477,11 @@ void move_players(void)
      
       if (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(6)-1)
 	{
-	  handle_player_in_box(i);
+	  handle_player_in_box();
 	}
       else
 	{
-	  handle_player_in_field(i);
+	  handle_player_in_field();
 	}
     }
 }
@@ -770,6 +764,8 @@ void run_dungeon(unsigned char dungeon_num)
   a=spr=0;
   i=0;
 
+  music_play(1);
+  
   // At this point, we loop around and handle frame scheduling
   
   ////////////////////////////////////////////////////////////
