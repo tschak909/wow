@@ -220,7 +220,7 @@ void attract_monsters(void);
 /**
  * update_doors()
  */
-void update_doors();
+void update_doors(void);
 
 /**
  * set_teleport(openclose)
