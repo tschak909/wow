@@ -81,8 +81,6 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
 /**
  * 8 objects on screen, two players and 6 enemies.
  */
-static unsigned char stamps[72];                  // 8 slots
-
 #define STAMP_NUM_FIELDS     9                    // Number of fields in each stamp slot
 #define STAMP_NUM_SLOTS      8                    // Number of slots in stamp structure
 #define STAMP_CENTER_BIAS_X  12                   // Offset to apply to box multiply to center sprite (X)
@@ -122,6 +120,7 @@ static unsigned char stamps[72];                  // 8 slots
 #define BOX_WALL_LEFT(x)     (x&1<<6)            // Box has left wall
 #define BOX_WALL_UP(x)       (x&1<<7)            // Box has up wall
 
+static unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
 
 /******************************************************
  * Zero Page Variables                                *

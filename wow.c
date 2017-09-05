@@ -379,25 +379,26 @@ void handle_player_in_field(void)
   if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
       // We are aligned.
-      if (PLAYER_PAD_RIGHT(i) && !BOX_WALL_RIGHT(d))
+      if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && !BOX_WALL_RIGHT(d))
 	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT;
-      else if (PLAYER_PAD_LEFT(i) && !BOX_WALL_LEFT(d))
+      else if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_LEFT && !BOX_WALL_LEFT(d))
 	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_LEFT;
-      else if (PLAYER_PAD_UP(i) && !BOX_WALL_UP(d))
+      else if (PLAYER_PAD_UP(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_UP && !BOX_WALL_UP(d))
 	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(d)]=STATE_PLAYER_UP;
-      else if (PLAYER_PAD_DOWN(i) && !BOX_WALL_DOWN(d))
+      else if (PLAYER_PAD_DOWN(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_DOWN && !BOX_WALL_DOWN(d))
 	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(d)]=STATE_PLAYER_DOWN;
       else if (PLAYER_PAD_IDLE(i))
 	  handle_pad_idle();
       
-      /* if (PLAYER_PAD_RIGHT(i) && BOX_WALL_RIGHT(d)) */
-      /* 	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT_IDLE; */
-      /* else if (PLAYER_PAD_LEFT(i) && BOX_WALL_LEFT(d)) */
-      /* 	stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT_IDLE; */
-      /* else if (PLAYER_PAD_UP(i) && BOX_WALL_UP(d)) */
-      /* 	stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_IDLE; */
-      /* else if (PLAYER_PAD_DOWN(i) && BOX_WALL_DOWN(d)) */
-      /* 	stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN_IDLE; */
+      if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && BOX_WALL_RIGHT(d))
+      	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT_IDLE;
+      else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && BOX_WALL_LEFT(d))
+      	stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT_IDLE;
+      else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP && BOX_WALL_UP(d))
+      	stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_IDLE;
+      else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN && BOX_WALL_DOWN(d))
+      	stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN_IDLE;
+
       
     }
   else
@@ -415,21 +416,22 @@ void handle_player_in_field(void)
 	stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN;
       else
 	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];
+      
     }
   
   // Handle state movement
   if (stamps[STAMP_STATE(i)]==STATE_PLAYER_RIGHT)
-    stamps[STAMP_X(i)]++;
+    stamps[STAMP_X(i)]+=2;
   else if (stamps[STAMP_STATE(i)]==STATE_PLAYER_LEFT)
-    stamps[STAMP_X(i)]--;
+    stamps[STAMP_X(i)]-=2;
   else if (stamps[STAMP_STATE(i)]==STATE_PLAYER_UP)
-    stamps[STAMP_Y(i)]--;
+    stamps[STAMP_Y(i)]-=2;
   else if (stamps[STAMP_STATE(i)]==STATE_PLAYER_DOWN)
-    stamps[STAMP_Y(i)]++;
+    stamps[STAMP_Y(i)]+=2;
 
   // And set last state, if we aren't idle.
   if (!PLAYER_PAD_IDLE(i))
-    stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];
+    stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];  
 }
 
 /**
