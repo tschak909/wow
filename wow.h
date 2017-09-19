@@ -101,10 +101,10 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
 #define STAMP_XTRA_B(x)      (STAMP_NUM(x)+8)     // Stamp Field: Extra B (Player Pad Data)
 
 #define PLAYER_PAD(x)        (stamps[STAMP_XTRA_B(x)])    // Alias for reading stored player pad value.
-#define PLAYER_PAD_RIGHT(x)  (PLAYER_PAD(x)&1<<0) // is player pressing right?
-#define PLAYER_PAD_LEFT(x)   (PLAYER_PAD(x)&1<<1) // is player pressing left?
-#define PLAYER_PAD_DOWN(x)   (PLAYER_PAD(x)&1<<2) // is player pressing down?
-#define PLAYER_PAD_UP(x)     (PLAYER_PAD(x)&1<<3) // is player pressing up?
+#define PLAYER_PAD_RIGHT(x)  (PLAYER_PAD(x)&PAD_RIGHT) // is player pressing right?
+#define PLAYER_PAD_LEFT(x)   (PLAYER_PAD(x)&PAD_LEFT) // is player pressing left?
+#define PLAYER_PAD_DOWN(x)   (PLAYER_PAD(x)&PAD_DOWN) // is player pressing down?
+#define PLAYER_PAD_UP(x)     (PLAYER_PAD(x)&PAD_UP) // is player pressing up?
 #define PLAYER_PAD_IDLE(x)   (PLAYER_PAD(x)==0x00)      // is player idle?
   
 #define PIXEL_BOX_X(x)       ((x*24)+STAMP_CENTER_BIAS_X)             // Convert Box X coordinates to pixels
@@ -121,6 +121,16 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
 #define BOX_WALL_UP(x)       (x&1<<7)            // Box has up wall
 
 static unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
+
+#define LASER_NUM_FIELDS     2
+#define LASER_NUM_SLOTS      4
+
+#define LASER_CENTER_BIAS_X  12
+#define LASER_CENTER_BIAS_Y  10
+
+#define LASER_NUM(x)         (x*LASER_NUM_FIELDS)
+#define LASER_X(x)           (STAMP_NUM(x)+0)
+#define LASER_Y(x)           (STAMP_NUM(x)+1)
 
 /******************************************************
  * Zero Page Variables                                *
@@ -165,23 +175,6 @@ void dungeon_blue(void);
  * double_score_win() - turn screen colors and set "DOUBLE SCORE" text on radar.
  */
 void double_score_win(void);
-
-/**
- * handle_player_in_field()
- * Handle when player is on the playfield
- */
-void handle_player_in_field(void);
-
-/**
- * handle_player_in_box()
- * Handle when player is in box.
- */
-void handle_player_in_box(void);
-
-/**
- * move_players()
- */
-void move_players(void);
 
 /**
  * move_monsters()

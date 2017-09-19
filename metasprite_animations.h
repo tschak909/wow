@@ -8,18 +8,18 @@
 #define METASPRITE_ANIMATIONS_H
 
 const unsigned char metasprite_animation_data[]={
-  0,4,8,8,     // Worrior Blue Right
+  0,4,8,4,     // Worrior Blue Right
   4,4,4,4,     // Worrior Blue Right Idle
-  1,5,9,9,     // Worrior Blue Left
+  1,5,9,5,     // Worrior Blue Left
   5,5,5,5,     // Worrior Blue Left Idle
-  2,6,10,10,   // Worrior Blue Up
+  2,6,10,6,   // Worrior Blue Up
   6,6,6,6,     // Worrior Blue Up Idle
-  3,7,11,11,   // Worrior Blue Down
+  3,7,11,7,   // Worrior Blue Down
   7,7,7,7,     // Worrior Blue Down Idle
-  4,12,16,16,  // Worrior Blue Right Shooting
+  4,12,16,12,  // Worrior Blue Right Shooting
   5,13,17,17,  // Worrior Blue Left Shooting
-  6,14,18,18,  // Worrior Blue Up Shooting
-  7,15,19,19,  // Worrior Blue Down Shooting
+  6,14,18,14,  // Worrior Blue Up Shooting
+  7,15,19,15,  // Worrior Blue Down Shooting
   // -------------------------------------------
   20,24,28,28, // Burwor Right
   21,25,29,29, // Burwor Left
@@ -41,18 +41,18 @@ const unsigned char metasprite_animation_data[]={
   57,59,61,61, // Worluk (Up) Up-Down
   57,59,61,61, // Workup (Down) Up-Down
   // -------------------------------------------
-  62,66,70,70, // Worrior Yellow Right
+  62,66,70,66, // Worrior Yellow Right
   66,66,66,66, // Worrior Yellow Right Idle
-  63,67,71,71, // Worrior Yellow Left
+  63,67,71,67, // Worrior Yellow Left
   67,67,67,67, // Worrior Yellow Left Idle
-  64,68,72,72, // Worrior Yellow Up
+  64,68,72,68, // Worrior Yellow Up
   68,68,68,68, // Worrior Yellow Up Idle
-  65,69,73,73, // Worrior Yellow Down
+  65,69,73,69, // Worrior Yellow Down
   69,69,69,69, // Worrior Yellow Down Idle
-  66,70,74,74, // Worrior Yellow Right Shooting
+  66,70,74,70, // Worrior Yellow Right Shooting
   67,71,75,75, // Worrior Yellow Left Shooting
-  68,72,76,76, // Worrior Yellow Up Shooting
-  69,73,77,77, // Worrior Yellow Down Shooting
+  68,72,76,72, // Worrior Yellow Up Shooting
+  69,73,77,73, // Worrior Yellow Down Shooting
 };
 
 #define STAMP_TYPE_BLUE_WORRIOR     0

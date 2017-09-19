@@ -113,7 +113,7 @@ void double_score_win(void)
   
   dungeon_red();   // Leave the dungeon red.
   j=0x20;
-  for (i=0;i<150;++i) // This effect lasts for 150 frames (or 3 seconds at our 50 drop rate)
+  for (i=0;i<150;i++) // This effect lasts for 150 frames (or 3 seconds at our 50 drop rate)
     {
       pal_col(0,j);
       if (j==0x3C)
@@ -191,7 +191,7 @@ void setup_enemy_sprites(void)
  */
 void animate_stamps(void)
 {
-  for (i=0;i<STAMP_NUM_SLOTS;++i)
+  for (i=0;i<STAMP_NUM_SLOTS;i++)
     {
       if (stamps[STAMP_DELAY(i)]==0)
 	{
@@ -237,7 +237,7 @@ void update_radar(void)
 {
   // Currently am hard-coding to place self immediately after the 8th player sprite slot.
   spr=192;
-  for (i=2;i<STAMP_NUM_SLOTS;++i)
+  for (i=2;i<STAMP_NUM_SLOTS;i++)
     {
       spr = oam_spr(STAMP_X_TO_RADAR(stamps[STAMP_X(i)]),STAMP_Y_TO_RADAR(stamps[STAMP_Y(i)]),stamp_type_to_radar(stamps[STAMP_TYPE(i)]),0,spr);
     }
@@ -268,7 +268,7 @@ void get_current_box(void)
  */
 void move_monsters(void)
 {
-  for (i=2;i<STAMP_NUM_SLOTS;++i)
+  for (i=2;i<STAMP_NUM_SLOTS;i++)
     {
       get_current_box();
       if (stamps[STAMP_STATE(i)] == STATE_MONSTER_RIGHT)
@@ -376,26 +376,26 @@ void handle_pad_idle(void)
  */
 void handle_player_in_field(void)
 {
-  if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
+   if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
       // We are aligned.
       if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && !BOX_WALL_RIGHT(d))
-	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT;
+      	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT;
       else if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_LEFT && !BOX_WALL_LEFT(d))
-	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_LEFT;
+      	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_LEFT;
       else if (PLAYER_PAD_UP(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_UP && !BOX_WALL_UP(d))
-	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(d)]=STATE_PLAYER_UP;
+	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_UP;
       else if (PLAYER_PAD_DOWN(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_DOWN && !BOX_WALL_DOWN(d))
-	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(d)]=STATE_PLAYER_DOWN;
+      	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_DOWN;
       else if (PLAYER_PAD_IDLE(i))
-	  handle_pad_idle();
+      	  handle_pad_idle();
       
       if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && BOX_WALL_RIGHT(d))
       	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT_IDLE;
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && BOX_WALL_LEFT(d))
       	stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT_IDLE;
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP && BOX_WALL_UP(d))
-      	stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_IDLE;
+	  stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_IDLE;
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN && BOX_WALL_DOWN(d))
       	stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN_IDLE;
 
@@ -472,7 +472,7 @@ void handle_player_in_box(void)
  */
 void move_players(void)
 {
-  for (i=0;i<2;++i)
+  for (i=0;i<2;i++)
     {
       get_current_box();
       stamps[STAMP_XTRA_B(i)]=pad_poll(i);
@@ -514,7 +514,7 @@ void run_dungeon(unsigned char dungeon_num)
   vram_adr(adr);
   a=c=d=0;
 
-  for (i=0;i<2;++i)
+  for (i=0;i<2;i++)
     {
       for (j=0;j<b;++j)
   	{
@@ -553,7 +553,7 @@ void run_dungeon(unsigned char dungeon_num)
   
   b=0;  // dungeon array index
 
-  for (i=0;i<6;++i)
+  for (i=0;i<6;i++)
     {
       for (j=0;j<10;++j)
   	{
@@ -764,7 +764,6 @@ void run_dungeon(unsigned char dungeon_num)
   ready_yellow_player();
   ready_blue_player();
   a=spr=0;
-  i=0;
 
   music_play(1);
   
@@ -1053,7 +1052,7 @@ void update_box_timers(void)
 {
   a=0xff;
   clear_update_buffer();
-  for (i=0;i<2;++i)
+  for (i=0;i<2;i++)
     {
       update_buffer[++a]=MSB(NTADR_A((i==1?5:26),19))|NT_UPD_VERT;
       update_buffer[++a]=LSB(NTADR_A((i==1?5:26),19));
