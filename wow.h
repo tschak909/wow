@@ -119,6 +119,7 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
 #define BOX_WALL_DOWN(x)     (x&1<<5)            // Box has down wall
 #define BOX_WALL_LEFT(x)     (x&1<<6)            // Box has left wall
 #define BOX_WALL_UP(x)       (x&1<<7)            // Box has up wall
+#define BOX_NO_WALLS(x)      x==0x00             // Box has no walls. (TBD: Replace with an upper 4-bit AND)
 
 static unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
 

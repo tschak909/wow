@@ -179,7 +179,7 @@ void setup_enemy_sprites(void)
       stamps[STAMP_X(i)]=PIXEL_BOX_X(a);
       stamps[STAMP_Y(i)]=PIXEL_BOX_Y(b);
       stamps[STAMP_TYPE(i)]=STAMP_TYPE_BURWOR;
-      stamps[STAMP_STATE(i)]=0; // Default to right
+      stamps[STAMP_STATE(i)]=STATE_MONSTER_RIGHT; // Default to right
       stamps[STAMP_FRAME(i)]=0; // First frame.
       stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
     }
@@ -263,6 +263,24 @@ void get_current_box(void)
 }
 
 /**
+ * monster_change_direction()
+ * Change monster direction.
+ */
+void monster_change_direction(void)
+{
+ change_direction:
+  stamps[STAMP_STATE(i)]=rand8()&0x03;
+  if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT && BOX_WALL_LEFT(d))
+    goto change_direction;
+  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT && BOX_WALL_RIGHT(d))
+    goto change_direction;
+  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_UP && BOX_WALL_UP(d))
+    goto change_direction;
+  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN && BOX_WALL_DOWN(d))
+    goto change_direction;
+}
+
+/**
  * move_monsters()
  * Move the monsters
  */
@@ -271,79 +289,38 @@ void move_monsters(void)
   for (i=2;i<STAMP_NUM_SLOTS;i++)
     {
       get_current_box();
-      if (stamps[STAMP_STATE(i)] == STATE_MONSTER_RIGHT)
+      if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
 	{
-	  if (d&1<<4)
-	    {
-	      if (stamps[STAMP_X(i)]==PIXEL_BOX_X(a))
-		{
-		  stamps[STAMP_STATE(i)]=rand8()&0x03;
-		}
-	      else
-		{
-		  stamps[STAMP_X(i)]++;
-		}
-	    }
-	  else
-	    {
-	      stamps[STAMP_X(i)]++;
-	    }
+	  monster_change_direction();
 	}
-      else if (stamps[STAMP_STATE(i)] == STATE_MONSTER_LEFT)
+      else
 	{
-	  if (d&1<<6)
-	    {
-	      if (stamps[STAMP_X(i)]==PIXEL_BOX_X(a))
-		{
-		  stamps[STAMP_STATE(i)]=rand8()&0x03;
-		}
-	      else
-		{
-		  stamps[STAMP_X(i)]--;
-		}
-	    }
+	  // We are not aligned.
+	  if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT && stamps[STAMP_LAST_STATE(i)]==STATE_MONSTER_LEFT)
+	    stamps[STAMP_STATE(i)]=STATE_MONSTER_RIGHT;
+	  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT && stamps[STAMP_LAST_STATE(i)]==STATE_MONSTER_RIGHT)
+	    stamps[STAMP_STATE(i)]=STATE_MONSTER_LEFT;
+	  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_UP && stamps[STAMP_LAST_STATE(i)]==STATE_MONSTER_DOWN)
+	    stamps[STAMP_STATE(i)]=STATE_MONSTER_UP;
+	  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP)
+	    stamps[STAMP_STATE(i)]=STATE_MONSTER_DOWN;
 	  else
-	    {
-	      stamps[STAMP_X(i)]--;
-	    }
+	    stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];
 	  
 	}
-      else if (stamps[STAMP_STATE(i)] == STATE_MONSTER_UP)
-	{
-	  if (d&1<<7)
-	    {
-	      if (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b))
-		{
-		  stamps[STAMP_STATE(i)]=rand8()&0x03;
-		}
-	      else
-		{
-		  stamps[STAMP_Y(i)]--;
-		}
-	    }
-	  else
-	    {
-	      stamps[STAMP_Y(i)]--;
-	    }
-	}
-      else if (stamps[STAMP_STATE(i)] == STATE_MONSTER_DOWN)
-	{
-	  if (d&1<<5)
-	    {
-	      if (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b))
-		{
-		  stamps[STAMP_STATE(i)]=rand8()&0x03;
-		}
-	      else
-		{
-		  stamps[STAMP_Y(i)]++;
-		}
-	    }
-	  else
-	    {
-	      stamps[STAMP_Y(i)]++;
-	    }
-	}
+      
+      // Handle state movement
+      if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT)
+	stamps[STAMP_X(i)]++;
+      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT)
+	stamps[STAMP_X(i)]--;
+      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_UP)
+	stamps[STAMP_Y(i)]--;
+      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN)
+	stamps[STAMP_Y(i)]++;
+
+      stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];  
+      
     }
 }
 
