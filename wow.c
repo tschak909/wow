@@ -255,7 +255,7 @@ void update_radar(void)
 void get_current_box(void)
 {
   a=div24(stamps[STAMP_X(i)]+8);
-  b=div24(stamps[STAMP_Y(i)]+16);
+  b=div24(stamps[STAMP_Y(i)]-8);
   c=(b*10)+a; // C is now the box #
   d=dungeon[c];
   score1[0]=div24(stamps[STAMP_X(0)]+8)+1;
