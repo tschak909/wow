@@ -255,11 +255,11 @@ void update_radar(void)
 void get_current_box(void)
 {
   a=div24(stamps[STAMP_X(i)]+8);
-  b=div24(stamps[STAMP_Y(i)]+8);
+  b=div24(stamps[STAMP_Y(i)]+16);
   c=(b*10)+a; // C is now the box #
   d=dungeon[c];
   score1[0]=div24(stamps[STAMP_X(0)]+8)+1;
-  score1[1]=div24(stamps[STAMP_Y(0)]+8)+1;
+  score1[1]=div24(stamps[STAMP_Y(0)]+16)+1;
 }
 
 /**
@@ -535,7 +535,7 @@ void run_dungeon(unsigned char dungeon_num)
       for (j=0;j<10;++j)
   	{
   	  /* Tile 1 */
-  	  vram_adr(NTADR_A((j*3)+1,(i*3)+1));
+  	  vram_adr(NTADR_A((j*3)+1,(i*3)+2));
   	  if (( (dungeon[b] & 1<<7) ) && ( (dungeon[b] & 1<<6) ))            /* UP AND LEFT */
   	    {
   	      if ( (dungeon[b] & 1<<3) )                          /* LEFT WITH TELEPORT */
@@ -609,7 +609,7 @@ void run_dungeon(unsigned char dungeon_num)
   	      vram_put(0x00);
   	    }
 
-  	  vram_adr(NTADR_A((j*3)+1,(i*3)+2));
+  	  vram_adr(NTADR_A((j*3)+1,(i*3)+3));
   	  // Tile 4
   	  if (dungeon[b] & (1<<6))            /* LEFT */
   	    {
@@ -648,7 +648,7 @@ void run_dungeon(unsigned char dungeon_num)
   	    }
 	  
 
-  	  vram_adr(NTADR_A((j*3)+1,(i*3)+3));
+  	  vram_adr(NTADR_A((j*3)+1,(i*3)+4));
   	  // Tile 7
   	  if (( (dungeon[b] & 1<<6) ) && ( (dungeon[b] & 1<<5) ))            /* LEFT AND DOWN */
   	    {
@@ -929,30 +929,30 @@ void update_doors()
   clear_update_buffer();
 
   // Update VRAM reflecting door states, two rows, two sets of 3 tiles each row.
-  update_buffer[0]=MSB(NTADR_A(1,18))|NT_UPD_HORZ;
-  update_buffer[1]=LSB(NTADR_A(1,18));
+  update_buffer[0]=MSB(NTADR_A(1,19))|NT_UPD_HORZ;
+  update_buffer[1]=LSB(NTADR_A(1,19));
   update_buffer[2]=3;
   update_buffer[3]=(blue_door_state==0?0x65:0x76);
   update_buffer[4]=(blue_door_state==0?0x00:0x64);
   update_buffer[5]=(blue_door_state==0?0x00:0x64);
-  update_buffer[6]=MSB(NTADR_A(28,18))|NT_UPD_HORZ;
-  update_buffer[7]=LSB(NTADR_A(28,18));
+  update_buffer[6]=MSB(NTADR_A(28,19))|NT_UPD_HORZ;
+  update_buffer[7]=LSB(NTADR_A(28,19));
   update_buffer[8]=3;
   update_buffer[9]=(yellow_door_state==0?0x00:0x64);
   update_buffer[10]=(yellow_door_state==0?0x00:0x64);
   update_buffer[11]=(yellow_door_state==0?0x66:0x77);
-  update_buffer[12]=MSB(NTADR_A(1,19))|NT_UPD_HORZ;
-  update_buffer[13]=LSB(NTADR_A(1,19));
+  update_buffer[12]=MSB(NTADR_A(1,20))|NT_UPD_HORZ;
+  update_buffer[13]=LSB(NTADR_A(1,20));
   update_buffer[14]=3;
-  update_buffer[15]=(blue_door_state==0?0x65:0x74);
+  update_buffer[15]=(blue_door_state==0?0x61:0x67);
   update_buffer[16]=(blue_door_state==0?0x00:0x63);
   update_buffer[17]=(blue_door_state==0?0x00:0x63);
-  update_buffer[18]=MSB(NTADR_A(28,19))|NT_UPD_HORZ;
-  update_buffer[19]=LSB(NTADR_A(28,19));
+  update_buffer[18]=MSB(NTADR_A(28,20))|NT_UPD_HORZ;
+  update_buffer[19]=LSB(NTADR_A(28,20));
   update_buffer[20]=3;
-  update_buffer[21]=(yellow_door_state==0?0x00:0x63);
-  update_buffer[22]=(yellow_door_state==0?0x00:0x63);
-  update_buffer[23]=(yellow_door_state==0?0x66:0x75);
+  update_buffer[21]=(yellow_door_state==0?0x00:0x62);
+  update_buffer[22]=(yellow_door_state==0?0x00:0x62);
+  update_buffer[23]=(yellow_door_state==0?0x60:0x68);
 }
 
 /**
@@ -1031,8 +1031,8 @@ void update_box_timers(void)
   clear_update_buffer();
   for (i=0;i<2;i++)
     {
-      update_buffer[++a]=MSB(NTADR_A((i==1?5:26),19))|NT_UPD_VERT;
-      update_buffer[++a]=LSB(NTADR_A((i==1?5:26),19));
+      update_buffer[++a]=MSB(NTADR_A((i==1?5:26),20))|NT_UPD_VERT;
+      update_buffer[++a]=LSB(NTADR_A((i==1?5:26),20));
       update_buffer[++a]=2;
       
       if (stamps[STAMP_XTRA_A(i)]>0)

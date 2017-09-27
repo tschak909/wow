@@ -58,7 +58,7 @@
 #define NT_RADAR_OFF_Y 22
 
 /* Palettes */
-const unsigned char palette[16]={ 0x0f,0x11,0x16,0x28,0x0f,0x16,0x21,0x31,0x0f,0x28,0x16,0x11,0x0f,0x0c,0x1c,0x2c };
+const unsigned char palette[16]={ 0x0f,0x11,0x16,0x28,0x0f,0x16,0x11,0x28,0x0f,0x28,0x16,0x11,0x0f,0x0c,0x1c,0x2c };
 
 /* metasprites */
 #include "metasprites.h"
@@ -108,9 +108,9 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
 #define PLAYER_PAD_IDLE(x)   (PLAYER_PAD(x)==0x00)      // is player idle?
   
 #define PIXEL_BOX_X(x)       ((x*24)+STAMP_CENTER_BIAS_X)             // Convert Box X coordinates to pixels
-#define PIXEL_BOX_Y(x)       ((x*24)+STAMP_CENTER_BIAS_Y)             // Convert Box Y coordinates to pixels
+#define PIXEL_BOX_Y(x)       (((x*24)+8)+STAMP_CENTER_BIAS_Y)             // Convert Box Y coordinates to pixels
 #define BOX_PIXEL_X(x)       (div24(x-STAMP_CENTER_BIAS_X))           // Convert Stamp X coordinates to Box X
-#define BOX_PIXEL_Y(x)       (div24(x-STAMP_CENTER_BIAS_Y))           // Convert Stamp Y coordinates to Box Y
+#define BOX_PIXEL_Y(x)       ((div24(x-STAMP_CENTER_BIAS_Y)))           // Convert Stamp Y coordinates to Box Y
 
 #define STAMP_X_TO_RADAR(x)  RADAR_SPR_OFFSET_X+BOX_PIXEL_X(x)*8          // Convert box position to radar sprite position
 #define STAMP_Y_TO_RADAR(x)  RADAR_SPR_OFFSET_Y+BOX_PIXEL_Y(x)*8          // Convert box position to radar sprite position
