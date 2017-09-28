@@ -151,7 +151,8 @@ static unsigned char* ptr;             // Generic reusable pointer.
 static unsigned char blue_door_state;  // Blue door state
 static unsigned char yellow_door_state; // Yellow door state
 static unsigned char teleport_state;   // Teleport state
-
+static unsigned char teleport_timer;   // Teleport timer
+static unsigned char inside_teleport;  // inside teleport
 /****************************************************
  * Prototypes                                       *
  ****************************************************/
@@ -220,6 +221,11 @@ void update_doors(void);
  * openclose = 0 for open, 1 for close
  */
 void set_teleport(unsigned char openclose);
+
+/**
+ * update_teleport_timer(void)
+ */
+void update_teleport_timer(void);
 
 /**
  * clear_update_buffer() - Clear the update buffer

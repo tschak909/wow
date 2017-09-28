@@ -270,7 +270,21 @@ void monster_change_direction(void)
 {
  change_direction:
   stamps[STAMP_STATE(i)]=rand8()&0x03;
-  if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT && BOX_WALL_LEFT(d))
+  if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state==OPEN)
+    {
+      inside_teleport=1;
+      teleport_timer=2;
+      teleport_state=CLOSED;
+      stamps[STAMP_X(i)]=PIXEL_BOX_X(9);
+    }
+  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(9) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state==OPEN)
+    {
+      inside_teleport=1;
+      teleport_timer=2;
+      teleport_state=CLOSED;
+      stamps[STAMP_X(i)]=PIXEL_BOX_X(0);
+    }
+  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT && BOX_WALL_LEFT(d))
     goto change_direction;
   else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT && BOX_WALL_RIGHT(d))
     goto change_direction;
@@ -356,7 +370,17 @@ void handle_player_in_field(void)
    if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
       // We are aligned.
-      if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && !BOX_WALL_RIGHT(d))
+      if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
+	{
+	  inside_teleport=1;
+	  stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_LEFT;
+	}
+      else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_LEFT && stamps[STAMP_X(i)]==PIXEL_BOX_X(9) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
+	{
+	  inside_teleport=1;
+	  stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT;
+	}
+      else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && !BOX_WALL_RIGHT(d))
       	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT;
       else if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_LEFT && !BOX_WALL_LEFT(d))
       	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_LEFT;
@@ -366,8 +390,18 @@ void handle_player_in_field(void)
       	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_DOWN;
       else if (PLAYER_PAD_IDLE(i))
       	  handle_pad_idle();
-      
-      if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && BOX_WALL_RIGHT(d))
+
+      if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
+	{
+	  inside_teleport=1;
+	  stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT;
+	}
+      else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(9) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
+	{
+	  inside_teleport=1;
+	  stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT;
+	}
+      else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && BOX_WALL_RIGHT(d))
       	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT_IDLE;
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && BOX_WALL_LEFT(d))
       	stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT_IDLE;
@@ -381,7 +415,21 @@ void handle_player_in_field(void)
   else
     {
       // We are not aligned.
-      if (PLAYER_PAD_IDLE(i))
+      if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && inside_teleport==1)
+	{
+	  inside_teleport=0;
+	  stamps[STAMP_X(i)]=PIXEL_BOX_X(9);
+	  teleport_state=CLOSED;
+	  teleport_timer=2;
+	}
+      else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && inside_teleport==1)
+	{
+	  inside_teleport=0;
+	  stamps[STAMP_X(i)]=PIXEL_BOX_X(0);
+	  teleport_state=CLOSED;
+	  teleport_timer=2;
+	}
+      else if (PLAYER_PAD_IDLE(i))
 	handle_pad_idle();
       else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT)
 	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT;
@@ -757,7 +805,6 @@ void run_dungeon(unsigned char dungeon_num)
       /* yellow_door_state=OPEN; */
       /* add_points(0); */
       /* add_points(1); */
-      /* teleport_state=CLOSED; */
 
       animate_stamps();
       move_monsters();
@@ -793,6 +840,7 @@ void run_dungeon(unsigned char dungeon_num)
 	  break;
 	case 1:
 	  update_box_timers();
+	  update_teleport_timer();
 	  break;
 	case 2:
 	  set_teleport(teleport_state);
@@ -902,12 +950,12 @@ void set_teleport(unsigned char openclose)
   clear_update_buffer();
 
   // Set the addresses for the two teleport regions.
-  update_buffer[0]=MSB(NTADR_A(1,7))|NT_UPD_VERT;
-  update_buffer[1]=LSB(NTADR_A(1,7));
+  update_buffer[0]=MSB(NTADR_A(1,8))|NT_UPD_VERT;
+  update_buffer[1]=LSB(NTADR_A(1,8));
   update_buffer[2]=3;
 
-  update_buffer[6]=MSB(NTADR_A(30,7))|NT_UPD_VERT;
-  update_buffer[7]=LSB(NTADR_A(30,7));
+  update_buffer[6]=MSB(NTADR_A(30,8))|NT_UPD_VERT;
+  update_buffer[7]=LSB(NTADR_A(30,8));
   update_buffer[8]=3;
 
   // and fill in the tiles in the data section.
@@ -917,7 +965,29 @@ void set_teleport(unsigned char openclose)
 
   update_buffer[9]=(openclose==0?0x78:0x7A);
   update_buffer[10]=(openclose==0?0x78:0x7A);
-  update_buffer[11]=(openclose==0?0x78:0x7A);  
+  update_buffer[11]=(openclose==0?0x78:0x7A);
+}
+
+/**
+ * update_teleport_timer()
+ */
+void update_teleport_timer(void)
+{
+  if (teleport_state==CLOSED)
+    {
+      if (teleport_timer==0)
+	teleport_state=OPEN;
+      else if (sec==0)
+	teleport_timer--;
+    }
+  else if (teleport_state==OPEN)
+    {
+      // don't do anything...yet.
+    }
+  else
+    {
+      teleport_state=OPEN;
+    }
 }
 
 /**
