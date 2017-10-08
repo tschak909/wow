@@ -179,7 +179,7 @@ void setup_enemy_sprites(void)
       stamps[STAMP_X(i)]=PIXEL_BOX_X(a);
       stamps[STAMP_Y(i)]=PIXEL_BOX_Y(b);
       stamps[STAMP_TYPE(i)]=STAMP_TYPE_BURWOR;
-      stamps[STAMP_STATE(i)]=STATE_MONSTER_RIGHT; // Default to right
+      stamps[STAMP_STATE(i)]=rand8()&0x03; // Random initial state.
       stamps[STAMP_FRAME(i)]=rand8()&0x03; // Random enemy frame.
       stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
     }
