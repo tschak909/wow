@@ -483,10 +483,12 @@ void handle_player_in_box(void)
       stamps[STAMP_Y(i)]=PIXEL_BOX_Y(5); // Pop out of box.
       if (i==0)
 	{
+	  stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_LEFT_IDLE;
 	  yellow_door_state=CLOSED;
 	}
       else
 	{
+	  stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT_IDLE;
 	  blue_door_state=CLOSED;
 	}
     }
