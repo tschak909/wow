@@ -1194,6 +1194,7 @@ void update_stamps(void)
  */
 void init(void)
 {
+  ppu_mask(0x00);
   clear_update_buffer();
   clear_stamps();
 }

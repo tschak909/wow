@@ -281,7 +281,7 @@ _ppu_off:
 _ppu_on_all:
 
 	lda <PPU_MASK_VAR
-	ora #%00111000		; Red  emphasis
+	ora #%00011000		; Red  emphasis
 
 ppu_onoff:
 
@@ -295,7 +295,7 @@ ppu_onoff:
 _ppu_on_bg:
 
 	lda <PPU_MASK_VAR
-	ora #%00101000		; Red  emphasis
+	ora #%00001000		; Red  emphasis
 	bne ppu_onoff	;bra
 
 
@@ -305,7 +305,7 @@ _ppu_on_bg:
 _ppu_on_spr:
 
 	lda <PPU_MASK_VAR 
-	ora #%00110000         	; red  emphasis
+	ora #%00010000         	; red  emphasis
 	bne ppu_onoff	;bra
 
 
