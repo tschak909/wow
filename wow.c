@@ -183,6 +183,9 @@ void setup_enemy_sprites(void)
       stamps[STAMP_FRAME(i)]=rand8()&0x03; // Random enemy frame.
       stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
     }
+  // Temporary code to test all monster types
+  stamps[STAMP_TYPE(5)]=stamps[STAMP_TYPE(6)]=STAMP_TYPE_GORWOR;
+  stamps[STAMP_TYPE(7)]=STAMP_TYPE_THORWOR;
 }
 
 /**
