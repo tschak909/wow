@@ -831,6 +831,7 @@ void run_dungeon(unsigned char dungeon_num)
       
       update_stamps();
       update_radar();
+      update_teleport_timer();
      
       // VRAM update scheduler
       
@@ -842,7 +843,6 @@ void run_dungeon(unsigned char dungeon_num)
 	  break;
 	case 1:
 	  update_box_timers();
-	  update_teleport_timer();
 	  break;
 	case 2:
 	  set_teleport(teleport_state);
