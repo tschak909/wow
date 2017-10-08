@@ -367,7 +367,7 @@ void handle_pad_idle(void)
  */
 void handle_player_in_field(void)
 {
-   if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
+  if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
       // We are aligned.
       if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
@@ -389,8 +389,8 @@ void handle_player_in_field(void)
       else if (PLAYER_PAD_DOWN(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_DOWN && !BOX_WALL_DOWN(d))
       	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_DOWN;
       else if (PLAYER_PAD_IDLE(i))
-      	  handle_pad_idle();
-
+	handle_pad_idle();
+      
       if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
 	{
 	  inside_teleport=1;
@@ -406,10 +406,10 @@ void handle_player_in_field(void)
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && BOX_WALL_LEFT(d))
       	stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT_IDLE;
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP && BOX_WALL_UP(d))
-	  stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_IDLE;
+	stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_IDLE;
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN && BOX_WALL_DOWN(d))
       	stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN_IDLE;
-
+      
       
     }
   else
@@ -453,7 +453,7 @@ void handle_player_in_field(void)
     stamps[STAMP_Y(i)]-=2;
   else if (stamps[STAMP_STATE(i)]==STATE_PLAYER_DOWN)
     stamps[STAMP_Y(i)]+=2;
-
+  
   // And set last state, if we aren't idle.
   if (!PLAYER_PAD_IDLE(i))
     stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];  

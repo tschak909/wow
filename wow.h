@@ -79,9 +79,20 @@ static unsigned char score1[7]={1,1,1,1,1,1,1};
 static unsigned char score2[7]={1,1,1,1,1,1,1};
 
 /**
+ * Current OAM allocation
+ * ----------------------
+ * 48 : 6 enemy 2 player sprites as 2x3 metasprite
+ *  6 : 6 radar dots
+ *  8 : 8 phaser shots
+ * -----------------------------------------------
+ * 62 : total sprites used
+ *  2 : sprites free
+ */ 
+
+/**
  * 8 objects on screen, two players and 6 enemies.
  */
-#define STAMP_NUM_FIELDS     9                    // Number of fields in each stamp slot
+#define STAMP_NUM_FIELDS     10                    // Number of fields in each stamp slot
 #define STAMP_NUM_SLOTS      8                    // Number of slots in stamp structure
 #define STAMP_CENTER_BIAS_X  12                   // Offset to apply to box multiply to center sprite (X)
 #define STAMP_CENTER_BIAS_Y  10                   // Offset to apply to box multiply to center sprite (Y)
@@ -99,13 +110,18 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
 #define STAMP_DELAY(x)       (STAMP_NUM(x)+6)     // Stamp Field: Delay
 #define STAMP_XTRA_A(x)      (STAMP_NUM(x)+7)     // Stamp Field: Extra A (Player Timer)
 #define STAMP_XTRA_B(x)      (STAMP_NUM(x)+8)     // Stamp Field: Extra B (Player Pad Data)
+#define STAMP_SHOOTING(x)    (STAMP_NUM(x)+9)     // Stamp Field: Is stamp shooting? (LATCH)
 
 #define PLAYER_PAD(x)        (stamps[STAMP_XTRA_B(x)])    // Alias for reading stored player pad value.
 #define PLAYER_PAD_RIGHT(x)  (PLAYER_PAD(x)&PAD_RIGHT) // is player pressing right?
 #define PLAYER_PAD_LEFT(x)   (PLAYER_PAD(x)&PAD_LEFT) // is player pressing left?
 #define PLAYER_PAD_DOWN(x)   (PLAYER_PAD(x)&PAD_DOWN) // is player pressing down?
 #define PLAYER_PAD_UP(x)     (PLAYER_PAD(x)&PAD_UP) // is player pressing up?
-#define PLAYER_PAD_IDLE(x)   (PLAYER_PAD(x)==0x00)      // is player idle?
+#define PLAYER_PAD_A(x)      (PLAYER_PAD(x)&PAD_A)  // is player pressing A
+#define PLAYER_PAD_B(x)      (PLAYER_PAD(x)&PAD_B)  // is player pressing B
+#define PLAYER_PAD_SELECT(x) (PLAYER_PAD(x)&PAD_SELECT) // is player pressing select?
+#define PLAYER_PAD_START(x)  (PLAYER_PAD(x)&PAD_START)  // is player pressing start?
+#define PLAYER_PAD_IDLE(x)   ((PLAYER_PAD(x)&0x0F)==0)  // is player idle?
   
 #define PIXEL_BOX_X(x)       ((x*24)+STAMP_CENTER_BIAS_X)             // Convert Box X coordinates to pixels
 #define PIXEL_BOX_Y(x)       (((x*24)+8)+STAMP_CENTER_BIAS_Y)             // Convert Box Y coordinates to pixels
@@ -153,6 +169,7 @@ static unsigned char yellow_door_state; // Yellow door state
 static unsigned char teleport_state;   // Teleport state
 static unsigned char teleport_timer;   // Teleport timer
 static unsigned char inside_teleport;  // inside teleport
+
 /****************************************************
  * Prototypes                                       *
  ****************************************************/
