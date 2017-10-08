@@ -258,8 +258,6 @@ void get_current_box(void)
   b=div24(stamps[STAMP_Y(i)]-8);
   c=(b*10)+a; // C is now the box #
   d=dungeon[c];
-  score1[0]=div24(stamps[STAMP_X(0)]+8)+1;
-  score1[1]=div24(stamps[STAMP_Y(0)]+16)+1;
 }
 
 /**
@@ -1137,6 +1135,29 @@ void clear_update_buffer(void)
 }
 
 /**
+ * is_stamp_visible()
+ * given stamp i, see if it actually is visible, or needs to be moved offscreen.
+ */
+unsigned char is_stamp_visible(void)
+{
+  if (stamps[STAMP_TYPE(i)]==STAMP_TYPE_BURWOR ||
+      stamps[STAMP_TYPE(i)]==STAMP_TYPE_BLUE_WORRIOR ||
+      stamps[STAMP_TYPE(i)]==STAMP_TYPE_YELLOW_WORRIOR ||
+      stamps[STAMP_TYPE(i)]==STAMP_TYPE_WORLUK)
+    return TRUE;
+
+  // utterly naive proximity detection, but it should be fast.
+  if ( (BOX_PIXEL_X(stamps[STAMP_X(0)]) == BOX_PIXEL_X(stamps[STAMP_X(i)])) ||
+       (BOX_PIXEL_Y(stamps[STAMP_Y(0)]) == BOX_PIXEL_Y(stamps[STAMP_Y(i)])) ||
+       (BOX_PIXEL_X(stamps[STAMP_X(1)]) == BOX_PIXEL_X(stamps[STAMP_X(i)])) ||
+       (BOX_PIXEL_Y(stamps[STAMP_Y(1)]) == BOX_PIXEL_Y(stamps[STAMP_X(i)])) )
+    return TRUE;
+ 
+  
+  return FALSE;
+}
+
+/**
  * update_stamps() - Update the on-screen stamps
  */
 void update_stamps(void)
@@ -1152,7 +1173,15 @@ void update_stamps(void)
       else
 	{
 	  a=metasprite_animation_data[stamps[STAMP_TYPE(i)]+(stamps[STAMP_STATE(i)]*4)+stamps[STAMP_FRAME(i)]];
-	  spr = oam_meta_spr(stamps[STAMP_X(i)],stamps[STAMP_Y(i)],spr,metasprite_list[a]);
+	  if (is_stamp_visible())
+	    {
+	      b=stamps[STAMP_X(i)];
+	      c=stamps[STAMP_Y(i)];
+	    }
+	  else
+	    b=c=0xF8; // Offscreen
+  
+	  spr = oam_meta_spr(b,c,spr,metasprite_list[a]);
 	}
     }
 }
