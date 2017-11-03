@@ -275,14 +275,12 @@ void monster_change_direction(void)
   stamps[STAMP_STATE(i)]=rand8()&0x03;
   if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state==OPEN)
     {
-      inside_teleport=1;
       teleport_timer=2;
       teleport_state=CLOSED;
       stamps[STAMP_X(i)]=PIXEL_BOX_X(9);
     }
   else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(9) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state==OPEN)
     {
-      inside_teleport=1;
       teleport_timer=2;
       teleport_state=CLOSED;
       stamps[STAMP_X(i)]=PIXEL_BOX_X(0);
@@ -375,13 +373,15 @@ void handle_player_in_field(void)
       // We are aligned.
       if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
 	{
-	  inside_teleport=1;
-	  stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_LEFT;
+	  stamps[STAMP_X(i)]=PIXEL_BOX_X(9);
+	  teleport_state=CLOSED;
+	  teleport_timer=2;	  
 	}
       else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_LEFT && stamps[STAMP_X(i)]==PIXEL_BOX_X(9) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
 	{
-	  inside_teleport=1;
-	  stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT;
+	  stamps[STAMP_X(i)]=PIXEL_BOX_X(0);
+	  teleport_state=CLOSED;
+	  teleport_timer=2;
 	}
       else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && !BOX_WALL_RIGHT(d))
       	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT;
@@ -396,12 +396,10 @@ void handle_player_in_field(void)
       
       if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
 	{
-	  inside_teleport=1;
-	  stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT;
+ 	  stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT;
 	}
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(9) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
 	{
-	  inside_teleport=1;
 	  stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT;
 	}
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && BOX_WALL_RIGHT(d))
@@ -412,27 +410,11 @@ void handle_player_in_field(void)
 	stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_IDLE;
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN && BOX_WALL_DOWN(d))
       	stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN_IDLE;
-      
-      
     }
   else
     {
       // We are not aligned.
-      if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && inside_teleport==1)
-	{
-	  inside_teleport=0;
-	  stamps[STAMP_X(i)]=PIXEL_BOX_X(9);
-	  teleport_state=CLOSED;
-	  teleport_timer=2;
-	}
-      else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && inside_teleport==1)
-	{
-	  inside_teleport=0;
-	  stamps[STAMP_X(i)]=PIXEL_BOX_X(0);
-	  teleport_state=CLOSED;
-	  teleport_timer=2;
-	}
-      else if (PLAYER_PAD_IDLE(i))
+      if (PLAYER_PAD_IDLE(i))
 	handle_pad_idle();
       else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT)
 	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT;

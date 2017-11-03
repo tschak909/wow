@@ -168,7 +168,6 @@ static unsigned char blue_door_state;  // Blue door state
 static unsigned char yellow_door_state; // Yellow door state
 static unsigned char teleport_state;   // Teleport state
 static unsigned char teleport_timer;   // Teleport timer
-static unsigned char inside_teleport;  // inside teleport
 
 /****************************************************
  * Prototypes                                       *
