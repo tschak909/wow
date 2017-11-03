@@ -681,6 +681,9 @@ const unsigned char metasprite_data[]={
 	 16,  8,0xbe,2,
 	  8,  8,0xbd,2,
 	  0,  8,0xbc,2,
+	128,
+
+	  0,  0,0xc8,0,
 	128
 
 };
@@ -771,7 +774,8 @@ const unsigned char* const metasprite_list[]={
 	metasprite_data+2002,
 	metasprite_data+2027,
 	metasprite_data+2052,
-	metasprite_data+2077
+	metasprite_data+2077,
+	metasprite_data+2102
 };
 
 #endif /* METASPRITES_H */
