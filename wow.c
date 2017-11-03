@@ -202,7 +202,7 @@ void animate_stamps(void)
 	  if (i>1) // Delay only applies to enemies.
 	    stamps[STAMP_DELAY(i)]=4;
 	  else
-	    stamps[STAMP_DELAY(i)]=2;
+	    stamps[STAMP_DELAY(i)]=1;
 	}
       else
 	{
