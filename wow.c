@@ -240,8 +240,7 @@ unsigned char stamp_type_to_radar(unsigned char t)
  */
 void update_radar(void)
 {
-  // Currently am hard-coding to place self immediately after the 8th player sprite slot.
-  spr=192;
+  spr=OAM_OFFSET_RADAR;
   for (i=2;i<STAMP_NUM_SLOTS;i++)
     {
       spr = oam_spr(STAMP_X_TO_RADAR(stamps[STAMP_X(i)]),STAMP_Y_TO_RADAR(stamps[STAMP_Y(i)]),stamp_type_to_radar(stamps[STAMP_TYPE(i)]),0,spr);
@@ -775,7 +774,7 @@ void run_dungeon(unsigned char dungeon_num)
   setup_enemy_sprites();
   ready_yellow_player();
   ready_blue_player();
-  a=spr=0;
+  a=spr=OAM_OFFSET_TOP;
 
   music_play(1);
   
@@ -902,7 +901,7 @@ void attract_monsters(void)
   bank_spr(1);
   bank_bg(0);
 
-  spr=0;
+  spr=OAM_OFFSET_TOP;
   spr = oam_meta_spr(120,8,spr,metasprite_list[21]);
   spr = oam_meta_spr(120,36,spr,metasprite_list[33]);
   spr = oam_meta_spr(120,68,spr,metasprite_list[45]);
@@ -1149,7 +1148,7 @@ unsigned char is_stamp_visible(void)
  */
 void update_stamps(void)
 {
-  spr=0;
+  spr=OAM_OFFSET_TOP;
   oam_clear();
   for (i=0;i<STAMP_NUM_SLOTS;i++)
     {

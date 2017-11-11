@@ -137,6 +137,21 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
 #define BOX_WALL_UP(x)       (x&1<<7)            // Box has up wall
 #define BOX_NO_WALLS(x)      x==0x00             // Box has no walls. (TBD: Replace with an upper 4-bit AND)
 
+/**
+ * Metasprite to OAM calculations
+ * 256 bytes, divided into 4 byte fields leave 64 possible OAM slots
+ * and thus, the first 192 slots are used for the two worriors and 6 enemies
+ * the next 6 entries are reserved for the radar blips for each enemy (players do not show up)
+ * the next 8 entries are used for phasers
+ * leaving 8 entries free. (whee)
+ */
+#define SPRITE_SIZE_W      2
+#define SPRITE_SIZE_H      3
+#define OAM_OFFSET_TOP     0
+#define OAM_FIELD_SIZE     4 /* The size of each OAM field. */
+#define OAM_OFFSET_RADAR   ( ( ( SPRITE_SIZE_W * SPRITE_SIZE_H ) * STAMP_NUM_SLOTS ) * OAM_FIELD_SIZE )
+#define OAM_OFFSET_LASERS  OAM_OFFSET_RADAR
+
 static unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
 
 #define LASER_NUM_FIELDS     2
