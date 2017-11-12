@@ -92,7 +92,7 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
 /**
  * 8 objects on screen, two players and 6 enemies.
  */
-#define STAMP_NUM_FIELDS     10                    // Number of fields in each stamp slot
+#define STAMP_NUM_FIELDS     10                   // Number of fields in each stamp slot
 #define STAMP_NUM_SLOTS      8                    // Number of slots in stamp structure
 #define STAMP_CENTER_BIAS_X  12                   // Offset to apply to box multiply to center sprite (X)
 #define STAMP_CENTER_BIAS_Y  10                   // Offset to apply to box multiply to center sprite (Y)
@@ -108,11 +108,11 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
 #define STAMP_LAST_STATE(x)  (STAMP_NUM(x)+4)
 #define STAMP_FRAME(x)       (STAMP_NUM(x)+5)     // Stamp Field: Current frame
 #define STAMP_DELAY(x)       (STAMP_NUM(x)+6)     // Stamp Field: Delay
-#define STAMP_XTRA_A(x)      (STAMP_NUM(x)+7)     // Stamp Field: Extra A (Player Timer)
-#define STAMP_XTRA_B(x)      (STAMP_NUM(x)+8)     // Stamp Field: Extra B (Player Pad Data)
+#define STAMP_TIMER(x)       (STAMP_NUM(x)+7)     // Stamp Field: Extra A (Player Timer)
+#define STAMP_PAD(x)         (STAMP_NUM(x)+8)     // Stamp Field: Extra B (Player Pad Data)
 #define STAMP_SHOOTING(x)    (STAMP_NUM(x)+9)     // Stamp Field: Is stamp shooting? (LATCH)
 
-#define PLAYER_PAD(x)        (stamps[STAMP_XTRA_B(x)])    // Alias for reading stored player pad value.
+#define PLAYER_PAD(x)        (stamps[STAMP_PAD(x)])    // Alias for reading stored player pad value.
 #define PLAYER_PAD_RIGHT(x)  (PLAYER_PAD(x)&PAD_RIGHT) // is player pressing right?
 #define PLAYER_PAD_LEFT(x)   (PLAYER_PAD(x)&PAD_LEFT) // is player pressing left?
 #define PLAYER_PAD_DOWN(x)   (PLAYER_PAD(x)&PAD_DOWN) // is player pressing down?

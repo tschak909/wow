@@ -134,7 +134,7 @@ void double_score_win(void)
  */
 void ready_blue_player(void)
 {
-  stamps[STAMP_XTRA_A(1)]=3; // Player is in the box.
+  stamps[STAMP_TIMER(1)]=3; // Player is in the box.
   stamps[STAMP_X(1)]=PIXEL_BOX_X(0);
   stamps[STAMP_Y(1)]=PIXEL_BOX_Y(6)-1; // 6 is the special spawn box.
   stamps[STAMP_TYPE(1)]=STAMP_TYPE_BLUE_WORRIOR;
@@ -149,7 +149,7 @@ void ready_blue_player(void)
  */
 void ready_yellow_player(void)
 {
-  stamps[STAMP_XTRA_A(0)]=6;
+  stamps[STAMP_TIMER(0)]=6;
   stamps[STAMP_X(0)]=PIXEL_BOX_X(9);
   stamps[STAMP_Y(0)]=PIXEL_BOX_Y(6)-1; // 6 is the special spawn box.
   stamps[STAMP_TYPE(0)]=STAMP_TYPE_YELLOW_WORRIOR;
@@ -449,17 +449,17 @@ void handle_player_in_field(void)
  */
 void handle_player_in_box(void)
 {
-  if (stamps[STAMP_XTRA_A(i)]>0)
+  if (stamps[STAMP_TIMER(i)]>0)
     {
-      if (stamps[STAMP_XTRA_B(i)] != 0)
+      if (stamps[STAMP_PAD(i)] != 0)
 	{
-	  stamps[STAMP_XTRA_A(i)]=0;
+	  stamps[STAMP_TIMER(i)]=0;
 	}
       else
 	{
 	  stamps[STAMP_Y(i)]=PIXEL_BOX_Y(6)-1; // 6 is the Y for the box.
 	  if (sec==0) // 0 means approximately 1 second elapsed.
-	    stamps[STAMP_XTRA_A(i)]--;         // Decrement timer
+	    stamps[STAMP_TIMER(i)]--;         // Decrement timer
 	}
     }
   else
@@ -486,7 +486,7 @@ void move_players(void)
   for (i=0;i<2;i++)
     {
       get_current_box();
-      stamps[STAMP_XTRA_B(i)]=pad_poll(i);
+      stamps[STAMP_PAD(i)]=pad_poll(i);
      
       if (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(6)-1)
 	{
@@ -1091,10 +1091,10 @@ void update_box_timers(void)
       update_buffer[++a]=LSB(NTADR_A((i==1?5:26),20));
       update_buffer[++a]=2;
       
-      if (stamps[STAMP_XTRA_A(i)]>0)
+      if (stamps[STAMP_TIMER(i)]>0)
 	{
-	  update_buffer[++a]=stamps[STAMP_XTRA_A(i)];
-	  update_buffer[++a]=stamps[STAMP_XTRA_A(i)]+0x10;
+	  update_buffer[++a]=stamps[STAMP_TIMER(i)];
+	  update_buffer[++a]=stamps[STAMP_TIMER(i)]+0x10;
 	}
       else
 	{
