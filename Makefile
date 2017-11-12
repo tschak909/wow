@@ -22,3 +22,6 @@ $(NAME).s: $(NAME).c
 
 clean:
 	rm -f $(NAME).nes *.o $(NAME).s 
+
+xfer:
+	scp $(NAME).nes root@lakka:/storage/roms
