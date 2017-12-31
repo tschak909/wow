@@ -25,3 +25,6 @@ clean:
 
 xfer:
 	scp $(NAME).nes root@lakka:/storage/roms
+
+run:	$(NAME).nes xfer
+	ssh root@lakka "systemctl stop retroarch ; retroarch -L /tmp/cores/fceumm_libretro.so /storage/roms/$(NAME).nes ; systemctl start retroarch"
