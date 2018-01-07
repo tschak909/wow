@@ -23,7 +23,7 @@ $(NAME).s: $(NAME).c
 clean:
 	rm -f $(NAME).nes *.o $(NAME).s 
 
-xfer:
+xfer:   $(NAME).nes
 	scp $(NAME).nes root@lakka:/storage/roms
 
 run:	$(NAME).nes xfer
