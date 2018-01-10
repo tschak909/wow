@@ -110,7 +110,7 @@ static unsigned char score2[7]={1,1,1,1,1,1,1};
 #define STAMP_DELAY(x)       (STAMP_NUM(x)+6)     // Stamp Field: Delay
 #define STAMP_TIMER(x)       (STAMP_NUM(x)+7)     // Stamp Field: Extra A (Player Timer)
 #define STAMP_PAD(x)         (STAMP_NUM(x)+8)     // Stamp Field: Extra B (Player Pad Data)
-#define STAMP_SHOOTING(x)    (STAMP_NUM(x)+9)     // Stamp Field: Is stamp shooting? (LATCH)
+#define STAMP_SHOOTING(x)    (STAMP_NUM(x)+9)     // Stamp Field: Is stamp shooting this frame?
 
 #define PLAYER_PAD(x)        (stamps[STAMP_PAD(x)])    // Alias for reading stored player pad value.
 #define PLAYER_PAD_RIGHT(x)  (PLAYER_PAD(x)&PAD_RIGHT) // is player pressing right?
@@ -183,6 +183,9 @@ static unsigned char blue_door_state;  // Blue door state
 static unsigned char yellow_door_state; // Yellow door state
 static unsigned char teleport_state;   // Teleport state
 static unsigned char teleport_timer;   // Teleport timer
+static unsigned char player_shooting[2];          // Player shooting this frame?
+static unsigned char player_last_shooting[2];     // Player shooting last frame?
+
 
 /****************************************************
  * Prototypes                                       *
