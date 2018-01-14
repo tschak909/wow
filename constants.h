@@ -1,0 +1,70 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+/******************************************************
+ * Constants                                          *
+ ******************************************************/
+
+/* States */
+#define OPEN 0
+#define CLOSED 1
+
+#define YELLOW_SPAWN_X 208
+#define YELLOW_SPAWN_Y 169
+
+/* Door update, three tiles. */
+#define NT_UPD_DOOR_BLUE 0
+#define NT_UPD_DOOR_YELLOW 7 
+
+/* Radar Update Nametable tiles */
+#define NT_RADAR_OFF_X 11
+#define NT_RADAR_OFF_Y 22
+
+/**
+ * Current OAM allocation
+ * ----------------------
+ * 48 : 6 enemy 2 player sprites as 2x3 metasprite
+ *  6 : 6 radar dots
+ *  8 : 8 phaser shots
+ * -----------------------------------------------
+ * 62 : total sprites used
+ *  2 : sprites free
+ */ 
+
+/**
+ * 8 objects on screen, two players and 6 enemies.
+ */
+#define STAMP_NUM_FIELDS     10                   // Number of fields in each stamp slot
+#define STAMP_NUM_SLOTS      8                    // Number of slots in stamp structure
+#define STAMP_CENTER_BIAS_X  12                   // Offset to apply to box multiply to center sprite (X)
+#define STAMP_CENTER_BIAS_Y  10                   // Offset to apply to box multiply to center sprite (Y)
+
+#define RADAR_SPR_OFFSET_X   88                   // Radar sprite top-left offset X
+#define RADAR_SPR_OFFSET_Y   176                  // Radar sprite top-left offset Y
+
+/**
+ * Metasprite to OAM calculations
+ * 256 bytes, divided into 4 byte fields leave 64 possible OAM slots
+ * and thus, the first 192 slots are used for the two worriors and 6 enemies
+ * the next 6 entries are reserved for the radar blips for each enemy (players do not show up)
+ * the next 8 entries are used for phasers
+ * leaving 8 entries free. (whee)
+ */
+#define SPRITE_SIZE_W      2
+#define SPRITE_SIZE_H      3
+#define OAM_OFFSET_TOP     0
+#define OAM_FIELD_SIZE     4 /* The size of each OAM field. */
+#define OAM_OFFSET_RADAR   ( ( ( SPRITE_SIZE_W * SPRITE_SIZE_H ) * STAMP_NUM_SLOTS ) * OAM_FIELD_SIZE )
+#define OAM_OFFSET_LASERS  OAM_OFFSET_RADAR
+
+/** 
+ * Laser stamp fields 
+ */
+
+#define LASER_NUM_FIELDS     2
+#define LASER_NUM_SLOTS      4
+
+#define LASER_CENTER_BIAS_X  12
+#define LASER_CENTER_BIAS_Y  10
+
+#endif
