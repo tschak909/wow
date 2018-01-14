@@ -138,7 +138,7 @@ void ready_blue_player(void)
   stamps[STAMP_X(1)]=PIXEL_BOX_X(0);
   stamps[STAMP_Y(1)]=PIXEL_BOX_Y(6)-1; // 6 is the special spawn box.
   stamps[STAMP_TYPE(1)]=STAMP_TYPE_BLUE_WORRIOR;
-  stamps[STAMP_STATE(1)]=1; // Facing right Idle
+  stamps[STAMP_STATE(1)]=stamps[STAMP_LAST_STATE(1)]=1; // Facing right Idle
   stamps[STAMP_FRAME(1)]=0;
   stamps[STAMP_DELAY(1)]=0;
   blue_door_state=OPEN;
@@ -153,7 +153,7 @@ void ready_yellow_player(void)
   stamps[STAMP_X(0)]=PIXEL_BOX_X(9);
   stamps[STAMP_Y(0)]=PIXEL_BOX_Y(6)-1; // 6 is the special spawn box.
   stamps[STAMP_TYPE(0)]=STAMP_TYPE_YELLOW_WORRIOR;
-  stamps[STAMP_STATE(0)]=3; // Facing left Idle
+  stamps[STAMP_STATE(0)]=stamps[STAMP_LAST_STATE(i)]=3; // Facing left Idle
   stamps[STAMP_FRAME(0)]=0;
   stamps[STAMP_DELAY(0)]=0;
   yellow_door_state=OPEN;
@@ -367,6 +367,9 @@ void handle_pad_idle(void)
  */
 void handle_player_in_field(void)
 {
+
+  stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];
+
   if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
       // We are aligned.
@@ -441,6 +444,10 @@ void handle_player_in_field(void)
   // And set last state, if we aren't idle.
   if (!PLAYER_PAD_IDLE(i))
     stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];  
+
+  // REMOVE: Show yellow state in yellow score.
+  score2[0]=stamps[STAMP_STATE(0)]+1;
+
 }
 
 /**
