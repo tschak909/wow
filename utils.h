@@ -51,4 +51,4 @@ void get_current_box(void);
  */
 void animate_stamps(void);
 
-#endif
+#endif /* UTILS_H */

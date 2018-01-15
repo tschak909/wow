@@ -99,4 +99,4 @@
 #define STATE_PLAYER_DOWN_SHOOTING          14
 #define STATE_PLAYER_DOWN_IDLE_SHOOTING     15
 
-#endif
+#endif /* CONSTANTS_H */

@@ -42,4 +42,4 @@
 #define LASER_X(x)           (STAMP_NUM(x)+0)
 #define LASER_Y(x)           (STAMP_NUM(x)+1)
 
-#endif
+#endif /* MACROS_H */

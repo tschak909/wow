@@ -32,4 +32,4 @@ void update_stamps(void);
  */
 void update_box_timers(void);
 
-#endif
+#endif /* UPDATE_H */
