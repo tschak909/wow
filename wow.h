@@ -42,6 +42,12 @@ extern void attract_scores(void);
 extern void clear_stamps(void);
 extern void clear_update_buffer(void);
 extern void run_dungeon(unsigned char dungeon_num);
+extern void update_doors(void);
+extern void set_teleport(unsigned char openclose);
+extern void update_teleport_timer(void);
+extern void update_scores(void);
+extern void update_stamps(void);
+extern void update_box_timers(void);
 
 /****************************************************
  * Prototypes                                       *
@@ -86,46 +92,15 @@ void move_monsters(void);
 void get_current_box(void);
 
 /**
- * update_doors()
- */
-void update_doors(void);
-
-/**
- * set_teleport(openclose)
- * openclose = 0 for open, 1 for close
- */
-void set_teleport(unsigned char openclose);
-
-/**
- * update_teleport_timer(void)
- */
-void update_teleport_timer(void);
-
-/**
  * init() - just as it says.
  */
 void init(void);
-
-/**
- * update_scores() - Update the score data for both players
- */
-void update_scores(void);
 
 /**
  * add_points(player)
  * player = scoreX to add points in score0 to
  */
 void add_points(unsigned char player);
-
-/**
- * update_stamps() - Update the on-screen stamps
- */
-void update_stamps(void);
-
-/**
- * update_box_timers() - Update the box timers, if active
- */
-void update_box_timers(void);
 
 
 #endif /* WOW_H */

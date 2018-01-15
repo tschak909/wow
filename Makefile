@@ -9,14 +9,16 @@ SRCS = $(NAME).s \
 	attract_monsters.s \
 	attract_scores.s \
 	utils.s \
-	run_dungeon.s
+	run_dungeon.s \
+	update.s
 
 OBJS = $(NAME).o \
 	crt0.o \
 	attract_monsters.o \
 	attract_scores.o \
 	utils.o \
-	run_dungeon.o
+	run_dungeon.o \
+	update.o
 
 all: $(NAME).nes 
 
@@ -50,6 +52,12 @@ run_dungeon.o: run_dungeon.s
 
 run_dungeon.s: run_dungeon.c
 	$(CC65) -Oi run_dungeon.c --add-source
+
+update.o: update.s
+	$(CA65) update.s
+
+update.s: update.c
+	$(CC65) -Oi update.c --add-source
 
 $(NAME).o: $(NAME).s
 	$(CA65) $(NAME).s

@@ -9,25 +9,25 @@ extern const unsigned char palette[16];
 extern unsigned char update_buffer[80];
 
 extern unsigned char* str;
-#pragma zpsym("str");
+#pragma zpsym("str")
 extern unsigned char* dungeon;
-#pragma zpsym("dungeon");
+#pragma zpsym("dungeon")
 extern unsigned char* ptr;
-#pragma zpsym("ptr");
+#pragma zpsym("ptr")
 extern unsigned char b;
-#pragma zpsym("b");
+#pragma zpsym("b")
 extern unsigned int adr;
-#pragma zpsym("adr");
+#pragma zpsym("adr")
 extern unsigned char a;
-#pragma zpsym("a");
+#pragma zpsym("a")
 extern unsigned char c;
-#pragma zpsym("c");
+#pragma zpsym("c")
 extern unsigned char d;
-#pragma zpsym("d");
+#pragma zpsym("d")
 extern unsigned char i;
-#pragma zpsym("i");
+#pragma zpsym("i")
 extern unsigned char j;
-#pragma zpsym("j");
+#pragma zpsym("j")
 extern unsigned char spr;
 #pragma zpsym("spr")
 extern unsigned char frame_cnt;
