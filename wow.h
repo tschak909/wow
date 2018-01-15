@@ -55,12 +55,6 @@ extern void get_current_box(void);
  ****************************************************/
 
 /**
- * move_monsters()
- * Move the monsters
- */
-void move_monsters(void);
-
-/**
  * init() - just as it says.
  */
 void init(void);

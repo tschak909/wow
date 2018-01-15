@@ -33,4 +33,4 @@ void handle_player_in_box(void);
  */
 void move_players(void);
 
-#endif
+#endif /* PLAYER_H */

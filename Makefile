@@ -11,7 +11,8 @@ SRCS = $(NAME).s \
 	utils.s \
 	dungeon.s \
 	update.s \
-	player.s
+	player.s \
+	monster.s
 
 OBJS = $(NAME).o \
 	crt0.o \
@@ -20,7 +21,8 @@ OBJS = $(NAME).o \
 	utils.o \
 	dungeon.o \
 	update.o \
-	player.o
+	player.o \
+	monster.o
 
 all: $(NAME).nes 
 
@@ -66,6 +68,12 @@ player.o: player.s
 
 player.s: player.c
 	$(CC65) -Oi player.c --add-source
+
+monster.o: monster.s
+	$(CA65) monster.s
+
+monster.s: monster.c
+	$(CC65) -Oi monster.c --add-source
 
 $(NAME).o: $(NAME).s
 	$(CA65) $(NAME).s
