@@ -2,7 +2,6 @@
 #define ATTRACT_MONSTERS_H
 
 #include "constants.h"
-#include "palette.h"
 #include "wow_monsters.h"
 #include "neslib.h"
 

@@ -1153,7 +1153,7 @@ void main(void)
   while(1)
     {
       /* attract_scores(); */
-      /* attract_monsters(); */
-      run_dungeon(1);
+      attract_monsters();
+      /* run_dungeon(1); */
     }
 }

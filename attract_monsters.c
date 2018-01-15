@@ -1,11 +1,17 @@
 #include "attract_monsters.h"
-#include "metasprites.h"
-
-#pragma bssseg (push,"ZEROPAGE")
-extern unsigned char spr,i,frame_cnt;
-#pragma bssseg (pop)
 
 extern void pal_fade_to(unsigned to);
+
+extern const unsigned char metasprite_data[];
+extern const unsigned char* const metasprite_list[];
+extern const unsigned char palette[16];
+
+extern unsigned char spr;
+#pragma zpsym("spr")
+extern unsigned char i;
+#pragma zpsym("i")
+extern unsigned char frame_cnt;
+#pragma zpsym("frame_cnt")
 
 /**
  * attract_monsters() - shown while game isn't playing
