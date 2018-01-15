@@ -1,5 +1,5 @@
-#ifndef RUN_DUNGEON_H
-#define RUN_DUNGEON_H
+#ifndef DUNGEON_H
+#define DUNGEON_H
 
 /**
  * dungeon_red() - Turn dungeon red
@@ -22,4 +22,4 @@ void dungeon_double_score_win(void);
  */
 void dungeon_run(unsigned char dungeon_num);
 
-#endif /* RUN_DUNGEON_H */
+#endif /* DUNGEON_H */

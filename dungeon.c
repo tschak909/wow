@@ -1,4 +1,4 @@
-#include "run_dungeon.h"
+#include "dungeon.h"
 #include "constants.h"
 #include "neslib.h"
 #include "wow_dungeon.h"
@@ -126,7 +126,7 @@ void double_score_win(void)
 }
 
 /**
- * run_dungeon() - dungeon code
+ * dungeon_run() - dungeon code
  * dungeon_num - Dungeon Number to run
  */
 void dungeon_run(unsigned char dungeon_num)
