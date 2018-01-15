@@ -117,23 +117,6 @@ void animate_stamps(void)
 }
 
 /**
- * get_current_box()
- * Get the current dungeon box for player
- * i = the stamp to return in a,b,c,d
- * a = the X box
- * b = the Y box
- * c = the dungeon box #
- * d = the box data.
- */
-void get_current_box(void)
-{
-  a=div24(stamps[STAMP_X(i)]+8);
-  b=div24(stamps[STAMP_Y(i)]-8);
-  c=(b*10)+a; // C is now the box #
-  d=dungeon[c];
-}
-
-/**
  * monster_change_direction()
  * Change monster direction.
  */

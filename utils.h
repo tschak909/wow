@@ -34,5 +34,15 @@ unsigned char stamp_type_to_radar(unsigned char t);
  */
 unsigned char is_stamp_visible(void);
 
+/**
+ * get_current_box()
+ * Get the current dungeon box for player
+ * i = the stamp to return in a,b,c,d
+ * a = the X box
+ * b = the Y box
+ * c = the dungeon box #
+ * d = the box data.
+ */
+void get_current_box(void);
 
 #endif

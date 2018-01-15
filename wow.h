@@ -48,6 +48,7 @@ extern void update_teleport_timer(void);
 extern void update_scores(void);
 extern void update_stamps(void);
 extern void update_box_timers(void);
+extern void get_current_box(void);
 
 /****************************************************
  * Prototypes                                       *
@@ -58,17 +59,6 @@ extern void update_box_timers(void);
  * Move the monsters
  */
 void move_monsters(void);
-
-/**
- * get_current_box()
- * Get the current dungeon box for player
- * i = the stamp to return in a,b,c,d
- * a = the X box
- * b = the Y box
- * c = the dungeon box #
- * d = the box data.
- */
-void get_current_box(void);
 
 /**
  * init() - just as it says.
