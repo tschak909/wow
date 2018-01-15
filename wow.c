@@ -35,29 +35,6 @@
 #include "wow.h"
 
 /**
- * animate_stamps() - increment the frame counters of each sprite, (0-7)
- * applying delay to the non-player sprites (2-7)
- */
-void animate_stamps(void)
-{
-  for (i=0;i<STAMP_NUM_SLOTS;i++)
-    {
-      if (stamps[STAMP_DELAY(i)]==0)
-	{
-	  stamps[STAMP_FRAME(i)]=(stamps[STAMP_FRAME(i)]+1)&0x03;
-	  if (i>1) // Delay only applies to enemies.
-	    stamps[STAMP_DELAY(i)]=4;
-	  else
-	    stamps[STAMP_DELAY(i)]=1;
-	}
-      else
-	{
-	  --stamps[STAMP_DELAY(i)];
-	}
-    }
-}
-
-/**
  * init() - just as it says.
  */
 void init(void)

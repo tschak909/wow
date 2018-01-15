@@ -45,4 +45,10 @@ unsigned char is_stamp_visible(void);
  */
 void get_current_box(void);
 
+/**
+ * animate_stamps() - increment the frame counters of each sprite, (0-7)
+ * applying delay to the non-player sprites (2-7)
+ */
+void animate_stamps(void);
+
 #endif
