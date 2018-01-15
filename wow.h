@@ -30,9 +30,6 @@
 #include "variables.h"
 #include "macros.h"
 #include "neslib.h"
-#include "wow_dungeon.h"
-#include "dungeon1.h"
-#include "dungeons.h"
 #include "palette.h"
 #include "metasprites.h"
 #include "metasprite_animations.h"
@@ -44,6 +41,7 @@ extern void attract_monsters(void);
 extern void attract_scores(void);
 extern void clear_stamps(void);
 extern void clear_update_buffer(void);
+extern void run_dungeon(unsigned char dungeon_num);
 
 /****************************************************
  * Prototypes                                       *
@@ -86,12 +84,6 @@ void move_monsters(void);
  * d = the box data.
  */
 void get_current_box(void);
-
-/**
- * run_dungeon() - dungeon code
- * dungeon_num - Dungeon Number to run
- */
-void run_dungeon(unsigned char dungeon_num);
 
 /**
  * update_doors()

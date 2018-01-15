@@ -8,13 +8,15 @@ LIB = runtime.lib
 SRCS = $(NAME).s \
 	attract_monsters.s \
 	attract_scores.s \
-	utils.s
+	utils.s \
+	run_dungeon.s
 
 OBJS = $(NAME).o \
 	crt0.o \
 	attract_monsters.o \
 	attract_scores.o \
-	utils.o
+	utils.o \
+	run_dungeon.o
 
 all: $(NAME).nes 
 
@@ -42,6 +44,12 @@ utils.o: utils.s
 
 utils.s: utils.c
 	$(CC65) -Oi utils.c --add-source
+
+run_dungeon.o: run_dungeon.s
+	$(CA65) run_dungeon.s
+
+run_dungeon.s: run_dungeon.c
+	$(CC65) -Oi run_dungeon.c --add-source
 
 $(NAME).o: $(NAME).s
 	$(CA65) $(NAME).s
