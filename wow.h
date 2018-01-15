@@ -30,7 +30,6 @@
 #include "variables.h"
 #include "macros.h"
 #include "neslib.h"
-#include "wow_scores.h"
 #include "wow_dungeon.h"
 #include "dungeon1.h"
 #include "dungeons.h"
@@ -42,6 +41,7 @@
  * Externs                                          *
  ****************************************************/
 extern void attract_monsters();
+extern void attract_scores();
 
 /****************************************************
  * Prototypes                                       *
@@ -90,11 +90,6 @@ void get_current_box(void);
  * dungeon_num - Dungeon Number to run
  */
 void run_dungeon(unsigned char dungeon_num);
-
-/**
- * attract_score() - show scores
- */
-void attract_scores(void);
 
 /**
  * update_doors()
