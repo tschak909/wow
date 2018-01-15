@@ -7,12 +7,14 @@ LIB = runtime.lib
 
 SRCS = $(NAME).s \
 	attract_monsters.s \
-	attract_scores.s
+	attract_scores.s \
+	utils.s
 
 OBJS = $(NAME).o \
 	crt0.o \
 	attract_monsters.o \
-	attract_scores.o
+	attract_scores.o \
+	utils.o
 
 all: $(NAME).nes 
 
@@ -34,6 +36,12 @@ attract_scores.o: attract_scores.s
 
 attract_scores.s: attract_scores.c
 	$(CC65) -Oi attract_scores.c --add-source
+
+utils.o: utils.s
+	$(CA65) utils.s
+
+utils.s: utils.c
+	$(CC65) -Oi utils.c --add-source
 
 $(NAME).o: $(NAME).s
 	$(CA65) $(NAME).s

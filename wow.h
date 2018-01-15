@@ -40,8 +40,10 @@
 /****************************************************
  * Externs                                          *
  ****************************************************/
-extern void attract_monsters();
-extern void attract_scores();
+extern void attract_monsters(void);
+extern void attract_scores(void);
+extern void clear_stamps(void);
+extern void clear_update_buffer(void);
 
 /****************************************************
  * Prototypes                                       *
@@ -108,11 +110,6 @@ void set_teleport(unsigned char openclose);
 void update_teleport_timer(void);
 
 /**
- * clear_update_buffer() - Clear the update buffer
- */
-void clear_update_buffer(void);
-
-/**
  * init() - just as it says.
  */
 void init(void);
@@ -127,11 +124,6 @@ void update_scores(void);
  * player = scoreX to add points in score0 to
  */
 void add_points(unsigned char player);
-
-/**
- * clear_stamps() - Clear the on screen stamp buffer
- */
-void clear_stamps(void);
 
 /**
  * update_stamps() - Update the on-screen stamps

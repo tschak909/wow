@@ -1033,22 +1033,6 @@ void update_box_timers(void)
 }
 
 /**
- * clear_stamps() - Clear the on screen stamp buffer
- */
-void clear_stamps(void)
-{
-  memfill(&stamps,0,sizeof(stamps));
-}
-
-/**
- * clear_update_buffer() - Clear the update buffer
- */
-void clear_update_buffer(void)
-{
-  memfill(&update_buffer,NT_UPD_EOF,sizeof(update_buffer));
-}
-
-/**
  * is_stamp_visible()
  * given stamp i, see if it actually is visible, or needs to be moved offscreen.
  */
