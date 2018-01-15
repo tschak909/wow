@@ -41,7 +41,7 @@ extern void attract_monsters(void);
 extern void attract_scores(void);
 extern void clear_stamps(void);
 extern void clear_update_buffer(void);
-extern void run_dungeon(unsigned char dungeon_num);
+extern void dungeon_run(unsigned char dungeon_num);
 extern void update_doors(void);
 extern void set_teleport(unsigned char openclose);
 extern void update_teleport_timer(void);
@@ -52,21 +52,6 @@ extern void update_box_timers(void);
 /****************************************************
  * Prototypes                                       *
  ****************************************************/
-
-/**
- * dungeon_red() - Turn dungeon red
- */
-void dungeon_red(void);
-
-/**
- * dungeon_blue() - Turn dungeon blue
- */
-void dungeon_blue(void);
-
-/**
- * double_score_win() - turn screen colors and set "DOUBLE SCORE" text on radar.
- */
-void double_score_win(void);
 
 /**
  * move_monsters()

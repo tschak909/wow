@@ -54,10 +54,82 @@ extern void update_scores(void);
 extern void clear_update_buffer(void);
 
 /**
+ * dungeon_red() - Turn dungeon red
+ */
+void dungeon_red()
+{
+  pal_col(1,0x16);
+}
+
+/**
+ * dungeon_blue() - Turn dungeon blue
+ */
+void dungeon_blue()
+{
+  pal_col(1,0x11);
+}
+
+/**
+ * double_score_win() - turn screen colors and set "DOUBLE SCORE" text on radar.
+ */
+void double_score_win(void)
+{
+  clear_update_buffer();
+  update_buffer[0]=MSB(NTADR_A(10,20))|NT_UPD_HORZ;
+  update_buffer[1]=LSB(NTADR_A(10,20));
+  update_buffer[2]=12;
+  update_buffer[3]=0x0e; // D
+  update_buffer[4]=0x29; // O
+  update_buffer[5]=0x2f; // U
+  update_buffer[6]=0x0c; // B
+  update_buffer[7]=0x26; // L
+  update_buffer[8]=0x0f; // E
+  update_buffer[9]=0x00; // 
+  update_buffer[10]=0x2D; // S
+  update_buffer[11]=0x0d;// C
+  update_buffer[12]=0x29;// O
+  update_buffer[13]=0x2C;// R
+  update_buffer[14]=0x0f;// E
+  
+  update_buffer[15]=MSB(NTADR_A(10,21))|NT_UPD_HORZ;
+  update_buffer[16]=LSB(NTADR_A(10,21));
+  update_buffer[17]=12;
+  update_buffer[18]=0x1e; // D
+  update_buffer[19]=0x39; // O
+  update_buffer[20]=0x3f; // U
+  update_buffer[21]=0x1c; // B
+  update_buffer[22]=0x36; // L
+  update_buffer[23]=0x1f; // E
+  update_buffer[24]=0x00; //
+  update_buffer[25]=0x3D; // S
+  update_buffer[26]=0x1d; // C
+  update_buffer[27]=0x39; // O
+  update_buffer[28]=0x3C; // R
+  update_buffer[29]=0x1f; // E
+  
+  dungeon_red();   // Leave the dungeon red.
+  j=0x20;
+  for (i=0;i<150;i++) // This effect lasts for 150 frames (or 3 seconds at our 50 drop rate)
+    {
+      pal_col(0,j);
+      if (j==0x3C)
+	{
+	  j=0x20;
+	}
+      else
+	{
+	  ++j;
+	}
+      ppu_wait_frame();
+    }
+  pal_col(0,0x0f);
+}
+
+/**
  * run_dungeon() - dungeon code
  * dungeon_num - Dungeon Number to run
  */
-void run_dungeon(unsigned char dungeon_num)
+void dungeon_run(unsigned char dungeon_num)
 {
   
   vram_adr(NAMETABLE_C);
