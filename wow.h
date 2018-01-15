@@ -54,12 +54,6 @@ extern void update_box_timers(void);
  ****************************************************/
 
 /**
- * pal_fade_to(unsigned to) - smoothly fade palette
- * to the given brightness value.
- */
-void pal_fade_to(unsigned to);
-
-/**
  * dungeon_red() - Turn dungeon red
  */
 void dungeon_red(void);
@@ -95,13 +89,6 @@ void get_current_box(void);
  * init() - just as it says.
  */
 void init(void);
-
-/**
- * add_points(player)
- * player = scoreX to add points in score0 to
- */
-void add_points(unsigned char player);
-
 
 #endif /* WOW_H */
 

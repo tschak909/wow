@@ -63,33 +63,4 @@ const unsigned char metasprite_animation_data[]={
   69,73,77,73, // Worrior Yellow Down Shooting Idle
 };
 
-#define STAMP_TYPE_BLUE_WORRIOR     0
-#define STAMP_TYPE_BURWOR           64
-#define STAMP_TYPE_GORWOR           80
-#define STAMP_TYPE_THORWOR          96
-#define STAMP_TYPE_WORLUK           112
-#define STAMP_TYPE_YELLOW_WORRIOR   128
-
-#define STATE_MONSTER_RIGHT         0
-#define STATE_MONSTER_LEFT          1
-#define STATE_MONSTER_UP            2
-#define STATE_MONSTER_DOWN          3
-
-#define STATE_PLAYER_RIGHT                  0
-#define STATE_PLAYER_RIGHT_IDLE             1
-#define STATE_PLAYER_LEFT                   2
-#define STATE_PLAYER_LEFT_IDLE              3
-#define STATE_PLAYER_UP                     4
-#define STATE_PLAYER_UP_IDLE                5
-#define STATE_PLAYER_DOWN                   6
-#define STATE_PLAYER_DOWN_IDLE              7
-#define STATE_PLAYER_RIGHT_SHOOTING         8
-#define STATE_PLAYER_RIGHT_IDLE_SHOOTING    9
-#define STATE_PLAYER_LEFT_SHOOTING          10
-#define STATE_PLAYER_LEFT_IDLE_SHOOTING     11
-#define STATE_PLAYER_UP_SHOOTING            12
-#define STATE_PLAYER_UP_IDLE_SHOOTING       13
-#define STATE_PLAYER_DOWN_SHOOTING          14
-#define STATE_PLAYER_DOWN_IDLE_SHOOTING     15
-
 #endif /* METASPRITE_ANIMATIONS_H */
