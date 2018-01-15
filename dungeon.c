@@ -70,9 +70,9 @@ void dungeon_blue()
 }
 
 /**
- * double_score_win() - turn screen colors and set "DOUBLE SCORE" text on radar.
+ * dungeon_double_score_win() - turn screen colors and set "DOUBLE SCORE" text on radar.
  */
-void double_score_win(void)
+void dungeon_double_score_win(void)
 {
   clear_update_buffer();
   update_buffer[0]=MSB(NTADR_A(10,20))|NT_UPD_HORZ;
