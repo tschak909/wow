@@ -126,31 +126,26 @@ void dungeon_double_score_win(void)
 }
 
 /**
- * dungeon_run() - dungeon code
- * dungeon_num - Dungeon Number to run
+ * dungeon_print_name(unsigned char dungeon_num)
+ * Print the dungeon name given dungeon number
  */
-void dungeon_run(unsigned char dungeon_num)
+void dungeon_print_name(unsigned char dungeon_num)
 {
-  
-  vram_adr(NAMETABLE_C);
-  vram_fill(0,1024);
-
-  pal_bright(0);
-
-  // Dump dungeon template into Nametable A
-  vram_adr(NAMETABLE_A);
-  vram_unrle(wow_dungeon);
-  pal_bg(palette);
-  pal_spr(palette);
-  vram_adr(NTADR_A(0,0));
-  
-  // Print dungeon name
   str=(unsigned char*)dungeon_names[dungeon_num-1];
-  b=10;
+  b=10; // temporarily use b for Maximum length
   adr=(NTADR_A(11,20));
   vram_adr(adr);
-  a=c=d=0;
+  a=c=d=0; // Reset temporary variables 
 
+  /**
+   * Render the text by translating the ASCII values to
+   * CHR tile values. There is also a correction to account
+   * for the fact that there is no @ in the character set, 
+   * as well as accounting for using special tiles for space.
+   * Once the correct tile is selected, the values are plopped 
+   * directly into VRAM, because the ppu is off.
+   */
+  
   for (i=0;i<2;i++)
     {
       for (j=0;j<b;++j)
@@ -185,7 +180,14 @@ void dungeon_run(unsigned char dungeon_num)
       a=a+0x10;  // second part of letter is 16 cells apart.
       vram_adr(adr+0x20);
     }
-  
+}
+
+/**
+ * dungeon_draw(unsigned char dungeon_num)
+ * Draw the requested dungeon into VRAM
+ */
+void dungeon_draw(unsigned char dungeon_num)
+{
   dungeon=(unsigned char*)dungeons[dungeon_num-1];
   
   b=0;  // dungeon array index
@@ -385,15 +387,51 @@ void dungeon_run(unsigned char dungeon_num)
   	  ++b;
   	}
     }
-  
-  // Point to vram update buffer for further updates.
+}
+
+/**
+ * dungeon_update_counters() - Update dungeon counter(s)
+ * Update the frame and second counters to be used for timers etc.
+ */
+void dungeon_update_counters(void)
+{
+  // Update counters
+  ++frame_cnt;
+  if (sec==0xff)
+    {
+      sec=49;
+    }
+  else
+    {
+      sec--;
+    }
+}
+
+/**
+ * dungeon_run() - dungeon code
+ * dungeon_num - Dungeon Number to run
+ */
+void dungeon_run(unsigned char dungeon_num)
+{
+  // PPU off. Set everything up, and draw the dungeon.
+  ppu_off();
+  vram_adr(NAMETABLE_C);
+  vram_fill(0,1024);
+  pal_bright(0);
+  vram_adr(NAMETABLE_A);
+  vram_unrle(wow_dungeon);
+  pal_bg(palette);
+  pal_spr(palette);
+  vram_adr(NTADR_A(0,0));
+  dungeon_print_name(dungeon_num);
+  dungeon_draw(dungeon_num);
   set_vram_update(update_buffer);
-  
+
+  // Turn the PPU on, and finish setting up.
   ppu_on_all();
   ppu_wait_frame();
   bank_spr(1);
   bank_bg(0);
-  
   pal_fade_to(4);
 
   // Set up the stamps for this initial run of the dungeon.
@@ -402,50 +440,26 @@ void dungeon_run(unsigned char dungeon_num)
   player_blue_ready();
   a=spr=OAM_OFFSET_TOP;
 
-  music_play(1);
+  /* music_play(1); */
   
   // At this point, we loop around and handle frame scheduling
   
   ////////////////////////////////////////////////////////////
 
   while(1)
-    {
-      
-      // Set Game State
-
-      /* blue_door_state=OPEN; */
-      /* yellow_door_state=OPEN; */
-      /* add_points(0); */
-      /* add_points(1); */
-
+    {      
       animate_stamps();
       monster_move_all();
       player_move_all();
-      
-      // End Set Game State
-
       ppu_wait_frame();
-      
-      // Update counters
-      ++frame_cnt;
-      if (sec==0xff)
-	{
-	  sec=49;
-	}
-      else
-	{
-	  sec--;
-	}
-
-      // Update sprites
-      
+      dungeon_update_counters();
       update_stamps();
       update_radar();
       update_teleport_timer();
      
       // VRAM update scheduler
       
-      a=frame_cnt&0x03;
+      a=frame_cnt&0x03; // four possible update states derived from frame counter.
       switch (a)
 	{
 	case 0:
