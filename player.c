@@ -30,9 +30,9 @@ extern unsigned char score2[7];
 extern void get_current_box(void);
 
 /**
- * ready_blue_player() - Ready the blue player
+ * player_blue_ready() - Ready the blue player
  */
-void ready_blue_player(void)
+void player_blue_ready(void)
 {
   stamps[STAMP_TIMER(1)]=3; // Player is in the box.
   stamps[STAMP_X(1)]=PIXEL_BOX_X(0);
@@ -45,9 +45,9 @@ void ready_blue_player(void)
 }
 
 /**
- * ready_yellow_player() - Ready the blue player
+ * player_yellow_ready() - Ready the blue player
  */
-void ready_yellow_player(void)
+void player_yellow_ready(void)
 {
   stamps[STAMP_TIMER(0)]=6;
   stamps[STAMP_X(0)]=PIXEL_BOX_X(9);
@@ -60,9 +60,9 @@ void ready_yellow_player(void)
 }
 
 /**
- * handle_pad_idle()
+ * player_handle_idle()
  */
-void handle_pad_idle(void)
+void player_handle_idle(void)
 {
   // Change to idle state if pad is idle.
   switch(stamps[STAMP_LAST_STATE(i)])
@@ -83,10 +83,10 @@ void handle_pad_idle(void)
 }
 
 /**
- * handle_player_in_field()
+ * player_in_field()
  * Handle when player is on the playfield
  */
-void handle_player_in_field(void)
+void player_in_field(void)
 {
 
   stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];
@@ -115,7 +115,7 @@ void handle_player_in_field(void)
       else if (PLAYER_PAD_DOWN(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_DOWN && !BOX_WALL_DOWN(d))
       	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_DOWN;
       else if (PLAYER_PAD_IDLE(i))
-	handle_pad_idle();
+	player_handle_idle();
       
       if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
 	{
@@ -138,7 +138,7 @@ void handle_player_in_field(void)
     {
       // We are not aligned.
       if (PLAYER_PAD_IDLE(i))
-	handle_pad_idle();
+	player_handle_idle();
       else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT)
 	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT;
       else if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT)
@@ -172,10 +172,10 @@ void handle_player_in_field(void)
 }
 
 /**
- * handle_player_in_box()
+ * player_in_box()
  * Handle when player is in box.
  */
-void handle_player_in_box(void)
+void player_in_box(void)
 {
   if (stamps[STAMP_TIMER(i)]>0)
     {
@@ -207,9 +207,9 @@ void handle_player_in_box(void)
 }
 
 /**
- * move_players()
+ * player_move_all()
  */
-void move_players(void)
+void player_move_all(void)
 {
   for (i=0;i<2;i++)
     {
@@ -218,11 +218,11 @@ void move_players(void)
      
       if (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(6)-1)
 	{
-	  handle_player_in_box();
+	  player_in_box();
 	}
       else
 	{
-	  handle_player_in_field();
+	  player_in_field();
 	}
     }
 }

@@ -2,35 +2,35 @@
 #define PLAYER_H
 
 /**
- * ready_blue_player() - Ready the blue player
+ * player_blue_ready() - Ready the blue player
  */
-void ready_blue_player(void);
+void player_blue_ready(void);
 
 /**
- * ready_yellow_player() - Ready the blue player
+ * player_yellow_ready() - Ready the blue player
  */
-void ready_yellow_player(void);
+void player_yellow_ready(void);
 
 /**
- * handle_pad_idle()
+ * player_idle()
  */
-void handle_pad_idle(void);
+void player_idle(void);
 
 /**
- * handle_player_in_field()
+ * player_in_field()
  * Handle when player is on the playfield
  */
-void handle_player_in_field(void);
+void player_in_field(void);
 
 /**
- * handle_player_in_box()
+ * player_in_box()
  * Handle when player is in box.
  */
-void handle_player_in_box(void);
+void player_in_box(void);
 
 /**
- * move_players()
+ * player_move_all()
  */
-void move_players(void);
+void player_move_all(void);
 
 #endif /* PLAYER_H */

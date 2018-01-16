@@ -2,26 +2,20 @@
 #define MONSTER_H
 
 /**
- * move_monsters()
+ * monster_move_all()
  * Move the monsters
  */
-void move_monsters(void);
+void monster_move_all(void);
 
 /**
- * setup_enemy_sprites() - Set up enemy sprite spawn points
+ * monster_setup_all() - Set up enemy sprite spawn points
  */
-void setup_enemy_sprites(void);
+void monster_setup_all(void);
 
 /**
  * monster_change_direction()
  * Change monster direction.
  */
 void monster_change_direction(void);
-
-/**
- * move_monsters()
- * Move the monsters
- */
-void move_monsters(void);
 
 #endif /* MONSTER_H */

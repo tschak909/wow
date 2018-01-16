@@ -38,12 +38,12 @@ extern unsigned char teleport_state;
 #pragma zpsym("teleport_state")
 
 extern void pal_fade_to(unsigned to);
-extern void setup_enemy_sprites(void);
-extern void ready_yellow_player(void);
-extern void ready_blue_player(void);
+extern void monster_setup_all(void);
+extern void player_blue_ready(void);
+extern void player_yellow_ready(void);
 extern void animate_stamps(void);
-extern void move_monsters(void);
-extern void move_players(void);
+extern void monster_move_all(void);
+extern void player_move_all(void);
 extern void update_stamps(void);
 extern void update_radar(void);
 extern void update_teleport_timer(void);
@@ -397,9 +397,9 @@ void dungeon_run(unsigned char dungeon_num)
   pal_fade_to(4);
 
   // Set up the stamps for this initial run of the dungeon.
-  setup_enemy_sprites();
-  ready_yellow_player();
-  ready_blue_player();
+  monster_setup_all();
+  player_yellow_ready();
+  player_blue_ready();
   a=spr=OAM_OFFSET_TOP;
 
   music_play(1);
@@ -419,8 +419,8 @@ void dungeon_run(unsigned char dungeon_num)
       /* add_points(1); */
 
       animate_stamps();
-      move_monsters();
-      move_players();
+      monster_move_all();
+      player_move_all();
       
       // End Set Game State
 

@@ -21,9 +21,9 @@ extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
 extern void get_current_box(void);
 
 /**
- * setup_enemy_sprites() - Set up enemy sprite spawn points
+ * monster_setup_all() - Set up enemy sprite spawn points
  */
-void setup_enemy_sprites(void)
+void monster_setup_all(void)
 {
   for (i=2;i<STAMP_NUM_SLOTS;i++)
     {
@@ -80,10 +80,10 @@ void monster_change_direction(void)
 }
 
 /**
- * move_monsters()
+ * monster_move_all()
  * Move the monsters
  */
-void move_monsters(void)
+void monster_move_all(void)
 {
   for (i=2;i<STAMP_NUM_SLOTS;i++)
     {
