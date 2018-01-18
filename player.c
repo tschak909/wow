@@ -83,7 +83,7 @@ void player_handle_idle(void)
       stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_UP_IDLE_SHOOTING:STATE_PLAYER_UP_IDLE);
       break;
     case STATE_PLAYER_DOWN:
-      stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_DOWN_IDLE:STATE_PLAYER_DOWN_IDLE);
+      stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_DOWN_IDLE_SHOOTING:STATE_PLAYER_DOWN_IDLE);
       break;
     }
 }
