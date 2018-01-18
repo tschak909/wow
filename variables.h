@@ -35,7 +35,8 @@ unsigned char blue_door_state;  // Blue door state
 unsigned char yellow_door_state; // Yellow door state
 unsigned char teleport_state;   // Teleport state
 unsigned char teleport_timer;   // Teleport timer
-// unsigned char player_shooting[2];          // Player shooting this frame?
-// unsigned char player_last_shooting[2];     // Player shooting last frame?
+unsigned char player_trigger[2];          // Player shooting this frame?
+unsigned char player_last_trigger[2];     // Player shooting last frame?
+unsigned char player_shooting_last_state[2]; // State before player started shooting.
 
 #endif /* VARIABLES_H */

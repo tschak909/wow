@@ -53,8 +53,8 @@ void main(void)
   
   while(1)
     {
-      attract_scores();
-      attract_monsters();
+      /* attract_scores(); */
+      /* attract_monsters(); */
       dungeon_run(1);
     }
 }

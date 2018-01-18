@@ -21,6 +21,12 @@ extern unsigned char d;
 #pragma zpsym("d")
 extern unsigned char sec;
 #pragma zpsym("sec")
+extern unsigned char player_trigger[2];
+#pragma zpsym("player_trigger")
+extern unsigned char player_last_trigger[2];
+#pragma zpsym("player_last_trigger")
+extern unsigned char player_shooting_last_state[2];
+#pragma zpsym("player_shooting_last_state")
 
 extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
 extern unsigned char score0[7];
@@ -68,16 +74,16 @@ void player_handle_idle(void)
   switch(stamps[STAMP_LAST_STATE(i)])
     {
     case STATE_PLAYER_RIGHT:
-      stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT_IDLE;
+      stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_RIGHT_IDLE_SHOOTING:STATE_PLAYER_RIGHT_IDLE);
       break;
     case STATE_PLAYER_LEFT:
-      stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT_IDLE;
+      stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_LEFT_IDLE_SHOOTING:STATE_PLAYER_LEFT_IDLE);
       break;
     case STATE_PLAYER_UP:
-      stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_IDLE;
+      stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_UP_IDLE_SHOOTING:STATE_PLAYER_UP_IDLE);
       break;
     case STATE_PLAYER_DOWN:
-      stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN_IDLE;
+      stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_DOWN_IDLE:STATE_PLAYER_DOWN_IDLE);
       break;
     }
 }
@@ -88,9 +94,6 @@ void player_handle_idle(void)
  */
 void player_in_field(void)
 {
-
-  stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];
-
   if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
       // We are aligned.
@@ -107,13 +110,13 @@ void player_in_field(void)
 	  teleport_timer=2;
 	}
       else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && !BOX_WALL_RIGHT(d))
-      	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT;
+      	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_RIGHT_SHOOTING:STATE_PLAYER_RIGHT);
       else if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_LEFT && !BOX_WALL_LEFT(d))
-      	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_LEFT;
+      	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_LEFT_SHOOTING:STATE_PLAYER_LEFT);
       else if (PLAYER_PAD_UP(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_UP && !BOX_WALL_UP(d))
-	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_UP;
+	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_UP_SHOOTING:STATE_PLAYER_UP);
       else if (PLAYER_PAD_DOWN(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_DOWN && !BOX_WALL_DOWN(d))
-      	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_DOWN;
+      	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_DOWN_SHOOTING:STATE_PLAYER_DOWN);
       else if (PLAYER_PAD_IDLE(i))
 	player_handle_idle();
       
@@ -126,13 +129,13 @@ void player_in_field(void)
 	  stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT;
 	}
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && BOX_WALL_RIGHT(d))
-      	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT_IDLE;
+      	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_RIGHT_IDLE_SHOOTING:STATE_PLAYER_RIGHT_IDLE);
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && BOX_WALL_LEFT(d))
-      	stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT_IDLE;
+      	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_LEFT_IDLE_SHOOTING:STATE_PLAYER_LEFT_IDLE);
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP && BOX_WALL_UP(d))
-	stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_IDLE;
+	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_UP_IDLE_SHOOTING:STATE_PLAYER_UP_IDLE);
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN && BOX_WALL_DOWN(d))
-      	stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN_IDLE;
+      	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_DOWN_IDLE_SHOOTING:STATE_PLAYER_DOWN_IDLE);
     }
   else
     {
@@ -140,18 +143,17 @@ void player_in_field(void)
       if (PLAYER_PAD_IDLE(i))
 	player_handle_idle();
       else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT)
-	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT;
+	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_RIGHT_SHOOTING:STATE_PLAYER_RIGHT);
       else if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT)
-	stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT;
+	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_LEFT_SHOOTING:STATE_PLAYER_LEFT);
       else if (PLAYER_PAD_UP(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN)
-	stamps[STAMP_STATE(i)]=STATE_PLAYER_UP;
+	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_UP_SHOOTING:STATE_PLAYER_UP);
       else if (PLAYER_PAD_DOWN(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP)
-	stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN;
+	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_DOWN_SHOOTING:STATE_PLAYER_DOWN);
       else
-	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];
-      
+	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];      
     }
-  
+
   // Handle state movement
   if (stamps[STAMP_STATE(i)]==STATE_PLAYER_RIGHT)
     stamps[STAMP_X(i)]+=2;
@@ -163,12 +165,29 @@ void player_in_field(void)
     stamps[STAMP_Y(i)]+=2;
   
   // And set last state, if we aren't idle.
-  if (!PLAYER_PAD_IDLE(i))
+  if (!PLAYER_PAD_IDLE(i) && stamps[STAMP_SHOOTING(i)]==0)
     stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];  
 
+  if (player_trigger[i]==player_last_trigger[i])
+    {
+      // Debounce
+    }
+  else
+    {
+      if (player_last_trigger[i]==0 && player_trigger[i]==1)
+  	{
+  	  stamps[STAMP_SHOOTING(i)]=1;
+  	  stamps[STAMP_FRAME(i)]=0;
+  	}
+    }
+
+  if (stamps[STAMP_SHOOTING(i)]==1 && stamps[STAMP_FRAME(i)]==3)
+    stamps[STAMP_SHOOTING(i)]=0;
+  
   // REMOVE: Show yellow state in yellow score.
   score2[0]=stamps[STAMP_STATE(0)]+1;
-
+  score2[1]=stamps[STAMP_LAST_STATE(0)]+1;
+  score2[2]=stamps[STAMP_SHOOTING(0)]+1;
 }
 
 /**
@@ -215,7 +234,8 @@ void player_move_all(void)
     {
       get_current_box();
       stamps[STAMP_PAD(i)]=pad_poll(i);
-     
+      player_trigger[i]=(PLAYER_PAD_A(i)?1:0);
+      
       if (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(6)-1)
 	{
 	  player_in_box();
@@ -224,5 +244,8 @@ void player_move_all(void)
 	{
 	  player_in_field();
 	}
+
+      player_last_trigger[i]=player_trigger[i];
+      
     }
 }

@@ -34,7 +34,7 @@
 /**
  * 8 objects on screen, two players and 6 enemies.
  */
-#define STAMP_NUM_FIELDS     10                   // Number of fields in each stamp slot
+#define STAMP_NUM_FIELDS     10                    // Number of fields in each stamp slot
 #define STAMP_NUM_SLOTS      8                    // Number of slots in stamp structure
 #define STAMP_CENTER_BIAS_X  12                   // Offset to apply to box multiply to center sprite (X)
 #define STAMP_CENTER_BIAS_Y  10                   // Offset to apply to box multiply to center sprite (Y)

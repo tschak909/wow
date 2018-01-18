@@ -55,8 +55,8 @@ const unsigned char metasprite_animation_data[]={
   65,65,65,65, // Worrior Yellow Down Idle
   66,70,74,78, // Worrior Yellow Right Shooting
   66,70,74,78, // Worrior Yellow Right Shooting Idle
-  67,71,75,75, // Worrior Yellow Left Shooting
-  67,71,75,75, // Worrior Yellow Left Shooting Idle
+  67,71,75,79, // Worrior Yellow Left Shooting
+  67,71,75,79, // Worrior Yellow Left Shooting Idle
   68,72,76,80, // Worrior Yellow Up Shooting
   68,72,76,80, // Worrior Yellow Up Shooting Idle  
   69,73,77,81, // Worrior Yellow Down Shooting
