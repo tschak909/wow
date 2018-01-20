@@ -148,18 +148,39 @@ void player_in_field(void)
       else if (PLAYER_PAD_DOWN(i) && (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP))
       	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_DOWN_SHOOTING:STATE_PLAYER_DOWN);
       else
-      	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?stamps[STAMP_LAST_STATE(i)]+STATE_ADD_SHOOTING:stamps[STAMP_LAST_STATE(i)]);
+	{
+	  if (stamps[STAMP_SHOOTING(i)]==1 && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT)
+	    stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT_SHOOTING;
+	  else if (stamps[STAMP_SHOOTING(i)]==1 && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT)
+	    stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT_SHOOTING;
+	  else if (stamps[STAMP_SHOOTING(i)]==1 && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN)
+	    stamps[STAMP_STATE(i)]=STATE_PLAYER_DOWN_SHOOTING;
+	  else if (stamps[STAMP_SHOOTING(i)]==1 && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP)
+	    stamps[STAMP_STATE(i)]=STATE_PLAYER_UP_SHOOTING;
+	  else
+	    stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];
+	}
     }
 
-  // Handle state movement
-  if (stamps[STAMP_STATE(i)]==STATE_PLAYER_RIGHT)
-    stamps[STAMP_X(i)]+=2;
-  else if (stamps[STAMP_STATE(i)]==STATE_PLAYER_LEFT)
-    stamps[STAMP_X(i)]-=2;
-  else if (stamps[STAMP_STATE(i)]==STATE_PLAYER_UP)
-    stamps[STAMP_Y(i)]-=2;
-  else if (stamps[STAMP_STATE(i)]==STATE_PLAYER_DOWN)
-    stamps[STAMP_Y(i)]+=2;
+  switch(stamps[STAMP_STATE(i)])
+    {
+    case STATE_PLAYER_RIGHT:
+    case STATE_PLAYER_RIGHT_SHOOTING:
+      stamps[STAMP_X(i)]+=2;
+      break;
+    case STATE_PLAYER_LEFT:
+    case STATE_PLAYER_LEFT_SHOOTING:
+      stamps[STAMP_X(i)]-=2;
+      break;
+    case STATE_PLAYER_UP:
+    case STATE_PLAYER_UP_SHOOTING:
+      stamps[STAMP_Y(i)]-=2;
+      break;
+    case STATE_PLAYER_DOWN:
+    case STATE_PLAYER_DOWN_SHOOTING:
+      stamps[STAMP_Y(i)]+=2;
+      break;
+    }
   
   // And set last state, if we aren't idle.
   if (!PLAYER_PAD_IDLE(i) && stamps[STAMP_SHOOTING(i)]==0)
