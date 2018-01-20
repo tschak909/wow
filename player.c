@@ -96,6 +96,7 @@ void player_in_field(void)
 {
   if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
+      pal_col(0,0x0f);
       // We are aligned.
       if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
 	{
@@ -109,49 +110,45 @@ void player_in_field(void)
 	  teleport_state=CLOSED;
 	  teleport_timer=2;
 	}
-      else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && !BOX_WALL_RIGHT(d))
-      	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_RIGHT_SHOOTING:STATE_PLAYER_RIGHT);
-      else if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_LEFT && !BOX_WALL_LEFT(d))
+      else if (PLAYER_PAD_RIGHT(i) && (stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT || stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT_IDLE) && !BOX_WALL_RIGHT(d))
+	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_RIGHT_SHOOTING:STATE_PLAYER_RIGHT);
+      else if (PLAYER_PAD_LEFT(i) && (stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_LEFT || stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_LEFT_IDLE) && !BOX_WALL_LEFT(d))
       	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_LEFT_SHOOTING:STATE_PLAYER_LEFT);
-      else if (PLAYER_PAD_UP(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_UP && !BOX_WALL_UP(d))
+      else if (PLAYER_PAD_UP(i) && (stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_UP || stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_UP_IDLE) && !BOX_WALL_UP(d))
 	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_UP_SHOOTING:STATE_PLAYER_UP);
-      else if (PLAYER_PAD_DOWN(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_DOWN && !BOX_WALL_DOWN(d))
+      else if (PLAYER_PAD_DOWN(i) && (stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_DOWN || stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_DOWN_IDLE) && !BOX_WALL_DOWN(d))
       	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_DOWN_SHOOTING:STATE_PLAYER_DOWN);
       else if (PLAYER_PAD_IDLE(i))
 	player_handle_idle();
       
       if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
-	{
- 	  stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT;
-	}
+	stamps[STAMP_STATE(i)]=STATE_PLAYER_LEFT;
       else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(9) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
-	{
-	  stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT;
-	}
-      else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT && BOX_WALL_RIGHT(d))
+	stamps[STAMP_STATE(i)]=STATE_PLAYER_RIGHT;
+      else if ((stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT || stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT_IDLE) && BOX_WALL_RIGHT(d))
       	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_RIGHT_IDLE_SHOOTING:STATE_PLAYER_RIGHT_IDLE);
-      else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT && BOX_WALL_LEFT(d))
+      else if ((stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT || stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT_IDLE) && BOX_WALL_LEFT(d))
       	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_LEFT_IDLE_SHOOTING:STATE_PLAYER_LEFT_IDLE);
-      else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP && BOX_WALL_UP(d))
+      else if ((stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP || stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP_IDLE) && BOX_WALL_UP(d))
 	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_UP_IDLE_SHOOTING:STATE_PLAYER_UP_IDLE);
-      else if (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN && BOX_WALL_DOWN(d))
+      else if ((stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN || stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN_IDLE) && BOX_WALL_DOWN(d))
       	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_DOWN_IDLE_SHOOTING:STATE_PLAYER_DOWN_IDLE);
     }
   else
     {
       // We are not aligned.
       if (PLAYER_PAD_IDLE(i))
-	player_handle_idle();
-      else if (PLAYER_PAD_RIGHT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT)
-	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_RIGHT_SHOOTING:STATE_PLAYER_RIGHT);
-      else if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT)
-	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_LEFT_SHOOTING:STATE_PLAYER_LEFT);
-      else if (PLAYER_PAD_UP(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN)
-	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_UP_SHOOTING:STATE_PLAYER_UP);
-      else if (PLAYER_PAD_DOWN(i) && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP)
-	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_DOWN_SHOOTING:STATE_PLAYER_DOWN);
+      	player_handle_idle();
+      else if (PLAYER_PAD_RIGHT(i) && (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_LEFT))
+      	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_RIGHT_SHOOTING:STATE_PLAYER_RIGHT);
+      else if (PLAYER_PAD_LEFT(i) && (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_RIGHT))
+      	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_LEFT_SHOOTING:STATE_PLAYER_LEFT);
+      else if (PLAYER_PAD_UP(i) && (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_DOWN))
+      	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_UP_SHOOTING:STATE_PLAYER_UP);
+      else if (PLAYER_PAD_DOWN(i) && (stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP))
+      	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?STATE_PLAYER_DOWN_SHOOTING:STATE_PLAYER_DOWN);
       else
-	stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];      
+      	stamps[STAMP_STATE(i)]=(stamps[STAMP_SHOOTING(i)]==1?stamps[STAMP_LAST_STATE(i)]+STATE_ADD_SHOOTING:stamps[STAMP_LAST_STATE(i)]);
     }
 
   // Handle state movement
