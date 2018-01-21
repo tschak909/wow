@@ -39,7 +39,16 @@
 #define BOX_NO_WALLS(x)      x==0x00             // Box has no walls. (TBD: Replace with an upper 4-bit AND)
 
 #define LASER_NUM(x)         (x*LASER_NUM_FIELDS)
-#define LASER_X(x)           (STAMP_NUM(x)+0)
-#define LASER_Y(x)           (STAMP_NUM(x)+1)
+#define LASER_X(x)           (LASER_NUM(x)+0)
+#define LASER_Y(x)           (LASER_NUM(x)+1)
+#define LASER_TYPE(x)        (LASER_NUM(x)+2)
+#define LASER_SHOOTING(x)    (LASER_NUM(x)+3)
+#define LASER_DIRECTION(x)   (LASER_NUM(x)+4)
+
+#define LASER_POSITION_X_START_H(x) x+LASER_X_OFFSET_H
+#define LASER_POSITION_Y_START_H(x) x+LASER_Y_OFFSET_H
+
+#define LASER_POSITION_X_START_V(x) x+LASER_X_OFFSET_V
+#define LASER_POSITION_Y_START_V(x) x+LASER_Y_OFFSET_V
 
 #endif /* MACROS_H */

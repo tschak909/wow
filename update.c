@@ -31,6 +31,7 @@ extern unsigned char score2[7];
 extern unsigned char update_buffer[80];
 extern const unsigned char metasprite_animation_data[];
 extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
+extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
 
 extern unsigned char stamp_type_to_radar(unsigned char t);
 extern void clear_update_buffer(void);
@@ -207,9 +208,7 @@ void update_stamps(void)
   for (i=0;i<STAMP_NUM_SLOTS;i++)
     {
       if (stamps[STAMP_X(i)] == 0)
-	{
 	  continue;
-	}
       else
 	{
 	  a=metasprite_animation_data[stamps[STAMP_TYPE(i)]+(stamps[STAMP_STATE(i)]*4)+stamps[STAMP_FRAME(i)]];
@@ -222,6 +221,23 @@ void update_stamps(void)
 	    b=c=0xF8; // Offscreen
   
 	  spr = oam_meta_spr(b,c,spr,metasprite_list[a]);
+	}
+    }
+}
+
+/**
+ * update_lasers() - Update the on-screen lasers
+ */
+void update_lasers(void)
+{
+  spr=OAM_OFFSET_LASERS;
+  for (i=0;i<LASER_NUM_SLOTS;i++)
+    {
+      if (stamps[LASER_X(i)]==0) // X=0, do not draw laser.
+	continue;
+      else
+	{
+	  spr = oam_spr(lasers[LASER_X(i)],lasers[LASER_Y(i)],lasers[LASER_TYPE(i)],0,spr);	  
 	}
     }
 }

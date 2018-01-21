@@ -28,6 +28,11 @@ void update_scores(void);
 void update_stamps(void);
 
 /**
+ * update_lasers() - Update the on-screen laser
+ */
+void update_lasers(void);
+
+/**
  * update_box_timers() - Update the box timers, if active
  */
 void update_box_timers(void);

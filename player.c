@@ -13,12 +13,18 @@ extern unsigned char a;
 #pragma zpsym("a")
 extern unsigned char b;
 #pragma zpsym("b")
+extern unsigned char d;
+#pragma zpsym("d")
+extern unsigned char e;
+#pragma zpsym("e")
+extern unsigned char f;
+#pragma zpsym("f")
+extern unsigned char h;
+#pragma zpsym("h")
 extern unsigned char teleport_state;
 #pragma zpsym("teleport_state")
 extern unsigned char teleport_timer;
 #pragma zpsym("teleport_timer")
-extern unsigned char d;
-#pragma zpsym("d")
 extern unsigned char sec;
 #pragma zpsym("sec")
 extern unsigned char player_trigger[2];
@@ -29,11 +35,13 @@ extern unsigned char player_shooting_last_state[2];
 #pragma zpsym("player_shooting_last_state")
 
 extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
+extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
 extern unsigned char score0[7];
 extern unsigned char score1[7];
 extern unsigned char score2[7];
 
 extern void get_current_box(void);
+extern void get_current_laser_box(void);
 
 /**
  * player_blue_ready() - Ready the blue player
@@ -96,7 +104,6 @@ void player_in_field(void)
 {
   if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
-      pal_col(0,0x0f);
       // We are aligned.
       if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
 	{
@@ -186,6 +193,7 @@ void player_in_field(void)
   if (!PLAYER_PAD_IDLE(i) && stamps[STAMP_SHOOTING(i)]==0)
     stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];  
 
+  // Convert trigger press to shooting state.
   if (player_trigger[i]==player_last_trigger[i])
     {
       // Debounce
@@ -196,11 +204,62 @@ void player_in_field(void)
   	{
   	  stamps[STAMP_SHOOTING(i)]=1;
   	  stamps[STAMP_FRAME(i)]=0;
+	  player_laser_fire(i);
   	}
     }
 
   if (stamps[STAMP_SHOOTING(i)]==1 && stamps[STAMP_FRAME(i)]==3)
     stamps[STAMP_SHOOTING(i)]=0;
+
+  if (lasers[LASER_SHOOTING(i)]==1)
+    {
+      get_current_laser_box();
+      if (lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_SHOOTING || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_IDLE || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_IDLE_SHOOTING)
+	{
+	  if (!BOX_WALL_RIGHT(h))
+	    {
+	      lasers[LASER_X(i)]+=8;
+	    }
+	  else
+	    {
+	      player_laser_stop(i);
+	    }	    
+	}
+      else if (lasers[LASER_DIRECTION(i)]==STATE_PLAYER_LEFT_SHOOTING || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_LEFT || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_LEFT_IDLE || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_LEFT_IDLE_SHOOTING)
+	{
+	  if (!BOX_WALL_LEFT(h))
+	    {
+	      lasers[LASER_X(i)]-=8;
+	    }
+	  else
+	    {
+	      player_laser_stop(i);
+	    }
+	}
+      else if (lasers[LASER_DIRECTION(i)]==STATE_PLAYER_DOWN_SHOOTING || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_DOWN || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_DOWN_IDLE || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_DOWN_IDLE_SHOOTING)
+	{
+	  if (!BOX_WALL_DOWN(h))
+	    {
+	      lasers[LASER_Y(i)]+=8;
+	    }
+	  else
+	    {
+	      player_laser_stop(i);
+	    }
+	}
+      else if (lasers[LASER_DIRECTION(i)]==STATE_PLAYER_UP_SHOOTING || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_UP || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_UP_IDLE || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_UP_IDLE_SHOOTING)
+	{
+	  if (!BOX_WALL_UP(h))
+	    {
+	      lasers[LASER_Y(i)]-=8;
+	    }
+	  else
+	    {
+	      player_laser_stop(i);
+	    }
+	}
+    }
+
   
   // REMOVE: Show yellow state in yellow score.
   score2[0]=stamps[STAMP_STATE(0)]+1;
@@ -266,4 +325,53 @@ void player_move_all(void)
       player_last_trigger[i]=player_trigger[i];
       
     }
+}
+
+/**
+ * player_laser_fire()
+ */
+void player_laser_fire(unsigned char player)
+{
+  // Position laser in player box.
+  lasers[LASER_SHOOTING(player)]=1;
+  lasers[LASER_DIRECTION(player)]=stamps[STAMP_STATE(i)];
+  switch(lasers[LASER_DIRECTION(player)])
+    {
+    case STATE_PLAYER_LEFT:
+    case STATE_PLAYER_LEFT_IDLE:
+    case STATE_PLAYER_LEFT_SHOOTING:
+    case STATE_PLAYER_LEFT_IDLE_SHOOTING:
+    case STATE_PLAYER_RIGHT:
+    case STATE_PLAYER_RIGHT_IDLE:
+    case STATE_PLAYER_RIGHT_SHOOTING:
+    case STATE_PLAYER_RIGHT_IDLE_SHOOTING:
+      lasers[LASER_X(player)]=LASER_POSITION_X_START_H(stamps[STAMP_X(i)]);
+      lasers[LASER_Y(player)]=LASER_POSITION_Y_START_H(stamps[STAMP_Y(i)]);
+      lasers[LASER_TYPE(player)]=0xC8;
+      break;
+    case STATE_PLAYER_DOWN:
+    case STATE_PLAYER_DOWN_IDLE:
+    case STATE_PLAYER_DOWN_SHOOTING:
+    case STATE_PLAYER_DOWN_IDLE_SHOOTING:
+    case STATE_PLAYER_UP:
+    case STATE_PLAYER_UP_IDLE:
+    case STATE_PLAYER_UP_SHOOTING:
+    case STATE_PLAYER_UP_IDLE_SHOOTING:
+      lasers[LASER_X(player)]=LASER_POSITION_X_START_V(stamps[STAMP_X(i)]);
+      lasers[LASER_Y(player)]=LASER_POSITION_Y_START_V(stamps[STAMP_Y(i)]);
+      lasers[LASER_TYPE(player)]=0xCA;
+      break;
+    }
+}
+
+/**
+ * player_laser_stop()
+ */
+void player_laser_stop(unsigned char player)
+{
+  lasers[LASER_X(player)]=0;
+  lasers[LASER_Y(player)]=0;
+  lasers[LASER_TYPE(player)]=0;
+  lasers[LASER_SHOOTING(player)]=0;
+  lasers[LASER_DIRECTION(player)]=0;
 }

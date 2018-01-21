@@ -16,13 +16,14 @@ unsigned char score1[7]={1,1,1,1,1,1,1};
 unsigned char score2[7]={1,1,1,1,1,1,1};
 
 unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
+unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_FIELDS];
 
 /******************************************************
  * Zero Page Variables                                *
  ******************************************************/
 #pragma bssseg (push,"ZEROPAGE")
 
-unsigned char i,j,a,b,c,d;          // Index counters or temporary
+unsigned char i,j,a,b,c,d,e,f,g,h;          // Index counters or temporary
 unsigned char spr;                // Pointers
 unsigned char frame_cnt;         // Frame counter (up to 256 frames)
 unsigned char sec;               // counts from 49 to 0 (one second)
