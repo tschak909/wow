@@ -172,19 +172,15 @@ void player_in_field(void)
   switch(stamps[STAMP_STATE(i)])
     {
     case STATE_PLAYER_RIGHT:
-    case STATE_PLAYER_RIGHT_SHOOTING:
       stamps[STAMP_X(i)]+=2;
       break;
     case STATE_PLAYER_LEFT:
-    case STATE_PLAYER_LEFT_SHOOTING:
       stamps[STAMP_X(i)]-=2;
       break;
     case STATE_PLAYER_UP:
-    case STATE_PLAYER_UP_SHOOTING:
       stamps[STAMP_Y(i)]-=2;
       break;
     case STATE_PLAYER_DOWN:
-    case STATE_PLAYER_DOWN_SHOOTING:
       stamps[STAMP_Y(i)]+=2;
       break;
     }
