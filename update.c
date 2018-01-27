@@ -237,7 +237,7 @@ void update_lasers(void)
 	continue;
       else
 	{
-	  spr = oam_spr(lasers[LASER_X(i)],lasers[LASER_Y(i)],lasers[LASER_TYPE(i)],0,spr);	  
+	  spr = oam_spr(lasers[LASER_X(i)]+lasers[LASER_OFFSET_X(i)],lasers[LASER_Y(i)]+lasers[LASER_OFFSET_Y(i)],lasers[LASER_TYPE(i)],0,spr);	  
 	}
     }
 }

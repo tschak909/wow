@@ -96,7 +96,7 @@
  * Laser stamp fields 
  */
 
-#define LASER_NUM_FIELDS     5
+#define LASER_NUM_FIELDS     7
 #define LASER_NUM_SLOTS      8
 
 #define LASER_CENTER_BIAS_X  12

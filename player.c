@@ -19,6 +19,8 @@ extern unsigned char e;
 #pragma zpsym("e")
 extern unsigned char f;
 #pragma zpsym("f")
+extern unsigned char g;
+#pragma zpsym("g")
 extern unsigned char h;
 #pragma zpsym("h")
 extern unsigned char teleport_state;
@@ -211,56 +213,39 @@ void player_in_field(void)
     {
       get_current_laser_box();
       if (lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_SHOOTING || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_IDLE || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_IDLE_SHOOTING)
-	{
-	  if (!BOX_WALL_RIGHT(h))
-	    {
-	      lasers[LASER_X(i)]+=8;
-	    }
-	  else
-	    {
+	{	    
+	  if (BOX_WALL_RIGHT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
 	      player_laser_stop(i);
-	    }	    
+	  else
+ 	      lasers[LASER_X(i)]+=8;
 	}
       else if (lasers[LASER_DIRECTION(i)]==STATE_PLAYER_LEFT_SHOOTING || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_LEFT || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_LEFT_IDLE || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_LEFT_IDLE_SHOOTING)
 	{
-	  if (!BOX_WALL_LEFT(h))
-	    {
-	      lasers[LASER_X(i)]-=8;
-	    }
-	  else
-	    {
+	  if (BOX_WALL_LEFT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
 	      player_laser_stop(i);
-	    }
+	  else
+	      lasers[LASER_X(i)]-=8;
 	}
       else if (lasers[LASER_DIRECTION(i)]==STATE_PLAYER_DOWN_SHOOTING || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_DOWN || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_DOWN_IDLE || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_DOWN_IDLE_SHOOTING)
 	{
-	  if (!BOX_WALL_DOWN(h))
-	    {
-	      lasers[LASER_Y(i)]+=8;
-	    }
-	  else
-	    {
+	  if (BOX_WALL_DOWN(h) && lasers[LASER_Y(i)]==PIXEL_BOX_Y(f))
 	      player_laser_stop(i);
-	    }
+	  else
+	      lasers[LASER_Y(i)]+=8;
 	}
       else if (lasers[LASER_DIRECTION(i)]==STATE_PLAYER_UP_SHOOTING || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_UP || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_UP_IDLE || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_UP_IDLE_SHOOTING)
 	{
-	  if (!BOX_WALL_UP(h))
-	    {
-	      lasers[LASER_Y(i)]-=8;
-	    }
-	  else
-	    {
+	  if (BOX_WALL_UP(h) && lasers[LASER_Y(i)]==PIXEL_BOX_Y(f))
 	      player_laser_stop(i);
-	    }
+	  else
+	      lasers[LASER_Y(i)]-=8;
 	}
     }
 
   
   // REMOVE: Show yellow state in yellow score.
-  score2[0]=stamps[STAMP_STATE(0)]+1;
-  score2[1]=stamps[STAMP_LAST_STATE(0)]+1;
-  score2[2]=stamps[STAMP_SHOOTING(0)]+1;
+  score2[0]=e+1;
+  score2[1]=f+1;
 }
 
 /**
@@ -331,6 +316,9 @@ void player_laser_fire(unsigned char player)
   // Position laser in player box.
   lasers[LASER_SHOOTING(player)]=1;
   lasers[LASER_DIRECTION(player)]=stamps[STAMP_STATE(i)];
+  lasers[LASER_X(player)]=PIXEL_BOX_X(a);
+  lasers[LASER_Y(player)]=PIXEL_BOX_Y(b);
+
   switch(lasers[LASER_DIRECTION(player)])
     {
     case STATE_PLAYER_LEFT:
@@ -341,8 +329,8 @@ void player_laser_fire(unsigned char player)
     case STATE_PLAYER_RIGHT_IDLE:
     case STATE_PLAYER_RIGHT_SHOOTING:
     case STATE_PLAYER_RIGHT_IDLE_SHOOTING:
-      lasers[LASER_X(player)]=LASER_POSITION_X_START_H(stamps[STAMP_X(i)]);
-      lasers[LASER_Y(player)]=LASER_POSITION_Y_START_H(stamps[STAMP_Y(i)]);
+      lasers[LASER_OFFSET_X(i)]=LASER_X_OFFSET_H;
+      lasers[LASER_OFFSET_Y(i)]=LASER_Y_OFFSET_H;
       lasers[LASER_TYPE(player)]=0xC8;
       break;
     case STATE_PLAYER_DOWN:
@@ -353,8 +341,8 @@ void player_laser_fire(unsigned char player)
     case STATE_PLAYER_UP_IDLE:
     case STATE_PLAYER_UP_SHOOTING:
     case STATE_PLAYER_UP_IDLE_SHOOTING:
-      lasers[LASER_X(player)]=LASER_POSITION_X_START_V(stamps[STAMP_X(i)]);
-      lasers[LASER_Y(player)]=LASER_POSITION_Y_START_V(stamps[STAMP_Y(i)]);
+      lasers[LASER_OFFSET_X(i)]=LASER_X_OFFSET_V;
+      lasers[LASER_OFFSET_Y(i)]=LASER_Y_OFFSET_V;
       lasers[LASER_TYPE(player)]=0xCA;
       break;
     }
@@ -370,4 +358,6 @@ void player_laser_stop(unsigned char player)
   lasers[LASER_TYPE(player)]=0;
   lasers[LASER_SHOOTING(player)]=0;
   lasers[LASER_DIRECTION(player)]=0;
+  lasers[LASER_OFFSET_X(player)]=0;
+  lasers[LASER_OFFSET_Y(player)]=0;
 }

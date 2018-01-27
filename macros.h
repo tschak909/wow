@@ -44,6 +44,8 @@
 #define LASER_TYPE(x)        (LASER_NUM(x)+2)
 #define LASER_SHOOTING(x)    (LASER_NUM(x)+3)
 #define LASER_DIRECTION(x)   (LASER_NUM(x)+4)
+#define LASER_OFFSET_X(x)    (LASER_NUM(x)+5)
+#define LASER_OFFSET_Y(x)    (LASER_NUM(x)+6)
 
 #define LASER_POSITION_X_START_H(x) x+LASER_X_OFFSET_H
 #define LASER_POSITION_Y_START_H(x) x+LASER_Y_OFFSET_H
