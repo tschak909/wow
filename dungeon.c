@@ -43,6 +43,7 @@ extern void player_blue_ready(void);
 extern void player_yellow_ready(void);
 extern void animate_stamps(void);
 extern void monster_move_all(void);
+extern void monster_shoot(void);
 extern void player_move_all(void);
 extern void update_stamps(void);
 extern void update_lasers(void);
@@ -441,7 +442,7 @@ void dungeon_run(unsigned char dungeon_num)
   player_blue_ready();
   a=spr=OAM_OFFSET_TOP;
 
-  /* music_play(1); */
+  music_play(1);
   
   // At this point, we loop around and handle frame scheduling
   
