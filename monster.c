@@ -11,14 +11,22 @@ extern unsigned char b;
 #pragma zpsym("b")
 extern unsigned char d;
 #pragma zpsym("d")
+extern unsigned char e;
+#pragma zpsym("e")
+extern unsigned char f;
+#pragma zpsym("f")
+extern unsigned char h;
+#pragma zpsym("h")
 extern unsigned char teleport_state;
 #pragma zpsym("teleport_state")
 extern unsigned char teleport_timer;
 #pragma zpsym("teleport_timer")
 
 extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
+extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
 
 extern void get_current_box(void);
+extern void get_current_laser_box(void);
 
 /**
  * monster_setup_all() - Set up enemy sprite spawn points
@@ -118,7 +126,141 @@ void monster_move_all(void)
       else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN)
 	stamps[STAMP_Y(i)]++;
 
-      stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];  
-      
+      stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];       
     }
+}
+
+/**
+ * monster_shoot()
+ * Fire phasor if worrior is nearby
+ */
+void monster_shoot(void)
+{
+  // This implementation is very naive.
+  get_current_laser_box();
+  if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT)
+    {
+      if (lasers[LASER_SHOOTING(i)]==0)
+	{
+	  // Is monster on the same horizontal plane?
+	  if (stamps[STAMP_Y(i)]==stamps[STAMP_Y(0)] || stamps[STAMP_Y(i)]==stamps[STAMP_Y(1)])
+	    {
+	      // Yes, fire.
+	      monster_laser_fire(i);
+	    }
+	}
+      else
+	{
+	  // Update laser position
+	  if (BOX_WALL_RIGHT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
+	    monster_laser_stop(i);
+	  else
+	    lasers[LASER_X(i)]+=4;
+	}
+    }
+  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT)
+    {
+      if (lasers[LASER_SHOOTING(i)]==0)
+	{
+	  // Is monster on the same horizontal plane?
+	  if (stamps[STAMP_Y(i)]==stamps[STAMP_Y(0)] || stamps[STAMP_Y(i)]==stamps[STAMP_Y(1)])
+	    {
+	      // Yes, fire.
+	      monster_laser_fire(i);
+	    }
+	}
+      else
+	{
+	  // Update laser position
+	  if (BOX_WALL_LEFT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
+	    monster_laser_stop(i);
+	  else
+	    lasers[LASER_X(i)]-=4;
+	}
+    }
+  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_UP)
+    {
+      if (lasers[LASER_SHOOTING(i)]==0)
+	{
+	  // Is monster on the same vertical plane?
+	  if (stamps[STAMP_X(i)]==stamps[STAMP_X(0)] || stamps[STAMP_X(i)]==stamps[STAMP_X(1)])
+	    {
+	      // Yes, fire.
+	      monster_laser_fire(i);
+	    }
+	}
+      else
+	{
+	  // Update laser position
+	  if (BOX_WALL_UP(h) && lasers[LASER_X(i)]==PIXEL_BOX_Y(f))
+	    monster_laser_stop(i);
+	  else
+	    lasers[LASER_X(i)]-=4;
+	}
+    }
+  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN)
+    {
+      if (lasers[LASER_SHOOTING(i)]==0)
+	{
+	  // Is monster on the same vertical plane?
+	  if (stamps[STAMP_X(i)]==stamps[STAMP_X(0)] || stamps[STAMP_X(i)]==stamps[STAMP_X(1)])
+	    {
+	      // Yes, fire.
+	      monster_laser_fire(i);
+	    }
+	}
+      else
+	{
+	  // Update laser position
+	  if (BOX_WALL_DOWN(h) && lasers[LASER_X(i)]==PIXEL_BOX_Y(f))
+	    monster_laser_stop(i);
+	  else
+	    lasers[LASER_X(i)]+=4;
+	}
+
+    }
+}
+
+/**
+ * monster_laser_fire(i)
+ * Start laser fire
+ */
+void monster_laser_fire(unsigned char player)
+{
+  // Position laser in monster box.
+  lasers[LASER_SHOOTING(player)]=1;
+  lasers[LASER_DIRECTION(player)]=stamps[STAMP_STATE(i)];
+  lasers[LASER_X(player)]=PIXEL_BOX_X(a);
+  lasers[LASER_Y(player)]=PIXEL_BOX_Y(b);
+
+  switch(lasers[LASER_DIRECTION(player)])
+    {
+    case STATE_MONSTER_LEFT:
+    case STATE_MONSTER_RIGHT:
+      lasers[LASER_OFFSET_X(i)]=LASER_X_OFFSET_H;
+      lasers[LASER_OFFSET_Y(i)]=LASER_Y_OFFSET_H;
+      lasers[LASER_TYPE(player)]=0xC9;
+      break;
+    case STATE_MONSTER_DOWN:
+    case STATE_MONSTER_UP:
+      lasers[LASER_OFFSET_X(i)]=LASER_X_OFFSET_V;
+      lasers[LASER_OFFSET_Y(i)]=LASER_Y_OFFSET_V;
+      lasers[LASER_TYPE(player)]=0xCB;
+      break;
+    }
+}
+
+/**
+ * monster_laser_stop(i);
+ * Stop laser fire.
+ */
+void monster_laser_stop(unsigned char player)
+{
+  lasers[LASER_X(player)]=0;
+  lasers[LASER_Y(player)]=0;
+  lasers[LASER_TYPE(player)]=0;
+  lasers[LASER_SHOOTING(player)]=0;
+  lasers[LASER_DIRECTION(player)]=0;
+  lasers[LASER_OFFSET_X(player)]=0;
+  lasers[LASER_OFFSET_Y(player)]=0;
 }

@@ -43,6 +43,7 @@ extern void player_blue_ready(void);
 extern void player_yellow_ready(void);
 extern void animate_stamps(void);
 extern void monster_move_all(void);
+extern void monster_shoot(void);
 extern void player_move_all(void);
 extern void update_stamps(void);
 extern void update_lasers(void);
