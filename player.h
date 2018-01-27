@@ -33,4 +33,14 @@ void player_in_box(void);
  */
 void player_move_all(void);
 
+/**
+ * player_laser_fire()
+ */
+void player_laser_fire(unsigned char player);
+
+/**
+ * player_laser_stop()
+ */
+void player_laser_stop(unsigned char player);
+
 #endif /* PLAYER_H */

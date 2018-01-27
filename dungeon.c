@@ -45,6 +45,7 @@ extern void animate_stamps(void);
 extern void monster_move_all(void);
 extern void player_move_all(void);
 extern void update_stamps(void);
+extern void update_lasers(void);
 extern void update_radar(void);
 extern void update_teleport_timer(void);
 extern void update_doors(void);
@@ -454,6 +455,7 @@ void dungeon_run(unsigned char dungeon_num)
       ppu_wait_frame();
       dungeon_update_counters();
       update_stamps();
+      update_lasers();
       update_radar();
       update_teleport_timer();
      

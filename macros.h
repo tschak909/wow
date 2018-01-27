@@ -11,7 +11,7 @@
 #define STAMP_DELAY(x)       (STAMP_NUM(x)+6)     // Stamp Field: Delay
 #define STAMP_TIMER(x)       (STAMP_NUM(x)+7)     // Stamp Field: Extra A (Player Timer)
 #define STAMP_PAD(x)         (STAMP_NUM(x)+8)     // Stamp Field: Extra B (Player Pad Data)
-#define STAMP_SHOOTING(x)    (STAMP_NUM(x)+9)     // Stamp Field: Is stamp shooting this frame?
+#define STAMP_SHOOTING(x)    (STAMP_NUM(x)+9)     // Stamp Field: Is stamp shooting?
 
 #define PLAYER_PAD(x)        (stamps[STAMP_PAD(x)])    // Alias for reading stored player pad value.
 #define PLAYER_PAD_RIGHT(x)  (PLAYER_PAD(x)&PAD_RIGHT) // is player pressing right?
@@ -39,7 +39,18 @@
 #define BOX_NO_WALLS(x)      x==0x00             // Box has no walls. (TBD: Replace with an upper 4-bit AND)
 
 #define LASER_NUM(x)         (x*LASER_NUM_FIELDS)
-#define LASER_X(x)           (STAMP_NUM(x)+0)
-#define LASER_Y(x)           (STAMP_NUM(x)+1)
+#define LASER_X(x)           (LASER_NUM(x)+0)
+#define LASER_Y(x)           (LASER_NUM(x)+1)
+#define LASER_TYPE(x)        (LASER_NUM(x)+2)
+#define LASER_SHOOTING(x)    (LASER_NUM(x)+3)
+#define LASER_DIRECTION(x)   (LASER_NUM(x)+4)
+#define LASER_OFFSET_X(x)    (LASER_NUM(x)+5)
+#define LASER_OFFSET_Y(x)    (LASER_NUM(x)+6)
+
+#define LASER_POSITION_X_START_H(x) x+LASER_X_OFFSET_H
+#define LASER_POSITION_Y_START_H(x) x+LASER_Y_OFFSET_H
+
+#define LASER_POSITION_X_START_V(x) x+LASER_X_OFFSET_V
+#define LASER_POSITION_Y_START_V(x) x+LASER_Y_OFFSET_V
 
 #endif /* MACROS_H */

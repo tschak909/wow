@@ -4,6 +4,7 @@
 #include "neslib.h"
 
 extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
+extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
 extern unsigned char update_buffer[80];
 extern unsigned char score0[7];
 extern unsigned char score1[7];
@@ -19,6 +20,15 @@ extern unsigned char c;
 #pragma zpsym("c")
 extern unsigned char d;
 #pragma zpsym("d")
+extern unsigned char e;
+#pragma zpsym("e")
+extern unsigned char f;
+#pragma zpsym("f")
+extern unsigned char g;
+#pragma zpsym("g")
+extern unsigned char h;
+#pragma zpsym("h")
+
 extern unsigned char* ptr;
 #pragma zpsym("ptr")
 extern unsigned char* dungeon;
@@ -156,6 +166,23 @@ void get_current_box(void)
   b=div24(stamps[STAMP_Y(i)]-8);
   c=(b*10)+a; // C is now the box #
   d=dungeon[c];
+}
+
+/**
+ * get_current_laser_box()
+ * Get the current dungeon box for a laser
+ * i = the stamp to return in e,f,g,h
+ * e = the X box
+ * f = the Y box
+ * g = the dungeon box #
+ * h = the box data.
+ */
+void get_current_laser_box(void)
+{
+  e=div24(lasers[LASER_X(i)]+8);
+  f=div24(lasers[LASER_Y(i)]-8);
+  g=(f*10)+e; // G is now the box #
+  h=dungeon[g];
 }
 
 /**

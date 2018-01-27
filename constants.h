@@ -34,7 +34,7 @@
 /**
  * 8 objects on screen, two players and 6 enemies.
  */
-#define STAMP_NUM_FIELDS     10                   // Number of fields in each stamp slot
+#define STAMP_NUM_FIELDS     10                    // Number of fields in each stamp slot
 #define STAMP_NUM_SLOTS      8                    // Number of slots in stamp structure
 #define STAMP_CENTER_BIAS_X  12                   // Offset to apply to box multiply to center sprite (X)
 #define STAMP_CENTER_BIAS_Y  10                   // Offset to apply to box multiply to center sprite (Y)
@@ -52,20 +52,11 @@
  */
 #define SPRITE_SIZE_W      2
 #define SPRITE_SIZE_H      3
+#define OAM_RADAR_SLOTS    32
 #define OAM_OFFSET_TOP     0
 #define OAM_FIELD_SIZE     4 /* The size of each OAM field. */
 #define OAM_OFFSET_RADAR   ( ( ( SPRITE_SIZE_W * SPRITE_SIZE_H ) * STAMP_NUM_SLOTS ) * OAM_FIELD_SIZE )
-#define OAM_OFFSET_LASERS  OAM_OFFSET_RADAR
-
-/** 
- * Laser stamp fields 
- */
-
-#define LASER_NUM_FIELDS     2
-#define LASER_NUM_SLOTS      4
-
-#define LASER_CENTER_BIAS_X  12
-#define LASER_CENTER_BIAS_Y  10
+#define OAM_OFFSET_LASERS  OAM_OFFSET_RADAR + OAM_RADAR_SLOTS
 
 /**
  * Metasprite constants
@@ -99,4 +90,25 @@
 #define STATE_PLAYER_DOWN_SHOOTING          14
 #define STATE_PLAYER_DOWN_IDLE_SHOOTING     15
 
+#define STATE_ADD_SHOOTING                  8
+
+/** 
+ * Laser stamp fields 
+ */
+
+#define LASER_NUM_FIELDS     7
+#define LASER_NUM_SLOTS      8
+
+#define LASER_CENTER_BIAS_X  12
+#define LASER_CENTER_BIAS_Y  10
+
+/**
+ * Laser sprite constants 
+ */
+#define SPRITE_LASER_PLAYER                0xC8
+#define SPRITE_LASER_ENEMY                 0xC9
+#define LASER_X_OFFSET_H                   0
+#define LASER_Y_OFFSET_H                   5
+#define LASER_X_OFFSET_V                   5
+#define LASER_Y_OFFSET_V                   0
 #endif /* CONSTANTS_H */

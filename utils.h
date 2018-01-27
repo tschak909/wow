@@ -46,6 +46,17 @@ unsigned char is_stamp_visible(void);
 void get_current_box(void);
 
 /**
+ * get_current_laser_box()
+ * Get the current dungeon box for a laser
+ * i = the stamp to return in e,f,g,h
+ * e = the X box
+ * f = the Y box
+ * g = the dungeon box #
+ * h = the box data.
+ */
+void get_current_laser_box(void);
+
+/**
  * animate_stamps() - increment the frame counters of each sprite, (0-7)
  * applying delay to the non-player sprites (2-7)
  */
