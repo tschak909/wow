@@ -134,6 +134,7 @@ void add_points(unsigned char player)
  */
 unsigned char is_stamp_visible(void)
 {
+  return TRUE;
   if (stamps[STAMP_TYPE(i)]==STAMP_TYPE_BURWOR ||
       stamps[STAMP_TYPE(i)]==STAMP_TYPE_BLUE_WORRIOR ||
       stamps[STAMP_TYPE(i)]==STAMP_TYPE_YELLOW_WORRIOR ||

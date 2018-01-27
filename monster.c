@@ -21,6 +21,8 @@ extern unsigned char teleport_state;
 #pragma zpsym("teleport_state")
 extern unsigned char teleport_timer;
 #pragma zpsym("teleport_timer")
+extern unsigned char monster_laser_count;
+#pragma zpsym("monster_laser_count")
 
 extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
 extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
@@ -53,8 +55,8 @@ void monster_setup_all(void)
       stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
     }
   // Temporary code to test all monster types
-  stamps[STAMP_TYPE(5)]=stamps[STAMP_TYPE(6)]=STAMP_TYPE_GORWOR;
-  stamps[STAMP_TYPE(7)]=STAMP_TYPE_THORWOR;
+  /* stamps[STAMP_TYPE(5)]=stamps[STAMP_TYPE(6)]=STAMP_TYPE_GORWOR; */
+  /* stamps[STAMP_TYPE(7)]=STAMP_TYPE_THORWOR; */
 }
 
 /**
@@ -126,7 +128,8 @@ void monster_move_all(void)
       else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN)
 	stamps[STAMP_Y(i)]++;
 
-      stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];       
+      stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];
+      monster_shoot();
     }
 }
 
@@ -136,88 +139,46 @@ void monster_move_all(void)
  */
 void monster_shoot(void)
 {
-  // This implementation is very naive.
-  get_current_laser_box();
-  if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT)
+  // This is holy shit naive. The previous naive implementation took too much CPU time.
+  if (rand8()>0xC0)
     {
-      if (lasers[LASER_SHOOTING(i)]==0)
+      if (((rand8())<0x08) && lasers[LASER_SHOOTING(i)]==0 && monster_laser_count<4) 
 	{
-	  // Is monster on the same horizontal plane?
-	  if (stamps[STAMP_Y(i)]==stamps[STAMP_Y(0)] || stamps[STAMP_Y(i)]==stamps[STAMP_Y(1)])
-	    {
-	      // Yes, fire.
-	      monster_laser_fire(i);
-	    }
+	  monster_laser_fire(i);
 	}
-      else
+    }
+
+  if (lasers[LASER_SHOOTING(i)]==1)
+    {
+      get_current_laser_box();
+      if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_RIGHT)
 	{
-	  // Update laser position
 	  if (BOX_WALL_RIGHT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
 	    monster_laser_stop(i);
 	  else
 	    lasers[LASER_X(i)]+=4;
 	}
-    }
-  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT)
-    {
-      if (lasers[LASER_SHOOTING(i)]==0)
+      else if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_LEFT)
 	{
-	  // Is monster on the same horizontal plane?
-	  if (stamps[STAMP_Y(i)]==stamps[STAMP_Y(0)] || stamps[STAMP_Y(i)]==stamps[STAMP_Y(1)])
-	    {
-	      // Yes, fire.
-	      monster_laser_fire(i);
-	    }
-	}
-      else
-	{
-	  // Update laser position
 	  if (BOX_WALL_LEFT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
 	    monster_laser_stop(i);
 	  else
 	    lasers[LASER_X(i)]-=4;
 	}
-    }
-  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_UP)
-    {
-      if (lasers[LASER_SHOOTING(i)]==0)
+      else if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_DOWN)
 	{
-	  // Is monster on the same vertical plane?
-	  if (stamps[STAMP_X(i)]==stamps[STAMP_X(0)] || stamps[STAMP_X(i)]==stamps[STAMP_X(1)])
-	    {
-	      // Yes, fire.
-	      monster_laser_fire(i);
-	    }
-	}
-      else
-	{
-	  // Update laser position
-	  if (BOX_WALL_UP(h) && lasers[LASER_X(i)]==PIXEL_BOX_Y(f))
+	  if (BOX_WALL_DOWN(h) && lasers[LASER_Y(i)]==PIXEL_BOX_Y(f))
 	    monster_laser_stop(i);
 	  else
-	    lasers[LASER_X(i)]-=4;
+	    lasers[LASER_Y(i)]+=4;
 	}
-    }
-  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN)
-    {
-      if (lasers[LASER_SHOOTING(i)]==0)
+      else if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_UP)
 	{
-	  // Is monster on the same vertical plane?
-	  if (stamps[STAMP_X(i)]==stamps[STAMP_X(0)] || stamps[STAMP_X(i)]==stamps[STAMP_X(1)])
-	    {
-	      // Yes, fire.
-	      monster_laser_fire(i);
-	    }
-	}
-      else
-	{
-	  // Update laser position
-	  if (BOX_WALL_DOWN(h) && lasers[LASER_X(i)]==PIXEL_BOX_Y(f))
+	  if (BOX_WALL_UP(h) && lasers[LASER_Y(i)]==PIXEL_BOX_Y(f))
 	    monster_laser_stop(i);
 	  else
-	    lasers[LASER_X(i)]+=4;
+	    lasers[LASER_Y(i)]-=4;
 	}
-
     }
 }
 
@@ -228,6 +189,7 @@ void monster_shoot(void)
 void monster_laser_fire(unsigned char player)
 {
   // Position laser in monster box.
+  monster_laser_count++;
   lasers[LASER_SHOOTING(player)]=1;
   lasers[LASER_DIRECTION(player)]=stamps[STAMP_STATE(i)];
   lasers[LASER_X(player)]=PIXEL_BOX_X(a);
@@ -256,6 +218,7 @@ void monster_laser_fire(unsigned char player)
  */
 void monster_laser_stop(unsigned char player)
 {
+  monster_laser_count--;
   lasers[LASER_X(player)]=0;
   lasers[LASER_Y(player)]=0;
   lasers[LASER_TYPE(player)]=0;

@@ -23,6 +23,8 @@ extern unsigned char b;
 #pragma zpsym("b")
 extern unsigned char c;
 #pragma zpsym("c")
+extern unsigned char frame_cnt;
+#pragma zpsym("frame_cnt");
 
 extern const unsigned char* metasprite_list[];
 extern unsigned char score0[7];
@@ -237,7 +239,7 @@ void update_lasers(void)
 	continue;
       else
 	{
-	  spr = oam_spr(lasers[LASER_X(i)]+lasers[LASER_OFFSET_X(i)],lasers[LASER_Y(i)]+lasers[LASER_OFFSET_Y(i)],lasers[LASER_TYPE(i)],0,spr);	  
+	  spr = oam_spr(lasers[LASER_X(i)]+lasers[LASER_OFFSET_X(i)],lasers[LASER_Y(i)]+lasers[LASER_OFFSET_Y(i)],lasers[LASER_TYPE(i)],(frame_cnt&0x01?0x00:0x40),spr);	  
 	}
     }
 }

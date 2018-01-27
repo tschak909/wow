@@ -442,7 +442,7 @@ void dungeon_run(unsigned char dungeon_num)
   player_blue_ready();
   a=spr=OAM_OFFSET_TOP;
 
-  /* music_play(1); */
+  music_play(1);
   
   // At this point, we loop around and handle frame scheduling
   
