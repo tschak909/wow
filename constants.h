@@ -52,11 +52,10 @@
  */
 #define SPRITE_SIZE_W      2
 #define SPRITE_SIZE_H      3
-#define OAM_RADAR_SLOTS    32
 #define OAM_OFFSET_TOP     0
 #define OAM_FIELD_SIZE     4 /* The size of each OAM field. */
-#define OAM_OFFSET_RADAR   ( ( ( SPRITE_SIZE_W * SPRITE_SIZE_H ) * STAMP_NUM_SLOTS ) * OAM_FIELD_SIZE )
-#define OAM_OFFSET_LASERS  OAM_OFFSET_RADAR + OAM_RADAR_SLOTS
+#define OAM_OFFSET_LASERS   ( ( ( SPRITE_SIZE_W * SPRITE_SIZE_H ) * STAMP_NUM_SLOTS ) * OAM_FIELD_SIZE )
+#define OAM_OFFSET_RADAR    OAM_OFFSET_LASERS + 24
 
 /**
  * Metasprite constants
@@ -111,7 +110,7 @@
 #define LASER_Y_OFFSET_H                   5
 #define LASER_X_OFFSET_V                   5
 #define LASER_Y_OFFSET_V                   0
-#define LASER_MONSTER_MAX                  3
+#define LASER_MONSTER_MAX                  2
 
 
 #endif /* CONSTANTS_H */
