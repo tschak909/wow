@@ -66,6 +66,7 @@
 #define STAMP_TYPE_THORWOR          96
 #define STAMP_TYPE_WORLUK           112
 #define STAMP_TYPE_YELLOW_WORRIOR   128
+#define STAMP_TYPE_EXPLOSION        192
 
 #define STATE_MONSTER_RIGHT         0
 #define STATE_MONSTER_LEFT          1
@@ -88,6 +89,9 @@
 #define STATE_PLAYER_UP_IDLE_SHOOTING       13
 #define STATE_PLAYER_DOWN_SHOOTING          14
 #define STATE_PLAYER_DOWN_IDLE_SHOOTING     15
+
+#define STATE_DYING                         16
+#define STATE_DEAD                          17
 
 #define STATE_ADD_SHOOTING                  8
 

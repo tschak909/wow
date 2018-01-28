@@ -61,6 +61,8 @@ const unsigned char metasprite_animation_data[]={
   68,72,76,80, // Worrior Yellow Up Shooting Idle  
   69,73,77,81, // Worrior Yellow Down Shooting
   69,73,77,81, // Worrior Yellow Down Shooting Idle
+  // -------------------------------------------
+  88,89,90,91, // Worrrior/Monster Explosion
 };
 
 #endif /* METASPRITE_ANIMATIONS_H */
