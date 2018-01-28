@@ -35,6 +35,12 @@ extern unsigned char player_last_trigger[2];
 #pragma zpsym("player_last_trigger")
 extern unsigned char player_shooting_last_state[2];
 #pragma zpsym("player_shooting_last_state")
+extern unsigned char blue_worrior_ai;
+#pragma zpsym("blue_worrior_ai")
+extern unsigned char j;
+#pragma zpsym("j")
+extern unsigned char frame_cnt;
+#pragma zpsym("frame_cnt")
 
 extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
 extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
@@ -104,6 +110,8 @@ void player_handle_idle(void)
  */
 void player_in_field(void)
 {
+  if (frame_cnt==0)
+    set_rand(stamps[STAMP_X(0)]);
   if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
       // We are aligned.
@@ -171,19 +179,20 @@ void player_in_field(void)
 	}
     }
 
+  // Apply player movement. AI player moves at half speed.
   switch(stamps[STAMP_STATE(i)])
     {
     case STATE_PLAYER_RIGHT:
-      stamps[STAMP_X(i)]+=2;
+      stamps[STAMP_X(i)]+=(blue_worrior_ai==1&&i==1)?1:2;
       break;
     case STATE_PLAYER_LEFT:
-      stamps[STAMP_X(i)]-=2;
+      stamps[STAMP_X(i)]-=(blue_worrior_ai==1&&i==1)?1:2;
       break;
     case STATE_PLAYER_UP:
-      stamps[STAMP_Y(i)]-=2;
+      stamps[STAMP_Y(i)]-=(blue_worrior_ai==1&&i==1)?1:2;
       break;
     case STATE_PLAYER_DOWN:
-      stamps[STAMP_Y(i)]+=2;
+      stamps[STAMP_Y(i)]+=(blue_worrior_ai==1&&i==1)?1:2;
       break;
     }
   
@@ -206,6 +215,16 @@ void player_in_field(void)
   	}
     }
 
+  // Finally handle AI trigger. Naive and somewhat random, for now.
+  if (rand8()>0xc0)
+    if (blue_worrior_ai==1 && rand8()<0x08 && i==1 && lasers[LASER_SHOOTING(i)]==0)
+      {
+	stamps[STAMP_SHOOTING(1)]=1;
+	stamps[STAMP_FRAME(1)]=0;
+	player_laser_fire(1);
+      }
+  
+  // Stop shooting animation if we're done.
   if (stamps[STAMP_SHOOTING(i)]==1 && stamps[STAMP_FRAME(i)]==3)
     stamps[STAMP_SHOOTING(i)]=0;
 
@@ -242,10 +261,11 @@ void player_in_field(void)
 	}
     }
 
+  score2[0]=lasers[LASER_TYPE(0)]-0xc0;
+  score2[1]=lasers[LASER_TYPE(1)]-0xc0;
+  score2[2]=lasers[LASER_DIRECTION(0)];
+  score2[3]=lasers[LASER_DIRECTION(1)];
   
-  // REMOVE: Show yellow state in yellow score.
-  score2[0]=e+1;
-  score2[1]=f+1;
 }
 
 /**
@@ -277,7 +297,10 @@ void player_in_box(void)
 	}
       else
 	{
-	  stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT_IDLE;
+	  if (i==1 && blue_worrior_ai==0)
+	    stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)]=STATE_PLAYER_RIGHT_IDLE;
+	  else
+	    stamps[STAMP_PAD(1)]=PAD_UP;
 	  blue_door_state=CLOSED;
 	}
     }
@@ -291,7 +314,12 @@ void player_move_all(void)
   for (i=0;i<2;i++)
     {
       get_current_box();
-      stamps[STAMP_PAD(i)]=pad_poll(i);
+
+      if (blue_worrior_ai==1 && i==1)
+	player_blue_move_ai();
+      else
+	stamps[STAMP_PAD(i)]=pad_poll(i);
+      
       player_trigger[i]=(PLAYER_PAD_A(i)?1:0);
       
       if (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(6)-1)
@@ -360,4 +388,71 @@ void player_laser_stop(unsigned char player)
   lasers[LASER_DIRECTION(player)]=0;
   lasers[LASER_OFFSET_X(player)]=0;
   lasers[LASER_OFFSET_Y(player)]=0;
+}
+
+/**
+ * player_change_ai_direction()
+ * Change the direction of the blue player
+ * TODO: if it isn't useful soon, remove it.
+ */
+void player_change_ai_direction()
+{
+  switch(rand8()&0x03)
+    {
+    case 0:
+      stamps[STAMP_PAD(i)]=PAD_RIGHT;
+      break;
+    case 1:
+      stamps[STAMP_PAD(i)]=PAD_LEFT;
+      break;
+    case 2:
+      stamps[STAMP_PAD(i)]=PAD_DOWN;
+      break;
+    case 3:
+      stamps[STAMP_PAD(i)]=PAD_UP;
+      break;
+    }
+}
+
+/**
+ * Move blue worrior AI if needed.
+ */
+void player_blue_move_ai(void)
+{
+  /* pick_monster_rand: */
+  /* if (j==255) j=rand8()&0x07; */
+
+  /* // We don't want the blue worrior to chase the yellow player or himself. */
+  /* if (j<2) */
+  /*   goto pick_monster_rand; */
+
+  j=6; // Temporary while I work this out.
+  
+  // get enemy's target box
+  e=BOX_PIXEL_X(stamps[STAMP_X(j)]);
+  f=BOX_PIXEL_Y(stamps[STAMP_Y(j)]);
+
+  if (a==e && b>f)
+    stamps[STAMP_PAD(i)]=PAD_UP;
+  else if (a<e && b>f)
+    stamps[STAMP_PAD(i)]=PAD_UP|PAD_RIGHT;
+  else if (a<e && b==f)
+    stamps[STAMP_PAD(i)]=PAD_RIGHT;
+  else if (a>e && b<f)
+    stamps[STAMP_PAD(i)]=PAD_DOWN|PAD_RIGHT;
+  else if (a==e && b<f)
+    stamps[STAMP_PAD(i)]=PAD_DOWN;
+  else if (a>e && b>f)
+    stamps[STAMP_PAD(i)]=PAD_DOWN|PAD_LEFT;
+  else if (a>e && b==f)
+    stamps[STAMP_PAD(i)]=PAD_LEFT;
+  else if (a>e&& b<f)
+    stamps[STAMP_PAD(i)]=PAD_UP|PAD_LEFT;  
+
+  /* if ((stamps[STAMP_STATE(i)]==STATE_PLAYER_RIGHT && BOX_WALL_RIGHT(d) && stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) || */
+  /*     (stamps[STAMP_STATE(i)]==STATE_PLAYER_LEFT && BOX_WALL_LEFT(d) && stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) || */
+  /*     (stamps[STAMP_STATE(i)]==STATE_PLAYER_DOWN && BOX_WALL_DOWN(d) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)) || */
+  /*     (stamps[STAMP_STATE(i)]==STATE_PLAYER_UP && BOX_WALL_UP(d) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b))) */
+  /*   player_change_ai_direction(); */
+
 }

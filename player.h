@@ -43,4 +43,16 @@ void player_laser_fire(unsigned char player);
  */
 void player_laser_stop(unsigned char player);
 
+/**
+ * player_change_ai_direction()
+ * Change the direction of the blue player
+ */
+void player_change_ai_direction();
+
+/**
+ * player_blue_move_ai()
+ * Move Player AI if needed.
+ */
+void player_blue_move_ai(void);
+
 #endif /* PLAYER_H */

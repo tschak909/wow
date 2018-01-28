@@ -235,11 +235,6 @@ void update_lasers(void)
   spr=OAM_OFFSET_LASERS;
   for (i=0;i<LASER_NUM_SLOTS;i++)
     {
-      if (stamps[LASER_X(i)]==0) // X=0, do not draw laser.
-	continue;
-      else
-	{
-	  spr = oam_spr(lasers[LASER_X(i)]+lasers[LASER_OFFSET_X(i)],lasers[LASER_Y(i)]+lasers[LASER_OFFSET_Y(i)],lasers[LASER_TYPE(i)],(frame_cnt&0x01?0x00:0x40),spr);	  
-	}
+      spr = oam_spr(lasers[LASER_X(i)]+lasers[LASER_OFFSET_X(i)],lasers[LASER_Y(i)]+lasers[LASER_OFFSET_Y(i)],lasers[LASER_TYPE(i)],(frame_cnt&0x01?0x00:0x40),spr);	  
     }
 }

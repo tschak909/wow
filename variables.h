@@ -40,4 +40,6 @@ unsigned char player_trigger[2];          // Player shooting this frame?
 unsigned char player_last_trigger[2];     // Player shooting last frame?
 unsigned char player_shooting_last_state[2]; // State before player started shooting.
 unsigned char monster_laser_count;           // Number of active monster lasers
+unsigned char blue_worrior_ai;               // Is blue worrior under AI control?
+
 #endif /* VARIABLES_H */
