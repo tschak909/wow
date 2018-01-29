@@ -11,7 +11,7 @@
 unsigned char update_buffer[80]; 
 
 /* Score registers */
-unsigned char score0[7]={1,1,1,1,1,1,2};
+unsigned char score0[7];
 unsigned char score1[7]={1,1,1,1,1,1,1};
 unsigned char score2[7]={1,1,1,1,1,1,1};
 
@@ -23,7 +23,7 @@ unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_FIELDS];
  ******************************************************/
 #pragma bssseg (push,"ZEROPAGE")
 
-unsigned char i,j,a,b,c,d,e,f,g,h;          // Index counters or temporary
+unsigned char i,j,a,b,c,d,e,f,g,h,k;          // Index counters or temporary
 unsigned char spr;                // Pointers
 unsigned char frame_cnt;         // Frame counter (up to 256 frames)
 unsigned char sec;               // counts from 49 to 0 (one second)
@@ -41,5 +41,6 @@ unsigned char player_last_trigger[2];     // Player shooting last frame?
 unsigned char player_shooting_last_state[2]; // State before player started shooting.
 unsigned char monster_laser_count;           // Number of active monster lasers
 unsigned char blue_worrior_ai;               // Is blue worrior under AI control?
+unsigned char double_score_dungeon;          // Double score dungeon?
 
 #endif /* VARIABLES_H */

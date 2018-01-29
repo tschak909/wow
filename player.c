@@ -41,6 +41,8 @@ extern unsigned char j;
 #pragma zpsym("j")
 extern unsigned char frame_cnt;
 #pragma zpsym("frame_cnt")
+extern unsigned char k;
+#pragma zpsym("k")
 
 extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
 extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
@@ -259,13 +261,7 @@ void player_in_field(void)
 	  else
 	      lasers[LASER_Y(i)]-=8;
 	}
-    }
-
-  score2[0]=lasers[LASER_TYPE(0)]-0xc0;
-  score2[1]=lasers[LASER_TYPE(1)]-0xc0;
-  score2[2]=lasers[LASER_DIRECTION(0)];
-  score2[3]=lasers[LASER_DIRECTION(1)];
-  
+    }  
 }
 
 /**
@@ -419,18 +415,18 @@ void player_change_ai_direction()
  */
 void player_blue_move_ai(void)
 {
-  /* pick_monster_rand: */
-  /* if (j==255) j=rand8()&0x07; */
+  pick_monster_rand:
+  if (k==0) k=rand8()&0x07;
 
-  /* // We don't want the blue worrior to chase the yellow player or himself. */
-  /* if (j<2) */
-  /*   goto pick_monster_rand; */
-
-  j=6; // Temporary while I work this out.
+  // We don't want the blue worrior to chase the yellow player or himself.
+  if (k<2)
+    goto pick_monster_rand;
+  else if (k>7)
+    goto pick_monster_rand;
   
   // get enemy's target box
-  e=BOX_PIXEL_X(stamps[STAMP_X(j)]);
-  f=BOX_PIXEL_Y(stamps[STAMP_Y(j)]);
+  e=BOX_PIXEL_X(stamps[STAMP_X(k)]);
+  f=BOX_PIXEL_Y(stamps[STAMP_Y(k)]);
 
   if (a==e && b>f)
     stamps[STAMP_PAD(i)]=PAD_UP;
@@ -448,11 +444,5 @@ void player_blue_move_ai(void)
     stamps[STAMP_PAD(i)]=PAD_LEFT;
   else if (a>e&& b<f)
     stamps[STAMP_PAD(i)]=PAD_UP|PAD_LEFT;  
-
-  /* if ((stamps[STAMP_STATE(i)]==STATE_PLAYER_RIGHT && BOX_WALL_RIGHT(d) && stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) || */
-  /*     (stamps[STAMP_STATE(i)]==STATE_PLAYER_LEFT && BOX_WALL_LEFT(d) && stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) || */
-  /*     (stamps[STAMP_STATE(i)]==STATE_PLAYER_DOWN && BOX_WALL_DOWN(d) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)) || */
-  /*     (stamps[STAMP_STATE(i)]==STATE_PLAYER_UP && BOX_WALL_UP(d) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b))) */
-  /*   player_change_ai_direction(); */
-
+  
 }

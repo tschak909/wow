@@ -23,10 +23,20 @@ extern unsigned char teleport_timer;
 #pragma zpsym("teleport_timer")
 extern unsigned char monster_laser_count;
 #pragma zpsym("monster_laser_count")
+extern unsigned char double_score_dungeon;
+#pragma zpsym("double_score_dungeon")
+extern unsigned char k;
+#pragma zpsym("k")
+extern unsigned char blue_worrior_ai;
+#pragma zpsym("blue_worrior_ai")
 
 extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
 extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
+extern unsigned char score0[7];
+extern unsigned char score1[7];
 
+extern void add_points(unsigned char player);
+extern void player_laser_stop(unsigned char player);
 extern void get_current_box(void);
 extern void get_current_laser_box(void);
 
@@ -55,8 +65,8 @@ void monster_setup_all(void)
       stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
     }
   // Temporary code to test all monster types
-  /* stamps[STAMP_TYPE(5)]=stamps[STAMP_TYPE(6)]=STAMP_TYPE_GORWOR; */
-  /* stamps[STAMP_TYPE(7)]=STAMP_TYPE_THORWOR; */
+  stamps[STAMP_TYPE(5)]=stamps[STAMP_TYPE(6)]=STAMP_TYPE_GORWOR;
+  stamps[STAMP_TYPE(7)]=STAMP_TYPE_THORWOR;
 }
 
 /**
@@ -116,6 +126,24 @@ void monster_move_all(void)
 	  else
 	    stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];
 	  
+	}
+
+      // Handle player laser to monster collision
+      if (BOX_PIXEL_X(lasers[LASER_X(0)])==a && BOX_PIXEL_Y(lasers[LASER_Y(0)])==b)
+	{
+	  monster_die(0);
+	}
+      else if (BOX_PIXEL_X(lasers[LASER_X(1)])==a && BOX_PIXEL_Y(lasers[LASER_Y(1)])==b)
+	{
+	  monster_die(1);
+	}
+
+      // If monster is dying and on last frame, set state to dead.
+      if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
+	{
+	  stamps[STAMP_STATE(i)]=STATE_DEAD;
+	  stamps[STAMP_X(i)]=0xF8;
+	  stamps[STAMP_Y(i)]=0xF8;
 	}
       
       // Handle state movement
@@ -226,4 +254,46 @@ void monster_laser_stop(unsigned char player)
   lasers[LASER_DIRECTION(player)]=0;
   lasers[LASER_OFFSET_X(player)]=0;
   lasers[LASER_OFFSET_Y(player)]=0;
+}
+
+/** 
+ * monster_dead_add_player_points(player)
+ * Monster shot, add points to score
+ * monster dead coming from i.
+ */
+void monster_dead_add_player_points(unsigned char player)
+{
+  memfill(&score0,1,sizeof(score0));
+  switch(stamps[STAMP_TYPE(i)])
+    {
+    case STAMP_TYPE_BURWOR:
+      score0[4]=2; // 100 points.
+      break;
+    case STAMP_TYPE_GORWOR:
+      score0[4]=3; // 200 points
+      break;
+    case STAMP_TYPE_THORWOR:
+      score0[4]=6; // 500 points
+      break;
+    case STAMP_TYPE_WORLUK:
+      score0[3]=3; // 2000 points
+      double_score_dungeon=1;
+      break;
+    }
+
+  add_points(player);
+}
+
+/**
+ * monster_die(player)
+ * Monster was killed by player
+ */
+void monster_die(unsigned char player)
+{
+  player_laser_stop(player);
+  stamps[STAMP_STATE(i)]=STATE_DYING;
+  stamps[STAMP_FRAME(i)]=0;
+  monster_dead_add_player_points(player);
+  if (player==1 && blue_worrior_ai==1) 
+    k=0; // Go tell AI to chase another monster, if applicable.
 }

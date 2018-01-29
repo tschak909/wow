@@ -35,6 +35,8 @@ extern unsigned char* dungeon;
 #pragma zpsym("dungeon")
 extern unsigned char i;
 #pragma zpsym("i")
+extern unsigned char j;
+#pragma zpsym("j")
 
 /**
  * clear_stamps() - Clear the on screen stamp buffer
@@ -102,7 +104,8 @@ unsigned char stamp_type_to_radar(unsigned char t)
  */
 void add_points(unsigned char player)
 {
-  ptr=(player==0 ? score1 : score2);
+  j=i; // save I
+  ptr=(player==0 ? score2 : score1);
   a=0; // clear carry
   
   for (i=7;i-->0; )
@@ -125,7 +128,8 @@ void add_points(unsigned char player)
       score0[i]=score0[i]+1;
       ptr[i]=(ptr[i])+1;
     }
-
+  
+  i=j; // Restore I
 }
 
 /**
@@ -134,7 +138,7 @@ void add_points(unsigned char player)
  */
 unsigned char is_stamp_visible(void)
 {
-  return TRUE;
+  /* return TRUE; */
   if (stamps[STAMP_TYPE(i)]==STAMP_TYPE_BURWOR ||
       stamps[STAMP_TYPE(i)]==STAMP_TYPE_BLUE_WORRIOR ||
       stamps[STAMP_TYPE(i)]==STAMP_TYPE_YELLOW_WORRIOR ||
@@ -197,7 +201,9 @@ void animate_stamps(void)
       if (stamps[STAMP_DELAY(i)]==0)
 	{
 	  stamps[STAMP_FRAME(i)]=(stamps[STAMP_FRAME(i)]+1)&0x03;
-	  if (i>1) // Delay only applies to enemies.
+	  if (stamps[STAMP_STATE(i)]==STATE_DYING) // Dying plays at max speed.
+	    stamps[STAMP_DELAY(i)]=1;
+	  else if (i>1) // Delay only applies to enemies.
 	    stamps[STAMP_DELAY(i)]=4;
 	  else
 	    stamps[STAMP_DELAY(i)]=1;

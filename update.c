@@ -209,8 +209,15 @@ void update_stamps(void)
   oam_clear();
   for (i=0;i<STAMP_NUM_SLOTS;i++)
     {
-      if (stamps[STAMP_X(i)] == 0)
+      if (stamps[STAMP_X(i)]==0 || stamps[STAMP_STATE(i)]==STATE_DEAD)
 	  continue;
+      else if (stamps[STAMP_STATE(i)]==STATE_DYING)
+	{
+	  a=metasprite_animation_data[STAMP_TYPE_EXPLOSION+stamps[STAMP_FRAME(i)]];
+	  b=stamps[STAMP_X(i)];
+	  c=stamps[STAMP_Y(i)];
+	  spr = oam_meta_spr(b,c,spr,metasprite_list[a]);
+	}
       else
 	{
 	  a=metasprite_animation_data[stamps[STAMP_TYPE(i)]+(stamps[STAMP_STATE(i)]*4)+stamps[STAMP_FRAME(i)]];
@@ -235,6 +242,13 @@ void update_lasers(void)
   spr=OAM_OFFSET_LASERS;
   for (i=0;i<LASER_NUM_SLOTS;i++)
     {
-      spr = oam_spr(lasers[LASER_X(i)]+lasers[LASER_OFFSET_X(i)],lasers[LASER_Y(i)]+lasers[LASER_OFFSET_Y(i)],lasers[LASER_TYPE(i)],(frame_cnt&0x01?0x00:0x40),spr);	  
+      if (lasers[LASER_SHOOTING(i)]==1)
+	{
+	  spr = oam_spr(lasers[LASER_X(i)]+lasers[LASER_OFFSET_X(i)],lasers[LASER_Y(i)]+lasers[LASER_OFFSET_Y(i)],lasers[LASER_TYPE(i)],(frame_cnt&0x01?0x00:0x40),spr);
+	}
+      else
+	{
+	  spr = oam_spr(0xFF,0XFF,0xFF,0xFF,spr);
+	}
     }
 }
