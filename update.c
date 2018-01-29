@@ -227,7 +227,7 @@ void update_stamps(void)
 	      c=stamps[STAMP_Y(i)];
 	    }
 	  else
-	    b=c=0xF8; // Offscreen
+	    continue;
   
 	  spr = oam_meta_spr(b,c,spr,metasprite_list[a]);
 	}
