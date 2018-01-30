@@ -52,6 +52,7 @@ extern unsigned char score2[7];
 
 extern void get_current_box(void);
 extern void get_current_laser_box(void);
+extern void add_points(unsigned char player);
 
 /**
  * player_blue_ready() - Ready the blue player
@@ -114,6 +115,10 @@ void player_in_field(void)
 {
   if (frame_cnt==0)
     set_rand(stamps[STAMP_X(0)]);
+
+  if (stamps[STAMP_STATE(i)]==STATE_DYING || stamps[STAMP_STATE(i)]==STATE_DEAD)
+    goto field_end;
+  
   if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
       // We are aligned.
@@ -233,6 +238,16 @@ void player_in_field(void)
   if (lasers[LASER_SHOOTING(i)]==1)
     {
       get_current_laser_box();
+
+      if (i==0 && (e==BOX_PIXEL_X(stamps[STAMP_X(1)]) && f==BOX_PIXEL_Y(stamps[STAMP_Y(1)])))
+	{
+	  player_die(0);
+	}
+      else if (i==1 && (e==BOX_PIXEL_X(stamps[STAMP_X(0)]) && f==BOX_PIXEL_Y(stamps[STAMP_Y(0)])))
+	{
+	  player_die(1);
+	}
+      
       if (lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_SHOOTING || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_IDLE || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_IDLE_SHOOTING)
 	{	    
 	  if (BOX_WALL_RIGHT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
@@ -261,7 +276,9 @@ void player_in_field(void)
 	  else
 	      lasers[LASER_Y(i)]-=8;
 	}
-    }  
+            
+    }
+ field_end: return;
 }
 
 /**
@@ -423,6 +440,9 @@ void player_blue_move_ai(void)
     goto pick_monster_rand;
   else if (k>7)
     goto pick_monster_rand;
+
+  /* if (stamps[STAMP_STATE(k)]==STATE_DEAD) */
+  /*   goto pick_monster_rand; */
   
   // get enemy's target box
   e=BOX_PIXEL_X(stamps[STAMP_X(k)]);
@@ -445,4 +465,29 @@ void player_blue_move_ai(void)
   else if (a>e&& b<f)
     stamps[STAMP_PAD(i)]=PAD_UP|PAD_LEFT;  
   
+}
+
+/**
+ * player_die(player)
+ * Player was killed by player
+ */
+void player_die(unsigned char player)
+{
+  memfill(&score0,1,sizeof(score0));
+  player_laser_stop(player);
+  switch(player)
+    {
+    case 0:
+      stamps[STAMP_STATE(1)]=STATE_DYING;
+      stamps[STAMP_FRAME(1)]=0;
+      break;
+    case 1:
+      stamps[STAMP_STATE(0)]=STATE_DYING;
+      stamps[STAMP_FRAME(0)]=0;      
+      break;
+    }
+  score0[3]=2;  // 1000 points.
+  add_points(player);
+  if (player==1 && blue_worrior_ai==1) 
+    k=0; // Go tell AI to chase another player, if applicable.
 }

@@ -55,4 +55,10 @@ void player_change_ai_direction();
  */
 void player_blue_move_ai(void);
 
+/**
+ * player_die(player)
+ * Player was killed by player
+ */
+void player_die(unsigned char player);
+
 #endif /* PLAYER_H */

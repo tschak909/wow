@@ -201,6 +201,15 @@ void animate_stamps(void)
       if (stamps[STAMP_DELAY(i)]==0)
 	{
 	  stamps[STAMP_FRAME(i)]=(stamps[STAMP_FRAME(i)]+1)&0x03;
+	  
+	  // If monster is dying and on last frame, set state to dead.
+	  if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
+	    {
+	      stamps[STAMP_STATE(i)]=STATE_DEAD;
+	      stamps[STAMP_X(i)]=0xFF;
+	      stamps[STAMP_Y(i)]=0xFF;
+	    }
+	  
 	  if (stamps[STAMP_STATE(i)]==STATE_DYING) // Dying plays at max speed.
 	    stamps[STAMP_DELAY(i)]=1;
 	  else if (i>1) // Delay only applies to enemies.

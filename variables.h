@@ -42,5 +42,6 @@ unsigned char player_shooting_last_state[2]; // State before player started shoo
 unsigned char monster_laser_count;           // Number of active monster lasers
 unsigned char blue_worrior_ai;               // Is blue worrior under AI control?
 unsigned char double_score_dungeon;          // Double score dungeon?
+unsigned char player_shot_loop[2];           // player shot animation loop counters for each player.
 
 #endif /* VARIABLES_H */

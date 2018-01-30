@@ -210,7 +210,11 @@ void update_stamps(void)
   for (i=0;i<STAMP_NUM_SLOTS;i++)
     {
       if (stamps[STAMP_X(i)]==0 || stamps[STAMP_STATE(i)]==STATE_DEAD)
-	  continue;
+	{
+	  a=metasprite_animation_data[92];
+	  b=c=0xf8;
+	  spr = oam_meta_spr(b,c,spr,metasprite_list[92]);
+	}
       else if (stamps[STAMP_STATE(i)]==STATE_DYING)
 	{
 	  a=metasprite_animation_data[STAMP_TYPE_EXPLOSION+stamps[STAMP_FRAME(i)]];

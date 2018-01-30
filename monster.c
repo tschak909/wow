@@ -137,14 +137,6 @@ void monster_move_all(void)
 	{
 	  monster_die(1);
 	}
-
-      // If monster is dying and on last frame, set state to dead.
-      if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
-	{
-	  stamps[STAMP_STATE(i)]=STATE_DEAD;
-	  stamps[STAMP_X(i)]=0xF8;
-	  stamps[STAMP_Y(i)]=0xF8;
-	}
       
       // Handle state movement
       if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT)
