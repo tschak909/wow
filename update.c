@@ -35,7 +35,7 @@ extern const unsigned char metasprite_animation_data[];
 extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
 extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
 
-extern unsigned char stamp_type_to_radar(unsigned char t);
+extern unsigned char stamp_type_to_radar(unsigned int t);
 extern void clear_update_buffer(void);
 extern unsigned char is_stamp_visible(void);
 

@@ -80,7 +80,7 @@ void pal_fade_to(unsigned to)
 /**
  * stamp_type_to_radar() - Choose radar sprite to use 
  */
-unsigned char stamp_type_to_radar(unsigned char t)
+unsigned char stamp_type_to_radar(unsigned int t)
 {
   switch (t)
     {

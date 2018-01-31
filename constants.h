@@ -66,8 +66,8 @@
 #define STAMP_TYPE_THORWOR          128
 #define STAMP_TYPE_WORLUK           144
 #define STAMP_TYPE_YELLOW_WORRIOR   160
-#define STAMP_TYPE_EXPLOSION        254
-#define STAMP_TYPE_DEAD             255
+#define STAMP_TYPE_EXPLOSION        256
+#define STAMP_TYPE_DEAD             257
 
 #define STATE_MONSTER_RIGHT         0
 #define STATE_MONSTER_LEFT          1
