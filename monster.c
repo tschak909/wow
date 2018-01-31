@@ -39,6 +39,7 @@ extern void add_points(unsigned char player);
 extern void player_laser_stop(unsigned char player);
 extern void get_current_box(void);
 extern void get_current_laser_box(void);
+extern unsigned char is_stamp_visible(void);
 
 /**
  * monster_setup_all() - Set up enemy sprite spawn points
@@ -137,6 +138,13 @@ void monster_move_all(void)
 	{
 	  monster_die(1);
 	}
+
+      if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
+	{
+	  stamps[STAMP_STATE(i)]=STATE_DEAD;
+	  stamps[STAMP_FRAME(i)]=0;
+	  stamps[STAMP_SHOOTING(i)]=0;
+	}
       
       // Handle state movement
       if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT)
@@ -162,7 +170,7 @@ void monster_shoot(void)
   // This is holy shit naive. The previous naive implementation took too much CPU time.
   if (rand8()>0xC0)
     {
-      if (((rand8())<0x08) && lasers[LASER_SHOOTING(i)]==0 && monster_laser_count<4) 
+      if (((rand8())<0x08) && lasers[LASER_SHOOTING(i)]==0 && monster_laser_count<4 && is_stamp_visible()) 
 	{
 	  monster_laser_fire(i);
 	}
@@ -221,13 +229,13 @@ void monster_laser_fire(unsigned char player)
     case STATE_MONSTER_RIGHT:
       lasers[LASER_OFFSET_X(i)]=LASER_X_OFFSET_H;
       lasers[LASER_OFFSET_Y(i)]=LASER_Y_OFFSET_H;
-      lasers[LASER_TYPE(player)]=0xC9;
+      lasers[LASER_TYPE(player)]=87;
       break;
     case STATE_MONSTER_DOWN:
     case STATE_MONSTER_UP:
       lasers[LASER_OFFSET_X(i)]=LASER_X_OFFSET_V;
       lasers[LASER_OFFSET_Y(i)]=LASER_Y_OFFSET_V;
-      lasers[LASER_TYPE(player)]=0xCB;
+      lasers[LASER_TYPE(player)]=94;
       break;
     }
 }
@@ -239,9 +247,9 @@ void monster_laser_fire(unsigned char player)
 void monster_laser_stop(unsigned char player)
 {
   monster_laser_count--;
-  lasers[LASER_X(player)]=0;
-  lasers[LASER_Y(player)]=0;
-  lasers[LASER_TYPE(player)]=0;
+  lasers[LASER_X(player)]=0xFF;
+  lasers[LASER_Y(player)]=0xFF;
+  lasers[LASER_TYPE(player)]=92;
   lasers[LASER_SHOOTING(player)]=0;
   lasers[LASER_DIRECTION(player)]=0;
   lasers[LASER_OFFSET_X(player)]=0;

@@ -85,17 +85,15 @@ unsigned char stamp_type_to_radar(unsigned char t)
   switch (t)
     {
     case STAMP_TYPE_BURWOR:
-      a=0xC5;
-      break;
+      return 0xC5;
     case STAMP_TYPE_GORWOR:
     case STAMP_TYPE_WORLUK:
-      a=0xC6;
-      break;
+      return 0xC6;
     case STAMP_TYPE_THORWOR:
-      a=0xC7;
-      break;
+      return 0xC7;
+    case STAMP_TYPE_DEAD:
+      return 0xff;
     }
-  return a;
 }
 
 /**
