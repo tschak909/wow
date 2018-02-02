@@ -276,12 +276,12 @@ void player_in_field(void)
 	      lasers[LASER_Y(i)]-=8;
 	}
 
-      if (BOX_PIXEL_X(stamps[STAMP_X(0)])==BOX_PIXEL_X(lasers[LASER_X(1)]) && BOX_PIXEL_Y(stamps[STAMP_Y(0)])==BOX_PIXEL_Y(lasers[LASER_Y(1)]) && stamps[STAMP_STATE(0)]<STATE_DEAD)
+      if (BOX_PIXEL_X(stamps[STAMP_X(0)])==BOX_PIXEL_X(lasers[LASER_X(1)]) && BOX_PIXEL_Y(stamps[STAMP_Y(0)])==BOX_PIXEL_Y(lasers[LASER_Y(1)]) && stamps[STAMP_STATE(0)]<STATE_PLAYER_RIGHT_SHOT)
 	{
 	  player_die(0);
 	  player_laser_stop(i);
 	}
-      else if (BOX_PIXEL_X(stamps[STAMP_X(1)])==BOX_PIXEL_X(lasers[LASER_X(0)]) && BOX_PIXEL_Y(stamps[STAMP_Y(1)])==BOX_PIXEL_Y(lasers[LASER_Y(0)]) && stamps[STAMP_STATE(1)]<STATE_DEAD)
+      else if (BOX_PIXEL_X(stamps[STAMP_X(1)])==BOX_PIXEL_X(lasers[LASER_X(0)]) && BOX_PIXEL_Y(stamps[STAMP_Y(1)])==BOX_PIXEL_Y(lasers[LASER_Y(0)]) && stamps[STAMP_STATE(1)]<STATE_PLAYER_RIGHT_SHOT)
 	{
 	  player_die(1);
 	  player_laser_stop(i);
@@ -513,6 +513,8 @@ void player_die(unsigned char player)
 {
   unsigned char new_state;
   memfill(&score0,1,sizeof(score0));
+
+  pal_col(0,rand8());
   
   switch(stamps[STAMP_STATE(player)])
     {
