@@ -213,6 +213,8 @@ void update_stamps(void)
     {
       if (stamps[STAMP_STATE(i)]==STATE_DEAD)
 	{
+	  stamps[STAMP_X(i)]=0xff;
+	  stamps[STAMP_Y(i)]=0xff;
 	  a=metasprite_animation_data[92];
 	  b=c=0xff;
 	  spr = oam_meta_spr(b,c,spr,metasprite_list[92]);

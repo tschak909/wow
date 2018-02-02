@@ -118,10 +118,13 @@ void player_in_field(void)
   if (frame_cnt==0)
     set_rand(stamps[STAMP_X(0)]);
 
-  if (stamps[STAMP_STATE(i)]==STATE_DYING || stamps[STAMP_STATE(i)]==STATE_DEAD)
-    goto no_move;
-  
-  if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
+  if (stamps[STAMP_STATE(i)]==STATE_DEAD)
+    {
+      goto no_move;
+    }
+  else if (stamps[STAMP_STATE(i)]>STATE_PLAYER_DOWN_IDLE_SHOOTING || stamps[STAMP_STATE(i)]==STATE_DYING)
+    player_shot();
+  else if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
       // We are aligned.
       if (PLAYER_PAD_LEFT(i) && stamps[STAMP_LAST_STATE(i)] != STATE_PLAYER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state == OPEN)
@@ -236,34 +239,12 @@ void player_in_field(void)
   // Stop shooting animation if we're done.
   if (stamps[STAMP_SHOOTING(i)]==1 && stamps[STAMP_FRAME(i)]==3)
     stamps[STAMP_SHOOTING(i)]=0;
-
-  if (player_shot_loop[i]>0 && stamps[STAMP_FRAME(i)]==3)
-    {
-      player_shot_loop[i]--;
-    }
-
-  if (stamps[STAMP_STATE(i)]>STATE_PLAYER_DOWN_IDLE_SHOOTING && player_shot_loop[i]==0)
-    {
-      stamps[STAMP_STATE(i)]=STATE_DYING;
-      stamps[STAMP_FRAME(i)]=0;
-    }
     
-  
+  // Handle shooting.  
   if (lasers[LASER_SHOOTING(i)]==1)
     {
       get_current_laser_box();
 
-      if (i==0 && (e==BOX_PIXEL_X(stamps[STAMP_X(1)]) && f==BOX_PIXEL_Y(stamps[STAMP_Y(1)])))
-	{
-	  player_laser_stop(1);
-	  player_die(1);
-	}
-      else if (i==1 && (e==BOX_PIXEL_X(stamps[STAMP_X(0)]) && f==BOX_PIXEL_Y(stamps[STAMP_Y(0)])))
-	{
-	  player_laser_stop(0);
-	  player_die(0);
-	}
-      
       if (lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_SHOOTING || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_IDLE || lasers[LASER_DIRECTION(i)]==STATE_PLAYER_RIGHT_IDLE_SHOOTING)
 	{	    
 	  if (BOX_WALL_RIGHT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
@@ -292,9 +273,52 @@ void player_in_field(void)
 	  else
 	      lasers[LASER_Y(i)]-=8;
 	}
+
+      if (BOX_PIXEL_X(stamps[STAMP_X(0)])==BOX_PIXEL_X(lasers[LASER_X(1)]) && BOX_PIXEL_Y(stamps[STAMP_Y(0)])==BOX_PIXEL_Y(lasers[LASER_Y(1)]))
+	{
+	  player_die(0);
+	  player_laser_stop(i);
+	}
+      else if (BOX_PIXEL_X(stamps[STAMP_X(1)])==BOX_PIXEL_X(lasers[LASER_X(0)]) && BOX_PIXEL_Y(stamps[STAMP_Y(1)])==BOX_PIXEL_Y(lasers[LASER_Y(0)]))
+	{
+	  player_die(1);
+	  player_laser_stop(i);
+	}
+      
+      if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
+	{
+	  stamps[STAMP_STATE(i)]=STATE_DEAD;
+	  stamps[STAMP_FRAME(i)]=0;
+	  stamps[STAMP_SHOOTING(i)]=0;
+	}
+
             
     }
- no_move: return;
+
+ no_move:
+  return;
+}
+
+/**
+ * player_shot()
+ * Player has been shot by something.
+ */
+void player_shot(void)
+{
+  // Handle dying animation.
+  if (stamps[STAMP_STATE(i)]!=STATE_DYING && player_shot_loop[i]>0 && stamps[STAMP_FRAME(i)]==3)
+    {
+      player_shot_loop[i]--;
+    }
+  else if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
+    {
+      stamps[STAMP_STATE(i)]=STATE_DEAD;
+    }
+  else if (stamps[STAMP_STATE(i)]!=STATE_DYING && stamps[STAMP_STATE(i)]>STATE_PLAYER_DOWN_IDLE_SHOOTING && player_shot_loop[i]==0)
+    {
+      stamps[STAMP_STATE(i)]=STATE_DYING;
+      stamps[STAMP_FRAME(i)]=0;
+    }
 }
 
 /**
@@ -491,7 +515,7 @@ void player_die(unsigned char player)
 {
   unsigned char new_state;
   memfill(&score0,1,sizeof(score0));
-
+  
   switch(stamps[STAMP_STATE(player)])
     {
     case STATE_PLAYER_RIGHT:
@@ -531,9 +555,13 @@ void player_die(unsigned char player)
   stamps[STAMP_STATE(player)]=new_state;
   stamps[STAMP_FRAME(player)]=0;
   player_shot_loop[player]=8;
+
+  if (i<2) // Only deal with score if player shoots player.
+    {
+      score0[3]=2;  // 1000 points.
+      add_points(i);
+    }
   
-  score0[3]=2;  // 1000 points.
-  add_points(i);
   if (player==1 && blue_worrior_ai==1) 
     k=0; // Go tell AI to chase another player, if applicable.
 }

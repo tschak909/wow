@@ -61,4 +61,10 @@ void player_blue_move_ai(void);
  */
 void player_die(unsigned char player);
 
+/**
+ * player_shot()
+ * Player has been shot by something.
+ */
+void player_shot(void);
+
 #endif /* PLAYER_H */

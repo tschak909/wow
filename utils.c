@@ -204,8 +204,6 @@ void animate_stamps(void)
 	  if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
 	    {
 	      stamps[STAMP_STATE(i)]=STATE_DEAD;
-	      stamps[STAMP_X(i)]=0xFF;
-	      stamps[STAMP_Y(i)]=0xFF;
 	    }
 	  
 	  if (stamps[STAMP_STATE(i)]==STATE_DYING) // Dying plays at max speed.

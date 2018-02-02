@@ -40,6 +40,7 @@ extern void player_laser_stop(unsigned char player);
 extern void get_current_box(void);
 extern void get_current_laser_box(void);
 extern unsigned char is_stamp_visible(void);
+extern void player_die(unsigned char player);
 
 /**
  * monster_setup_all() - Set up enemy sprite spawn points
@@ -132,11 +133,21 @@ void monster_move_all(void)
       // Handle player laser to monster collision
       if (BOX_PIXEL_X(lasers[LASER_X(0)])==a && BOX_PIXEL_Y(lasers[LASER_Y(0)])==b)
 	{
-	  monster_die(0);
+	  if (stamps[STAMP_STATE(i)]==STATE_DYING)
+	    {
+	      // This is here to prevent perpetual point grabbage
+	    }
+	  else
+	    monster_die(0);
 	}
       else if (BOX_PIXEL_X(lasers[LASER_X(1)])==a && BOX_PIXEL_Y(lasers[LASER_Y(1)])==b)
 	{
-	  monster_die(1);
+	  if (stamps[STAMP_STATE(i)]==STATE_DYING)
+	    {
+	      // This is here to prevent perpetual point grabbage
+	    }
+	  else
+	    monster_die(1);
 	}
 
       if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
@@ -170,16 +181,29 @@ void monster_shoot(void)
   // This is holy shit naive. The previous naive implementation took too much CPU time.
   if (rand8()>0xC0)
     {
-      if (((rand8())<0x08) && lasers[LASER_SHOOTING(i)]==0 && monster_laser_count<4 && is_stamp_visible()) 
-	{
-	  monster_laser_fire(i);
-	}
+      if (((rand8())<0x08) && lasers[LASER_SHOOTING(i)]==0 && monster_laser_count<4 && is_stamp_visible())
+  	{
+  	  monster_laser_fire(i);
+  	}
     }
 
   if (lasers[LASER_SHOOTING(i)]==1)
     {
       get_current_laser_box();
-      if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_RIGHT)
+
+      if (stamps[STAMP_STATE(0)]<STATE_PLAYER_DOWN_IDLE_SHOOTING && e==BOX_PIXEL_X(stamps[STAMP_X(0)]) && f==BOX_PIXEL_Y(stamps[STAMP_Y(0)]))
+	{
+	  // Monster laser hit yellow worrior
+	  player_die(0);
+	  monster_laser_stop(i);
+	}
+      else if (stamps[STAMP_STATE(1)]<STATE_PLAYER_DOWN_IDLE_SHOOTING && e==BOX_PIXEL_X(stamps[STAMP_X(1)]) && f==BOX_PIXEL_Y(stamps[STAMP_Y(1)]))
+	{
+	  // Monster laser hit blue worrior
+	  player_die(1);
+	  monster_laser_stop(i);
+	}
+      else if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_RIGHT)
 	{
 	  if (BOX_WALL_RIGHT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
 	    monster_laser_stop(i);
@@ -291,9 +315,12 @@ void monster_dead_add_player_points(unsigned char player)
 void monster_die(unsigned char player)
 {
   player_laser_stop(player);
+  if (lasers[LASER_SHOOTING(i)]==1)
+    monster_laser_stop(i); // Stop any laser that might be firing from monster.
   stamps[STAMP_STATE(i)]=STATE_DYING;
   stamps[STAMP_FRAME(i)]=0;
   monster_dead_add_player_points(player);
+
   if (player==1 && blue_worrior_ai==1) 
     k=0; // Go tell AI to chase another monster, if applicable.
 }

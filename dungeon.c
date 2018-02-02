@@ -431,6 +431,7 @@ void dungeon_run(unsigned char dungeon_num)
 
   // Turn the PPU on, and finish setting up.
   ppu_on_all();
+  ppu_mask(0x1E); // like ppu_on_all except show first 8 horizontal pixels.
   ppu_wait_frame();
   bank_spr(1);
   bank_bg(0);
