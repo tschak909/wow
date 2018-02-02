@@ -123,7 +123,9 @@ void player_in_field(void)
       goto no_move;
     }
   else if (stamps[STAMP_STATE(i)]>STATE_PLAYER_DOWN_IDLE_SHOOTING || stamps[STAMP_STATE(i)]==STATE_DYING)
-    player_shot();
+    {
+      player_shot();
+    }
   else if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
     {
       // We are aligned.
@@ -274,12 +276,12 @@ void player_in_field(void)
 	      lasers[LASER_Y(i)]-=8;
 	}
 
-      if (BOX_PIXEL_X(stamps[STAMP_X(0)])==BOX_PIXEL_X(lasers[LASER_X(1)]) && BOX_PIXEL_Y(stamps[STAMP_Y(0)])==BOX_PIXEL_Y(lasers[LASER_Y(1)]))
+      if (BOX_PIXEL_X(stamps[STAMP_X(0)])==BOX_PIXEL_X(lasers[LASER_X(1)]) && BOX_PIXEL_Y(stamps[STAMP_Y(0)])==BOX_PIXEL_Y(lasers[LASER_Y(1)]) && stamps[STAMP_STATE(0)]<STATE_DEAD)
 	{
 	  player_die(0);
 	  player_laser_stop(i);
 	}
-      else if (BOX_PIXEL_X(stamps[STAMP_X(1)])==BOX_PIXEL_X(lasers[LASER_X(0)]) && BOX_PIXEL_Y(stamps[STAMP_Y(1)])==BOX_PIXEL_Y(lasers[LASER_Y(0)]))
+      else if (BOX_PIXEL_X(stamps[STAMP_X(1)])==BOX_PIXEL_X(lasers[LASER_X(0)]) && BOX_PIXEL_Y(stamps[STAMP_Y(1)])==BOX_PIXEL_Y(lasers[LASER_Y(0)]) && stamps[STAMP_STATE(1)]<STATE_DEAD)
 	{
 	  player_die(1);
 	  player_laser_stop(i);
@@ -309,10 +311,6 @@ void player_shot(void)
   if (stamps[STAMP_STATE(i)]!=STATE_DYING && player_shot_loop[i]>0 && stamps[STAMP_FRAME(i)]==3)
     {
       player_shot_loop[i]--;
-    }
-  else if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
-    {
-      stamps[STAMP_STATE(i)]=STATE_DEAD;
     }
   else if (stamps[STAMP_STATE(i)]!=STATE_DYING && stamps[STAMP_STATE(i)]>STATE_PLAYER_DOWN_IDLE_SHOOTING && player_shot_loop[i]==0)
     {
