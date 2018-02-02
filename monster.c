@@ -23,12 +23,24 @@ extern unsigned char teleport_timer;
 #pragma zpsym("teleport_timer")
 extern unsigned char monster_laser_count;
 #pragma zpsym("monster_laser_count")
+extern unsigned char double_score_dungeon;
+#pragma zpsym("double_score_dungeon")
+extern unsigned char k;
+#pragma zpsym("k")
+extern unsigned char blue_worrior_ai;
+#pragma zpsym("blue_worrior_ai")
 
 extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
 extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
+extern unsigned char score0[7];
+extern unsigned char score1[7];
 
+extern void add_points(unsigned char player);
+extern void player_laser_stop(unsigned char player);
 extern void get_current_box(void);
 extern void get_current_laser_box(void);
+extern unsigned char is_stamp_visible(void);
+extern void player_die(unsigned char player);
 
 /**
  * monster_setup_all() - Set up enemy sprite spawn points
@@ -55,8 +67,8 @@ void monster_setup_all(void)
       stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
     }
   // Temporary code to test all monster types
-  /* stamps[STAMP_TYPE(5)]=stamps[STAMP_TYPE(6)]=STAMP_TYPE_GORWOR; */
-  /* stamps[STAMP_TYPE(7)]=STAMP_TYPE_THORWOR; */
+  stamps[STAMP_TYPE(5)]=stamps[STAMP_TYPE(6)]=STAMP_TYPE_GORWOR;
+  stamps[STAMP_TYPE(7)]=STAMP_TYPE_THORWOR;
 }
 
 /**
@@ -117,6 +129,33 @@ void monster_move_all(void)
 	    stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];
 	  
 	}
+
+      // Handle player laser to monster collision
+      if (BOX_PIXEL_X(lasers[LASER_X(0)])==a && BOX_PIXEL_Y(lasers[LASER_Y(0)])==b)
+	{
+	  if (stamps[STAMP_STATE(i)]==STATE_DYING)
+	    {
+	      // This is here to prevent perpetual point grabbage
+	    }
+	  else
+	    monster_die(0);
+	}
+      else if (BOX_PIXEL_X(lasers[LASER_X(1)])==a && BOX_PIXEL_Y(lasers[LASER_Y(1)])==b)
+	{
+	  if (stamps[STAMP_STATE(i)]==STATE_DYING)
+	    {
+	      // This is here to prevent perpetual point grabbage
+	    }
+	  else
+	    monster_die(1);
+	}
+
+      if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
+	{
+	  stamps[STAMP_STATE(i)]=STATE_DEAD;
+	  stamps[STAMP_FRAME(i)]=0;
+	  stamps[STAMP_SHOOTING(i)]=0;
+	}
       
       // Handle state movement
       if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT)
@@ -142,16 +181,29 @@ void monster_shoot(void)
   // This is holy shit naive. The previous naive implementation took too much CPU time.
   if (rand8()>0xC0)
     {
-      if (((rand8())<0x08) && lasers[LASER_SHOOTING(i)]==0 && monster_laser_count<4) 
-	{
-	  monster_laser_fire(i);
-	}
+      if (((rand8())<0x08) && lasers[LASER_SHOOTING(i)]==0 && monster_laser_count<4 && is_stamp_visible())
+  	{
+  	  monster_laser_fire(i);
+  	}
     }
 
   if (lasers[LASER_SHOOTING(i)]==1)
     {
       get_current_laser_box();
-      if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_RIGHT)
+
+      if (stamps[STAMP_STATE(0)]<STATE_PLAYER_DOWN_IDLE_SHOOTING && e==BOX_PIXEL_X(stamps[STAMP_X(0)]) && f==BOX_PIXEL_Y(stamps[STAMP_Y(0)]))
+	{
+	  // Monster laser hit yellow worrior
+	  player_die(0);
+	  monster_laser_stop(i);
+	}
+      else if (stamps[STAMP_STATE(1)]<STATE_PLAYER_DOWN_IDLE_SHOOTING && e==BOX_PIXEL_X(stamps[STAMP_X(1)]) && f==BOX_PIXEL_Y(stamps[STAMP_Y(1)]))
+	{
+	  // Monster laser hit blue worrior
+	  player_die(1);
+	  monster_laser_stop(i);
+	}
+      else if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_RIGHT)
 	{
 	  if (BOX_WALL_RIGHT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
 	    monster_laser_stop(i);
@@ -201,13 +253,13 @@ void monster_laser_fire(unsigned char player)
     case STATE_MONSTER_RIGHT:
       lasers[LASER_OFFSET_X(i)]=LASER_X_OFFSET_H;
       lasers[LASER_OFFSET_Y(i)]=LASER_Y_OFFSET_H;
-      lasers[LASER_TYPE(player)]=0xC9;
+      lasers[LASER_TYPE(player)]=87;
       break;
     case STATE_MONSTER_DOWN:
     case STATE_MONSTER_UP:
       lasers[LASER_OFFSET_X(i)]=LASER_X_OFFSET_V;
       lasers[LASER_OFFSET_Y(i)]=LASER_Y_OFFSET_V;
-      lasers[LASER_TYPE(player)]=0xCB;
+      lasers[LASER_TYPE(player)]=94;
       break;
     }
 }
@@ -219,11 +271,56 @@ void monster_laser_fire(unsigned char player)
 void monster_laser_stop(unsigned char player)
 {
   monster_laser_count--;
-  lasers[LASER_X(player)]=0;
-  lasers[LASER_Y(player)]=0;
-  lasers[LASER_TYPE(player)]=0;
+  lasers[LASER_X(player)]=0xFF;
+  lasers[LASER_Y(player)]=0xFF;
+  lasers[LASER_TYPE(player)]=92;
   lasers[LASER_SHOOTING(player)]=0;
   lasers[LASER_DIRECTION(player)]=0;
   lasers[LASER_OFFSET_X(player)]=0;
   lasers[LASER_OFFSET_Y(player)]=0;
+}
+
+/** 
+ * monster_dead_add_player_points(player)
+ * Monster shot, add points to score
+ * monster dead coming from i.
+ */
+void monster_dead_add_player_points(unsigned char player)
+{
+  memfill(&score0,1,sizeof(score0));
+  switch(stamps[STAMP_TYPE(i)])
+    {
+    case STAMP_TYPE_BURWOR:
+      score0[4]=2; // 100 points.
+      break;
+    case STAMP_TYPE_GORWOR:
+      score0[4]=3; // 200 points
+      break;
+    case STAMP_TYPE_THORWOR:
+      score0[4]=6; // 500 points
+      break;
+    case STAMP_TYPE_WORLUK:
+      score0[3]=3; // 2000 points
+      double_score_dungeon=1;
+      break;
+    }
+
+  add_points(player);
+}
+
+/**
+ * monster_die(player)
+ * Monster was killed by player
+ */
+void monster_die(unsigned char player)
+{
+  player_laser_stop(player);
+  if (lasers[LASER_SHOOTING(i)]==1)
+    monster_laser_stop(i); // Stop any laser that might be firing from monster.
+  stamps[STAMP_STATE(i)]=STATE_DYING;
+  stamps[STAMP_FRAME(i)]=0;
+  monster_dead_add_player_points(player);
+
+  if (player==1 && blue_worrior_ai==1) 
+    k=0; // Go tell AI to chase another monster, if applicable.
 }

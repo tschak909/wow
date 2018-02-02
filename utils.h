@@ -26,7 +26,7 @@ void add_points(unsigned char player);
 /**
  * stamp_type_to_radar(t) - Choose radar sprite to use 
  */
-unsigned char stamp_type_to_radar(unsigned char t);
+unsigned char stamp_type_to_radar(unsigned int t);
 
 /**
  * is_stamp_visible()

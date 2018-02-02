@@ -61,11 +61,13 @@
  * Metasprite constants
  */
 #define STAMP_TYPE_BLUE_WORRIOR     0
-#define STAMP_TYPE_BURWOR           64
-#define STAMP_TYPE_GORWOR           80
-#define STAMP_TYPE_THORWOR          96
-#define STAMP_TYPE_WORLUK           112
-#define STAMP_TYPE_YELLOW_WORRIOR   128
+#define STAMP_TYPE_BURWOR           96
+#define STAMP_TYPE_GORWOR           112
+#define STAMP_TYPE_THORWOR          128
+#define STAMP_TYPE_WORLUK           144
+#define STAMP_TYPE_YELLOW_WORRIOR   160
+#define STAMP_TYPE_EXPLOSION        256
+#define STAMP_TYPE_DEAD             257
 
 #define STATE_MONSTER_RIGHT         0
 #define STATE_MONSTER_LEFT          1
@@ -88,6 +90,16 @@
 #define STATE_PLAYER_UP_IDLE_SHOOTING       13
 #define STATE_PLAYER_DOWN_SHOOTING          14
 #define STATE_PLAYER_DOWN_IDLE_SHOOTING     15
+#define STATE_PLAYER_RIGHT_SHOT             16
+#define STATE_PLAYER_RIGHT_IDLE_SHOT        17
+#define STATE_PLAYER_LEFT_SHOT              18
+#define STATE_PLAYER_LEFT_IDLE_SHOT         19
+#define STATE_PLAYER_UP_SHOT                20
+#define STATE_PLAYER_UP_IDLE_SHOT           21
+#define STATE_PLAYER_DOWN_SHOT              22
+#define STATE_PLAYER_DOWN_IDLE_SHOT         23
+#define STATE_DYING                         254
+#define STATE_DEAD                          255
 
 #define STATE_ADD_SHOOTING                  8
 

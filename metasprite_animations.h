@@ -24,6 +24,14 @@ const unsigned char metasprite_animation_data[]={
   6,10,14,18,  // Worrior Blue Up Shooting Idle
   7,11,15,19,  // Worrior Blue Down Shooting
   7,11,15,19,  // Worrior Blue Down Shooting Idle
+  0,62,0,62,   // Worrior Blue Right Shot
+  0,62,0,62,   // Worrior Blue Right Shot Idle
+  1,63,1,63,   // Worrior Blue Left Shot
+  1,63,1,63,   // Worrior Blue Left Shot Idle
+  2,64,2,64,   // Worrior Blue Up Shot
+  2,64,2,64,   // Worrior Blue Up Shot Idle
+  3,65,3,65,   // Worrior Blue Down Shot
+  3,65,3,65,   // Worrior Blue Down Shot Idle
   // -------------------------------------------
   20,24,28,28, // Burwor Right
   21,25,29,29, // Burwor Left
@@ -61,6 +69,16 @@ const unsigned char metasprite_animation_data[]={
   68,72,76,80, // Worrior Yellow Up Shooting Idle  
   69,73,77,81, // Worrior Yellow Down Shooting
   69,73,77,81, // Worrior Yellow Down Shooting Idle
+  62,0,62,0,   // Worrior Yellow Right Shot
+  62,0,62,0,   // Worrior Yellow Right Shot Idle
+  63,1,63,1,   // Worrior Yellow Left Shot
+  63,1,63,1,   // Worrior Yellow Left Shot Idle
+  64,2,64,2,   // Worrior Yellow Up Shot
+  64,2,64,2,   // Worrior Yellow Up Shot Idle
+  65,3,65,3,   // Worrior Yellow Down Shot
+  65,3,65,3,   // Worrior Yellow Down Shot Idle
+  // -------------------------------------------
+  88,89,90,91, // Worrrior/Monster Explosion
 };
 
 #endif /* METASPRITE_ANIMATIONS_H */

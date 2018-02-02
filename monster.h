@@ -36,4 +36,17 @@ void monster_laser_fire(unsigned char player);
  */
 void monster_laser_stop(unsigned char player);
 
+/** 
+ * monster_dead_add_player_points(player)
+ * Monster shot, add points to score
+ * monster dead coming from i.
+ */
+void monster_dead_add_player_points(unsigned char player);
+
+/**
+ * monster_die(player)
+ * Monster was killed by player
+ */
+void monster_die(unsigned char player);
+
 #endif /* MONSTER_H */

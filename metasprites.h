@@ -687,6 +687,47 @@ const unsigned char metasprite_data[]={
 	128,
 
 	  0,  0,0xc9,0,
+	128,
+
+	  0,  0,0xcc,0,
+	  8,  0,0xcd,0,
+	  0,  8,0xce,0,
+	  8,  8,0xcf,0,
+	  0, 16,0xff,0,
+	  8, 16,0xff,0,
+	128,
+
+	  0,  0,0xd0,0,
+	  8,  0,0xd1,0,
+	  0,  8,0xd2,0,
+	  8,  8,0xd3,0,
+	  0, 16,0xff,0,
+	  8, 16,0xff,0,
+	128,
+
+	  0,  0,0xd4,0,
+	  8,  0,0xd5,0,
+	  0,  8,0xd6,0,
+	  8,  8,0xd7,0,
+	  0, 16,0xff,0,
+	  8, 16,0xff,0,
+	128,
+
+	  0,  0,0xd8,0,
+	  8,  0,0xd9,0,
+	  0,  8,0xda,0,
+	  8,  8,0xdb,0,
+	  0, 16,0xff,0,
+	  8, 16,0xff,0,
+	128,
+
+	  0,  0,0xff,0,
+	128,
+
+	  0,  0,0xca,0,
+	128,
+
+	  0,  0,0xcb,0,
 	128
 
 };
@@ -779,7 +820,14 @@ const unsigned char* const metasprite_list[]={
 	metasprite_data+2052,
 	metasprite_data+2077,
 	metasprite_data+2102,
-	metasprite_data+2107
+	metasprite_data+2107,
+	metasprite_data+2112,
+	metasprite_data+2137,
+	metasprite_data+2162,
+	metasprite_data+2187,
+	metasprite_data+2212,
+	metasprite_data+2217,
+	metasprite_data+2222
 };
 
 #endif /* METASPRITES_H */
