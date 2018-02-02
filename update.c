@@ -251,7 +251,12 @@ void update_lasers(void)
     {
       if (lasers[LASER_SHOOTING(i)]==1)
 	{
-	  spr = oam_meta_spr(lasers[LASER_X(i)]+lasers[LASER_OFFSET_X(i)],lasers[LASER_Y(i)]+lasers[LASER_OFFSET_Y(i)],spr,metasprite_list[lasers[LASER_TYPE(i)]]);
+	  if (lasers[LASER_TYPE(i)]==0)
+	    {
+	      spr = oam_meta_spr(0xFF,0xFF,spr,metasprite_list[92]);	      
+	    }
+	  else
+	    spr = oam_meta_spr(lasers[LASER_X(i)]+lasers[LASER_OFFSET_X(i)],lasers[LASER_Y(i)]+lasers[LASER_OFFSET_Y(i)],spr,metasprite_list[lasers[LASER_TYPE(i)]]);
 	}
       else
 	{

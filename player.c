@@ -434,7 +434,7 @@ void player_laser_stop(unsigned char player)
 {
   lasers[LASER_X(player)]=0xff;
   lasers[LASER_Y(player)]=0xff;
-  lasers[LASER_TYPE(player)]=0;
+  lasers[LASER_TYPE(player)]=92;
   lasers[LASER_SHOOTING(player)]=0;
   lasers[LASER_DIRECTION(player)]=0;
   lasers[LASER_OFFSET_X(player)]=0;
@@ -513,8 +513,6 @@ void player_die(unsigned char player)
 {
   unsigned char new_state;
   memfill(&score0,1,sizeof(score0));
-
-  pal_col(0,rand8());
   
   switch(stamps[STAMP_STATE(player)])
     {
