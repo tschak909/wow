@@ -15,29 +15,6 @@ unsigned char score0[7];
 unsigned char score1[7]={1,1,1,1,1,1,1};
 unsigned char score2[7]={1,1,1,1,1,1,1};
 
-unsigned char stamp_x[8];          // Stamp X position
-unsigned char stamp_y[8];          // Stamp Y position
-unsigned char stamp_type[8];       // Stamp type
-unsigned char stamp_state[8];      // Stamp state
-unsigned char stamp_last_state[8]; // Stamp last state
-unsigned char stamp_frame[8];      // Stamp frame
-unsigned char stamp_delay[8];      // STamp delay
-unsigned char stamp_timer[8];      // Stamp timer
-unsigned char stamp_pad[8];        // Stamp pad
-unsigned char stamp_shooting[8];   // Stamp shooting
-unsigned char stamp_x_box[8];      // Stamp X box position
-unsigned char stamp_y_box[8];      // Stamp Y box position
-
-unsigned char laser_x[8];          // Laser X position
-unsigned char laser_y[8];          // Laser Y position
-unsigned char laser_type[8];       // Laser type
-unsigned char laser_shooting[8];   // Laser shooting
-unsigned char laser_direction[8];  // Laser direction
-unsigned char laser_offset_x[8];   // Laser X offset
-unsigned char laser_offset_y[8];   // Laser Y offset
-unsigned char laser_x_box[8];      // Laser X box position
-unsigned char laser_y_box[8];      // Laser Y box position
-
 /******************************************************
  * Zero Page Variables                                *
  ******************************************************/
@@ -63,5 +40,24 @@ unsigned char monster_laser_count;           // Number of active monster lasers
 unsigned char blue_worrior_ai;               // Is blue worrior under AI control?
 unsigned char double_score_dungeon;          // Double score dungeon?
 unsigned char player_shot_loop[2];           // player shot animation loop counters for each player.
+
+unsigned char stamp_x[8];          // Stamp X position
+unsigned char stamp_y[8];          // Stamp Y position
+unsigned char stamp_type[8];       // Stamp type
+unsigned char stamp_state[8];      // Stamp state
+unsigned char stamp_last_state[8]; // Stamp last state
+unsigned char stamp_frame[8];      // Stamp frame
+unsigned char stamp_delay[8];      // STamp delay
+unsigned char stamp_timer[8];      // Stamp timer
+unsigned char stamp_pad[8];        // Stamp pad
+unsigned char stamp_shooting[8];   // Stamp shooting
+
+unsigned char laser_x[8];          // Laser X position
+unsigned char laser_y[8];          // Laser Y position
+unsigned char laser_type[8];       // Laser type
+unsigned char laser_shooting[8];   // Laser shooting
+unsigned char laser_direction[8];  // Laser direction
+unsigned char laser_offset_x[8];   // Laser X offset
+unsigned char laser_offset_y[8];   // Laser Y offset
 
 #endif /* VARIABLES_H */

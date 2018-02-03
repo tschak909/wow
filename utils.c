@@ -4,27 +4,40 @@
 #include "neslib.h"
 
 extern unsigned char stamp_x[8];          // Stamp X position
+#pragma zpsym("stamp_x")
 extern unsigned char stamp_y[8];          // Stamp Y position
+#pragma zpsym("stamp_y")
 extern unsigned char stamp_type[8];       // Stamp type
+#pragma zpsym("stamp_type")
 extern unsigned char stamp_state[8];      // Stamp state
+#pragma zpsym("stamp_state")
 extern unsigned char stamp_last_state[8]; // Stamp last state
+#pragma zpsym("stamp_last_state")
 extern unsigned char stamp_frame[8];      // Stamp frame
-extern unsigned char stamp_delay[8];      // STamp delay
+#pragma zpsym("stamp_frame")
+extern unsigned char stamp_delay[8];      // Stamp delay
+#pragma zpsym("stamp_delay")
 extern unsigned char stamp_timer[8];      // Stamp timer
+#pragma zpsym("stamp_timer")
 extern unsigned char stamp_pad[8];        // Stamp pad
+#pragma zpsym("stamp_pad")
 extern unsigned char stamp_shooting[8];   // Stamp shooting
-extern unsigned char stamp_x_box[8];      // Stamp X box position
-extern unsigned char stamp_y_box[8];      // Stamp Y box position
+#pragma zpsym("stamp_shooting")
 
 extern unsigned char laser_x[8];          // Laser X position
+#pragma zpsym("laser_x")
 extern unsigned char laser_y[8];          // Laser Y position
+#pragma zpsym("laser_y")
 extern unsigned char laser_type[8];       // Laser type
+#pragma zpsym("laser_type")
 extern unsigned char laser_shooting[8];   // Laser shooting
+#pragma zpsym("laser_shooting")
 extern unsigned char laser_direction[8];  // Laser direction
+#pragma zpsym("laser_direction")
 extern unsigned char laser_offset_x[8];   // Laser X offset
+#pragma zpsym("laser_offset_x")
 extern unsigned char laser_offset_y[8];   // Laser Y offset
-extern unsigned char laser_x_box[8];      // Laser X box position
-extern unsigned char laser_y_box[8];      // Laser Y box position
+#pragma zpsym("laser_offset_y")
 
 extern unsigned char update_buffer[80];
 extern unsigned char score0[7];
@@ -74,8 +87,6 @@ void clear_stamps(void)
   memfill(&stamp_timer,0,sizeof(stamp_timer));
   memfill(&stamp_pad,0,sizeof(stamp_pad));
   memfill(&stamp_shooting,0,sizeof(stamp_shooting));
-  memfill(&stamp_x_box,0,sizeof(stamp_x_box));
-  memfill(&stamp_y_box,0,sizeof(stamp_y_box));
 }
 
 /**
