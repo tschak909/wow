@@ -3,8 +3,29 @@
 #include "macros.h"
 #include "neslib.h"
 
-extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
-extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
+extern unsigned char stamp_x[8];          // Stamp X position
+extern unsigned char stamp_y[8];          // Stamp Y position
+extern unsigned char stamp_type[8];       // Stamp type
+extern unsigned char stamp_state[8];      // Stamp state
+extern unsigned char stamp_last_state[8]; // Stamp last state
+extern unsigned char stamp_frame[8];      // Stamp frame
+extern unsigned char stamp_delay[8];      // STamp delay
+extern unsigned char stamp_timer[8];      // Stamp timer
+extern unsigned char stamp_pad[8];        // Stamp pad
+extern unsigned char stamp_shooting[8];   // Stamp shooting
+extern unsigned char stamp_x_box[8];      // Stamp X box position
+extern unsigned char stamp_y_box[8];      // Stamp Y box position
+
+extern unsigned char laser_x[8];          // Laser X position
+extern unsigned char laser_y[8];          // Laser Y position
+extern unsigned char laser_type[8];       // Laser type
+extern unsigned char laser_shooting[8];   // Laser shooting
+extern unsigned char laser_direction[8];  // Laser direction
+extern unsigned char laser_offset_x[8];   // Laser X offset
+extern unsigned char laser_offset_y[8];   // Laser Y offset
+extern unsigned char laser_x_box[8];      // Laser X box position
+extern unsigned char laser_y_box[8];      // Laser Y box position
+
 extern unsigned char update_buffer[80];
 extern unsigned char score0[7];
 extern unsigned char score1[7];
@@ -43,7 +64,18 @@ extern unsigned char j;
  */
 void clear_stamps(void)
 {
-  memfill(&stamps,0,sizeof(stamps));
+  memfill(&stamp_x,0,sizeof(stamp_x));
+  memfill(&stamp_y,0,sizeof(stamp_y));
+  memfill(&stamp_type,0,sizeof(stamp_type));
+  memfill(&stamp_state,0,sizeof(stamp_state));
+  memfill(&stamp_last_state,0,sizeof(stamp_last_state));
+  memfill(&stamp_frame,0,sizeof(stamp_frame));
+  memfill(&stamp_delay,0,sizeof(stamp_delay));
+  memfill(&stamp_timer,0,sizeof(stamp_timer));
+  memfill(&stamp_pad,0,sizeof(stamp_pad));
+  memfill(&stamp_shooting,0,sizeof(stamp_shooting));
+  memfill(&stamp_x_box,0,sizeof(stamp_x_box));
+  memfill(&stamp_y_box,0,sizeof(stamp_y_box));
 }
 
 /**
@@ -136,18 +168,17 @@ void add_points(unsigned char player)
  */
 unsigned char is_stamp_visible(void)
 {
-  /* return TRUE; */
-  if (stamps[STAMP_TYPE(i)]==STAMP_TYPE_BURWOR ||
-      stamps[STAMP_TYPE(i)]==STAMP_TYPE_BLUE_WORRIOR ||
-      stamps[STAMP_TYPE(i)]==STAMP_TYPE_YELLOW_WORRIOR ||
-      stamps[STAMP_TYPE(i)]==STAMP_TYPE_WORLUK)
+  if (stamp_type[i]==STAMP_TYPE_BURWOR ||
+      stamp_type[i]==STAMP_TYPE_BLUE_WORRIOR ||
+      stamp_type[i]==STAMP_TYPE_YELLOW_WORRIOR ||
+      stamp_type[i]==STAMP_TYPE_WORLUK)
     return TRUE;
 
   // utterly naive proximity detection, but it should be fast.
-  if ( (BOX_PIXEL_X(stamps[STAMP_X(0)]) == BOX_PIXEL_X(stamps[STAMP_X(i)])) ||
-       (BOX_PIXEL_Y(stamps[STAMP_Y(0)]) == BOX_PIXEL_Y(stamps[STAMP_Y(i)])) ||
-       (BOX_PIXEL_X(stamps[STAMP_X(1)]) == BOX_PIXEL_X(stamps[STAMP_X(i)])) ||
-       (BOX_PIXEL_Y(stamps[STAMP_Y(1)]) == BOX_PIXEL_Y(stamps[STAMP_X(i)])) )
+  if ( (BOX_PIXEL_X(stamp_x[0]) == BOX_PIXEL_X(stamp_x[i])) ||
+       (BOX_PIXEL_Y(stamp_y[0]) == BOX_PIXEL_Y(stamp_y[i])) ||
+       (BOX_PIXEL_X(stamp_x[1]) == BOX_PIXEL_X(stamp_x[i])) ||
+       (BOX_PIXEL_Y(stamp_y[1]) == BOX_PIXEL_Y(stamp_x[i])) )
     return TRUE;
  
   
@@ -165,8 +196,8 @@ unsigned char is_stamp_visible(void)
  */
 void get_current_box(void)
 {
-  a=div24(stamps[STAMP_X(i)]+8);
-  b=div24(stamps[STAMP_Y(i)]-8);
+  a=div24(stamp_x[i]+8);
+  b=div24(stamp_y[i]-8);
   c=(b*10)+a; // C is now the box #
   d=dungeon[c];
 }
@@ -182,8 +213,8 @@ void get_current_box(void)
  */
 void get_current_laser_box(void)
 {
-  e=div24(lasers[LASER_X(i)]+8);
-  f=div24(lasers[LASER_Y(i)]-8);
+  e=div24(laser_x[i]+8);
+  f=div24(laser_y[i]-8);
   g=(f*10)+e; // G is now the box #
   h=dungeon[g];
 }
@@ -196,26 +227,26 @@ void animate_stamps(void)
 {
   for (i=0;i<STAMP_NUM_SLOTS;i++)
     {
-      if (stamps[STAMP_DELAY(i)]==0)
+      if (stamp_delay[i]==0)
 	{
-	  stamps[STAMP_FRAME(i)]=(stamps[STAMP_FRAME(i)]+1)&0x03;
+	  stamp_frame[i]=(stamp_frame[i]+1)&0x03;
 	  
 	  // If monster is dying and on last frame, set state to dead.
-	  if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
+	  if (stamp_state[i]==STATE_DYING && stamp_frame[i]==3)
 	    {
-	      stamps[STAMP_STATE(i)]=STATE_DEAD;
+	      stamp_state[i]=STATE_DEAD;
 	    }
 	  
-	  if (stamps[STAMP_STATE(i)]==STATE_DYING) // Dying plays at max speed.
-	    stamps[STAMP_DELAY(i)]=1;
+	  if (stamp_state[i]==STATE_DYING) // Dying plays at max speed.
+	    stamp_delay[i]=1;
 	  else if (i>1) // Delay only applies to enemies.
-	    stamps[STAMP_DELAY(i)]=4;
+	    stamp_delay[i]=4;
 	  else
-	    stamps[STAMP_DELAY(i)]=1;
+	    stamp_delay[i]=1;
 	}
       else
 	{
-	  --stamps[STAMP_DELAY(i)];
+	  --stamp_delay[i];
 	}
     }
 }

@@ -30,10 +30,31 @@ extern unsigned char k;
 extern unsigned char blue_worrior_ai;
 #pragma zpsym("blue_worrior_ai")
 
-extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
-extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
 extern unsigned char score0[7];
 extern unsigned char score1[7];
+
+extern unsigned char stamp_x[8];          // Stamp X position
+extern unsigned char stamp_y[8];          // Stamp Y position
+extern unsigned char stamp_type[8];       // Stamp type
+extern unsigned char stamp_state[8];      // Stamp state
+extern unsigned char stamp_last_state[8]; // Stamp last state
+extern unsigned char stamp_frame[8];      // Stamp frame
+extern unsigned char stamp_delay[8];      // STamp delay
+extern unsigned char stamp_timer[8];      // Stamp timer
+extern unsigned char stamp_pad[8];        // Stamp pad
+extern unsigned char stamp_shooting[8];   // Stamp shooting
+extern unsigned char stamp_x_box[8];      // Stamp X box position
+extern unsigned char stamp_y_box[8];      // Stamp Y box position
+
+extern unsigned char laser_x[8];          // Laser X position
+extern unsigned char laser_y[8];          // Laser Y position
+extern unsigned char laser_type[8];       // Laser type
+extern unsigned char laser_shooting[8];   // Laser shooting
+extern unsigned char laser_direction[8];  // Laser direction
+extern unsigned char laser_offset_x[8];   // Laser X offset
+extern unsigned char laser_offset_y[8];   // Laser Y offset
+extern unsigned char laser_x_box[8];      // Laser X box position
+extern unsigned char laser_y_box[8];      // Laser Y box position
 
 extern void add_points(unsigned char player);
 extern void player_laser_stop(unsigned char player);
@@ -59,16 +80,16 @@ void monster_setup_all(void)
       if (b>5)
 	goto randy;
       
-      stamps[STAMP_X(i)]=PIXEL_BOX_X(a);
-      stamps[STAMP_Y(i)]=PIXEL_BOX_Y(b);
-      stamps[STAMP_TYPE(i)]=STAMP_TYPE_BURWOR;
-      stamps[STAMP_STATE(i)]=rand8()&0x03; // Random initial state.
-      stamps[STAMP_FRAME(i)]=rand8()&0x03; // Random enemy frame.
-      stamps[STAMP_DELAY(i)]=4; // TODO: Change this per level.
+      stamp_x[i]=PIXEL_BOX_X(a);
+      stamp_y[i]=PIXEL_BOX_Y(b);
+      stamp_type[i]=STAMP_TYPE_BURWOR;
+      stamp_state[i]=rand8()&0x03; // Random initial state.
+      stamp_frame[i]=rand8()&0x03; // Random enemy frame.
+      stamp_delay[i]=4; // TODO: Change this per level.
     }
   // Temporary code to test all monster types
-  stamps[STAMP_TYPE(5)]=stamps[STAMP_TYPE(6)]=STAMP_TYPE_GORWOR;
-  stamps[STAMP_TYPE(7)]=STAMP_TYPE_THORWOR;
+  stamp_type[5]=stamp_type[6]=STAMP_TYPE_GORWOR;
+  stamp_type[7]=STAMP_TYPE_THORWOR;
 }
 
 /**
@@ -78,26 +99,26 @@ void monster_setup_all(void)
 void monster_change_direction(void)
 {
  change_direction:
-  stamps[STAMP_STATE(i)]=rand8()&0x03;
-  if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT && stamps[STAMP_X(i)]==PIXEL_BOX_X(0) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state==OPEN)
+  stamp_state[i]=rand8()&0x03;
+  if (stamp_state[i]==STATE_MONSTER_LEFT && stamp_x[i]==PIXEL_BOX_X(0) && stamp_y[i]==PIXEL_BOX_Y(2) && teleport_state==OPEN)
     {
       teleport_timer=2;
       teleport_state=CLOSED;
-      stamps[STAMP_X(i)]=PIXEL_BOX_X(9);
+      stamp_x[i]=PIXEL_BOX_X(9);
     }
-  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT && stamps[STAMP_X(i)]==PIXEL_BOX_X(9) && stamps[STAMP_Y(i)]==PIXEL_BOX_Y(2) && teleport_state==OPEN)
+  else if (stamp_state[i]==STATE_MONSTER_RIGHT && stamp_x[i]==PIXEL_BOX_X(9) && stamp_y[i]==PIXEL_BOX_Y(2) && teleport_state==OPEN)
     {
       teleport_timer=2;
       teleport_state=CLOSED;
-      stamps[STAMP_X(i)]=PIXEL_BOX_X(0);
+      stamp_x[i]=PIXEL_BOX_X(0);
     }
-  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT && BOX_WALL_LEFT(d))
+  else if (stamp_state[i]==STATE_MONSTER_LEFT && BOX_WALL_LEFT(d))
     goto change_direction;
-  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT && BOX_WALL_RIGHT(d))
+  else if (stamp_state[i]==STATE_MONSTER_RIGHT && BOX_WALL_RIGHT(d))
     goto change_direction;
-  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_UP && BOX_WALL_UP(d))
+  else if (stamp_state[i]==STATE_MONSTER_UP && BOX_WALL_UP(d))
     goto change_direction;
-  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN && BOX_WALL_DOWN(d))
+  else if (stamp_state[i]==STATE_MONSTER_DOWN && BOX_WALL_DOWN(d))
     goto change_direction;
 }
 
@@ -110,39 +131,39 @@ void monster_move_all(void)
   for (i=2;i<STAMP_NUM_SLOTS;i++)
     {
       get_current_box();
-      if ((stamps[STAMP_X(i)]==PIXEL_BOX_X(a)) && (stamps[STAMP_Y(i)]==PIXEL_BOX_Y(b)))
+      if ((stamp_x[i]==PIXEL_BOX_X(a)) && (stamp_y[i]==PIXEL_BOX_Y(b)))
 	{
 	  monster_change_direction();
 	}
       else
 	{
 	  // We are not aligned.
-	  if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT && stamps[STAMP_LAST_STATE(i)]==STATE_MONSTER_LEFT)
-	    stamps[STAMP_STATE(i)]=STATE_MONSTER_RIGHT;
-	  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT && stamps[STAMP_LAST_STATE(i)]==STATE_MONSTER_RIGHT)
-	    stamps[STAMP_STATE(i)]=STATE_MONSTER_LEFT;
-	  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_UP && stamps[STAMP_LAST_STATE(i)]==STATE_MONSTER_DOWN)
-	    stamps[STAMP_STATE(i)]=STATE_MONSTER_UP;
-	  else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN && stamps[STAMP_LAST_STATE(i)]==STATE_PLAYER_UP)
-	    stamps[STAMP_STATE(i)]=STATE_MONSTER_DOWN;
+	  if (stamp_state[i]==STATE_MONSTER_RIGHT && stamp_last_state[i]==STATE_MONSTER_LEFT)
+	    stamp_state[i]=STATE_MONSTER_RIGHT;
+	  else if (stamp_state[i]==STATE_MONSTER_LEFT && stamp_last_state[i]==STATE_MONSTER_RIGHT)
+	    stamp_state[i]=STATE_MONSTER_LEFT;
+	  else if (stamp_state[i]==STATE_MONSTER_UP && stamp_last_state[i]==STATE_MONSTER_DOWN)
+	    stamp_state[i]=STATE_MONSTER_UP;
+	  else if (stamp_state[i]==STATE_MONSTER_DOWN && stamp_last_state[i]==STATE_PLAYER_UP)
+	    stamp_state[i]=STATE_MONSTER_DOWN;
 	  else
-	    stamps[STAMP_STATE(i)]=stamps[STAMP_LAST_STATE(i)];
+	    stamp_state[i]=stamp_last_state[i];
 	  
 	}
 
       // Handle player laser to monster collision
-      if (BOX_PIXEL_X(lasers[LASER_X(0)])==a && BOX_PIXEL_Y(lasers[LASER_Y(0)])==b)
+      if (BOX_PIXEL_X(laser_x[0])==a && BOX_PIXEL_Y(laser_y[0])==b)
 	{
-	  if (stamps[STAMP_STATE(i)]==STATE_DYING)
+	  if (stamp_state[i]==STATE_DYING)
 	    {
 	      // This is here to prevent perpetual point grabbage
 	    }
 	  else
 	    monster_die(0);
 	}
-      else if (BOX_PIXEL_X(lasers[LASER_X(1)])==a && BOX_PIXEL_Y(lasers[LASER_Y(1)])==b)
+      else if (BOX_PIXEL_X(laser_x[1])==a && BOX_PIXEL_Y(laser_y[1])==b)
 	{
-	  if (stamps[STAMP_STATE(i)]==STATE_DYING)
+	  if (stamp_state[i]==STATE_DYING)
 	    {
 	      // This is here to prevent perpetual point grabbage
 	    }
@@ -150,24 +171,24 @@ void monster_move_all(void)
 	    monster_die(1);
 	}
 
-      if (stamps[STAMP_STATE(i)]==STATE_DYING && stamps[STAMP_FRAME(i)]==3)
+      if (stamp_state[i]==STATE_DYING && stamp_frame[i]==3)
 	{
-	  stamps[STAMP_STATE(i)]=STATE_DEAD;
-	  stamps[STAMP_FRAME(i)]=0;
-	  stamps[STAMP_SHOOTING(i)]=0;
+	  stamp_state[i]=STATE_DEAD;
+	  stamp_frame[i]=0;
+	  stamp_shooting[i]=0;
 	}
       
       // Handle state movement
-      if (stamps[STAMP_STATE(i)]==STATE_MONSTER_RIGHT)
-	stamps[STAMP_X(i)]++;
-      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_LEFT)
-	stamps[STAMP_X(i)]--;
-      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_UP)
-	stamps[STAMP_Y(i)]--;
-      else if (stamps[STAMP_STATE(i)]==STATE_MONSTER_DOWN)
-	stamps[STAMP_Y(i)]++;
+      if (stamp_state[i]==STATE_MONSTER_RIGHT)
+	stamp_x[i]++;
+      else if (stamp_state[i]==STATE_MONSTER_LEFT)
+	stamp_x[i]--;
+      else if (stamp_state[i]==STATE_MONSTER_UP)
+	stamp_y[i]--;
+      else if (stamp_state[i]==STATE_MONSTER_DOWN)
+	stamp_y[i]++;
 
-      stamps[STAMP_LAST_STATE(i)]=stamps[STAMP_STATE(i)];
+      stamp_last_state[i]=stamp_state[i];
       monster_shoot();
     }
 }
@@ -181,55 +202,55 @@ void monster_shoot(void)
   // This is holy shit naive. The previous naive implementation took too much CPU time.
   if (rand8()>0xC0)
     {
-      if (((rand8())<0x08) && lasers[LASER_SHOOTING(i)]==0 && monster_laser_count<4 && is_stamp_visible())
+      if (((rand8())<0x08) && laser_shooting[i]==0 && monster_laser_count<4 && is_stamp_visible())
   	{
   	  monster_laser_fire(i);
   	}
     }
 
-  if (lasers[LASER_SHOOTING(i)]==1)
+  if (laser_shooting[i]==1)
     {
       get_current_laser_box();
 
-      if (stamps[STAMP_STATE(0)]<STATE_PLAYER_DOWN_IDLE_SHOOTING && e==BOX_PIXEL_X(stamps[STAMP_X(0)]) && f==BOX_PIXEL_Y(stamps[STAMP_Y(0)]))
+      if (stamp_state[0]<STATE_PLAYER_DOWN_IDLE_SHOOTING && e==BOX_PIXEL_X(stamp_x[0]) && f==BOX_PIXEL_Y(stamp_y[0]))
 	{
 	  // Monster laser hit yellow worrior
 	  player_die(0);
 	  monster_laser_stop(i);
 	}
-      else if (stamps[STAMP_STATE(1)]<STATE_PLAYER_DOWN_IDLE_SHOOTING && e==BOX_PIXEL_X(stamps[STAMP_X(1)]) && f==BOX_PIXEL_Y(stamps[STAMP_Y(1)]))
+      else if (stamp_state[1]<STATE_PLAYER_DOWN_IDLE_SHOOTING && e==BOX_PIXEL_X(stamp_x[1]) && f==BOX_PIXEL_Y(stamp_y[1]))
 	{
 	  // Monster laser hit blue worrior
 	  player_die(1);
 	  monster_laser_stop(i);
 	}
-      else if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_RIGHT)
+      else if (laser_direction[i]==STATE_MONSTER_RIGHT)
 	{
-	  if (BOX_WALL_RIGHT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
+	  if (BOX_WALL_RIGHT(h) && laser_x[i]==PIXEL_BOX_X(e))
 	    monster_laser_stop(i);
 	  else
-	    lasers[LASER_X(i)]+=4;
+	    laser_x[i]+=4;
 	}
-      else if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_LEFT)
+      else if (laser_direction[i]==STATE_MONSTER_LEFT)
 	{
-	  if (BOX_WALL_LEFT(h) && lasers[LASER_X(i)]==PIXEL_BOX_X(e))
+	  if (BOX_WALL_LEFT(h) && laser_x[i]==PIXEL_BOX_X(e))
 	    monster_laser_stop(i);
 	  else
-	    lasers[LASER_X(i)]-=4;
+	    laser_x[i]-=4;
 	}
-      else if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_DOWN)
+      else if (laser_direction[i]==STATE_MONSTER_DOWN)
 	{
-	  if (BOX_WALL_DOWN(h) && lasers[LASER_Y(i)]==PIXEL_BOX_Y(f))
+	  if (BOX_WALL_DOWN(h) && laser_y[i]==PIXEL_BOX_Y(f))
 	    monster_laser_stop(i);
 	  else
-	    lasers[LASER_Y(i)]+=4;
+	    laser_y[i]+=4;
 	}
-      else if (lasers[LASER_DIRECTION(i)]==STATE_MONSTER_UP)
+      else if (laser_direction[i]==STATE_MONSTER_UP)
 	{
-	  if (BOX_WALL_UP(h) && lasers[LASER_Y(i)]==PIXEL_BOX_Y(f))
+	  if (BOX_WALL_UP(h) && laser_y[i]==PIXEL_BOX_Y(f))
 	    monster_laser_stop(i);
 	  else
-	    lasers[LASER_Y(i)]-=4;
+	    laser_y[i]-=4;
 	}
     }
 }
@@ -242,24 +263,24 @@ void monster_laser_fire(unsigned char player)
 {
   // Position laser in monster box.
   monster_laser_count++;
-  lasers[LASER_SHOOTING(player)]=1;
-  lasers[LASER_DIRECTION(player)]=stamps[STAMP_STATE(i)];
-  lasers[LASER_X(player)]=PIXEL_BOX_X(a);
-  lasers[LASER_Y(player)]=PIXEL_BOX_Y(b);
+  laser_shooting[player]=1;
+  laser_direction[player]=stamp_state[i];
+  laser_x[player]=PIXEL_BOX_X(a);
+  laser_y[player]=PIXEL_BOX_Y(b);
 
-  switch(lasers[LASER_DIRECTION(player)])
+  switch(laser_direction[player])
     {
     case STATE_MONSTER_LEFT:
     case STATE_MONSTER_RIGHT:
-      lasers[LASER_OFFSET_X(i)]=LASER_X_OFFSET_H;
-      lasers[LASER_OFFSET_Y(i)]=LASER_Y_OFFSET_H;
-      lasers[LASER_TYPE(player)]=87;
+      laser_offset_x[i]=LASER_X_OFFSET_H;
+      laser_offset_y[i]=LASER_Y_OFFSET_H;
+      laser_type[player]=87;
       break;
     case STATE_MONSTER_DOWN:
     case STATE_MONSTER_UP:
-      lasers[LASER_OFFSET_X(i)]=LASER_X_OFFSET_V;
-      lasers[LASER_OFFSET_Y(i)]=LASER_Y_OFFSET_V;
-      lasers[LASER_TYPE(player)]=94;
+      laser_offset_x[i]=LASER_X_OFFSET_V;
+      laser_offset_y[i]=LASER_Y_OFFSET_V;
+      laser_type[player]=94;
       break;
     }
 }
@@ -271,13 +292,13 @@ void monster_laser_fire(unsigned char player)
 void monster_laser_stop(unsigned char player)
 {
   monster_laser_count--;
-  lasers[LASER_X(player)]=0xFF;
-  lasers[LASER_Y(player)]=0xFF;
-  lasers[LASER_TYPE(player)]=92;
-  lasers[LASER_SHOOTING(player)]=0;
-  lasers[LASER_DIRECTION(player)]=0;
-  lasers[LASER_OFFSET_X(player)]=0;
-  lasers[LASER_OFFSET_Y(player)]=0;
+  laser_x[player]=0xFF;
+  laser_y[player]=0xFF;
+  laser_type[player]=92;
+  laser_shooting[player]=0;
+  laser_direction[player]=0;
+  laser_offset_x[player]=0;
+  laser_offset_y[player]=0;
 }
 
 /** 
@@ -288,7 +309,7 @@ void monster_laser_stop(unsigned char player)
 void monster_dead_add_player_points(unsigned char player)
 {
   memfill(&score0,1,sizeof(score0));
-  switch(stamps[STAMP_TYPE(i)])
+  switch(stamp_type[i])
     {
     case STAMP_TYPE_BURWOR:
       score0[4]=2; // 100 points.
@@ -315,10 +336,10 @@ void monster_dead_add_player_points(unsigned char player)
 void monster_die(unsigned char player)
 {
   player_laser_stop(player);
-  if (lasers[LASER_SHOOTING(i)]==1)
+  if (laser_shooting[i]==1)
     monster_laser_stop(i); // Stop any laser that might be firing from monster.
-  stamps[STAMP_STATE(i)]=STATE_DYING;
-  stamps[STAMP_FRAME(i)]=0;
+  stamp_state[i]=STATE_DYING;
+  stamp_frame[i]=0;
   monster_dead_add_player_points(player);
 
   if (player==1 && blue_worrior_ai==1) 
