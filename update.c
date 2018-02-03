@@ -32,8 +32,42 @@ extern unsigned char score1[7];
 extern unsigned char score2[7];
 extern unsigned char update_buffer[80];
 extern const unsigned char metasprite_animation_data[];
-extern unsigned char stamps[STAMP_NUM_FIELDS*STAMP_NUM_SLOTS];
-extern unsigned char lasers[LASER_NUM_FIELDS*LASER_NUM_SLOTS];
+
+extern unsigned char stamp_x[8];          // Stamp X position
+#pragma zpsym("stamp_x")
+extern unsigned char stamp_y[8];          // Stamp Y position
+#pragma zpsym("stamp_y")
+extern unsigned char stamp_type[8];       // Stamp type
+#pragma zpsym("stamp_type")
+extern unsigned char stamp_state[8];      // Stamp state
+#pragma zpsym("stamp_state")
+extern unsigned char stamp_last_state[8]; // Stamp last state
+#pragma zpsym("stamp_last_state")
+extern unsigned char stamp_frame[8];      // Stamp frame
+#pragma zpsym("stamp_frame")
+extern unsigned char stamp_delay[8];      // Stamp delay
+#pragma zpsym("stamp_delay")
+extern unsigned char stamp_timer[8];      // Stamp timer
+#pragma zpsym("stamp_timer")
+extern unsigned char stamp_pad[8];        // Stamp pad
+#pragma zpsym("stamp_pad")
+extern unsigned char stamp_shooting[8];   // Stamp shooting
+#pragma zpsym("stamp_shooting")
+
+extern unsigned char laser_x[8];          // Laser X position
+#pragma zpsym("laser_x")
+extern unsigned char laser_y[8];          // Laser Y position
+#pragma zpsym("laser_y")
+extern unsigned char laser_type[8];       // Laser type
+#pragma zpsym("laser_type")
+extern unsigned char laser_shooting[8];   // Laser shooting
+#pragma zpsym("laser_shooting")
+extern unsigned char laser_direction[8];  // Laser direction
+#pragma zpsym("laser_direction")
+extern unsigned char laser_offset_x[8];   // Laser X offset
+#pragma zpsym("laser_offset_x")
+extern unsigned char laser_offset_y[8];   // Laser Y offset
+#pragma zpsym("laser_offset_y")
 
 extern unsigned char stamp_type_to_radar(unsigned int t);
 extern void clear_update_buffer(void);
@@ -49,10 +83,10 @@ void update_radar(void)
 {
   for (i=2;i<STAMP_NUM_SLOTS;i++)
     {
-      if (stamps[STAMP_STATE(i)]==STATE_DEAD)
+      if (stamp_state[i]==STATE_DEAD)
 	spr=oam_spr(0xff,0xff,0xff,0xff,spr);
       else
-	spr = oam_spr(STAMP_X_TO_RADAR(stamps[STAMP_X(i)]),STAMP_Y_TO_RADAR(stamps[STAMP_Y(i)]),stamp_type_to_radar(stamps[STAMP_TYPE(i)]),0,spr);
+	spr = oam_spr(STAMP_X_TO_RADAR(stamp_x[i]),STAMP_Y_TO_RADAR(stamp_y[i]),stamp_type_to_radar(stamp_type[i]),0,spr);
     }
 }
 
@@ -189,10 +223,10 @@ void update_box_timers(void)
       update_buffer[++a]=LSB(NTADR_A((i==1?5:26),20));
       update_buffer[++a]=2;
       
-      if (stamps[STAMP_TIMER(i)]>0)
+      if (stamp_timer[i]>0)
 	{
-	  update_buffer[++a]=stamps[STAMP_TIMER(i)];
-	  update_buffer[++a]=stamps[STAMP_TIMER(i)]+0x10;
+	  update_buffer[++a]=stamp_timer[i];
+	  update_buffer[++a]=stamp_timer[i]+0x10;
 	}
       else
 	{
@@ -211,28 +245,28 @@ void update_stamps(void)
   oam_clear();
   for (i=0;i<STAMP_NUM_SLOTS;i++)
     {
-      if (stamps[STAMP_STATE(i)]==STATE_DEAD)
+      if (stamp_state[i]==STATE_DEAD)
 	{
-	  stamps[STAMP_X(i)]=0xff;
-	  stamps[STAMP_Y(i)]=0xff;
+	  stamp_x[i]=0xff;
+	  stamp_y[i]=0xff;
 	  a=metasprite_animation_data[92];
 	  b=c=0xff;
 	  spr = oam_meta_spr(b,c,spr,metasprite_list[92]);
 	}
-      else if (stamps[STAMP_STATE(i)]==STATE_DYING)
+      else if (stamp_state[i]==STATE_DYING)
 	{
-	  a=metasprite_animation_data[STAMP_TYPE_EXPLOSION+stamps[STAMP_FRAME(i)]];
-	  b=stamps[STAMP_X(i)];
-	  c=stamps[STAMP_Y(i)];
+	  a=metasprite_animation_data[STAMP_TYPE_EXPLOSION+stamp_frame[i]];
+	  b=stamp_x[i];
+	  c=stamp_y[i];
 	  spr = oam_meta_spr(b,c,spr,metasprite_list[a]);
 	}
       else
 	{
-	  a=metasprite_animation_data[stamps[STAMP_TYPE(i)]+(stamps[STAMP_STATE(i)]*4)+stamps[STAMP_FRAME(i)]];
+	  a=metasprite_animation_data[stamp_type[i]+(stamp_state[i]*4)+stamp_frame[i]];
 	  if (is_stamp_visible())
 	    {
-	      b=stamps[STAMP_X(i)];
-	      c=stamps[STAMP_Y(i)];
+	      b=stamp_x[i];
+	      c=stamp_y[i];
 	    }
 	  else
 	    continue;
@@ -249,14 +283,14 @@ void update_lasers(void)
 {
   for (i=0;i<LASER_NUM_SLOTS;i++)
     {
-      if (lasers[LASER_SHOOTING(i)]==1)
+      if (laser_shooting[i]==1)
 	{
-	  if (lasers[LASER_TYPE(i)]==0)
+	  if (laser_type[i]==0)
 	    {
 	      spr = oam_meta_spr(0xFF,0xFF,spr,metasprite_list[92]);	      
 	    }
 	  else
-	    spr = oam_meta_spr(lasers[LASER_X(i)]+lasers[LASER_OFFSET_X(i)],lasers[LASER_Y(i)]+lasers[LASER_OFFSET_Y(i)],spr,metasprite_list[lasers[LASER_TYPE(i)]]);
+	    spr = oam_meta_spr(laser_x[i]+laser_offset_x[i],laser_y[i]+laser_offset_y[i],spr,metasprite_list[laser_type[i]]);
 	}
       else
 	{
