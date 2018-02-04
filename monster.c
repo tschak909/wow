@@ -68,6 +68,8 @@ extern unsigned char laser_offset_x[8];   // Laser X offset
 #pragma zpsym("laser_offset_x")
 extern unsigned char laser_offset_y[8];   // Laser Y offset
 #pragma zpsym("laser_offset_y")
+extern unsigned char frame_cnt;
+#pragma zpsym("frame_cnt")
 
 extern void add_points(unsigned char player);
 extern void player_laser_stop(unsigned char player);
@@ -242,28 +244,28 @@ void monster_shoot(void)
 	  if (BOX_WALL_RIGHT(h) && laser_x[i]==PIXEL_BOX_X(e))
 	    monster_laser_stop(i);
 	  else
-	    laser_x[i]+=4;
+	    laser_x[i]+=2;
 	}
       else if (laser_direction[i]==STATE_MONSTER_LEFT)
 	{
 	  if (BOX_WALL_LEFT(h) && laser_x[i]==PIXEL_BOX_X(e))
 	    monster_laser_stop(i);
 	  else
-	    laser_x[i]-=4;
+	    laser_x[i]-=2;
 	}
       else if (laser_direction[i]==STATE_MONSTER_DOWN)
 	{
 	  if (BOX_WALL_DOWN(h) && laser_y[i]==PIXEL_BOX_Y(f))
 	    monster_laser_stop(i);
 	  else
-	    laser_y[i]+=4;
+	    laser_y[i]+=2;
 	}
       else if (laser_direction[i]==STATE_MONSTER_UP)
 	{
 	  if (BOX_WALL_UP(h) && laser_y[i]==PIXEL_BOX_Y(f))
 	    monster_laser_stop(i);
 	  else
-	    laser_y[i]-=4;
+	    laser_y[i]-=2;
 	}
     }
 }
