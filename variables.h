@@ -57,6 +57,7 @@ unsigned char stamp_delay[8];      // STamp delay
 unsigned char stamp_timer[8];      // Stamp timer
 unsigned char stamp_pad[8];        // Stamp pad
 unsigned char stamp_shooting[8];   // Stamp shooting
+unsigned char stamp_move_delay[8]; // Stamp move delay
 
 unsigned char laser_x[8];          // Laser X position
 unsigned char laser_y[8];          // Laser Y position

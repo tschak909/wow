@@ -206,7 +206,7 @@ void monster_move_all(void)
 	stamp_y[i]++;
 
       stamp_last_state[i]=stamp_state[i];
-      monster_shoot();
+      /* monster_shoot(); */
     }
 }
 

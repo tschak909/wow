@@ -72,6 +72,8 @@ extern unsigned char stamp_pad[8];        // Stamp pad
 #pragma zpsym("stamp_pad")
 extern unsigned char stamp_shooting[8];   // Stamp shooting
 #pragma zpsym("stamp_shooting")
+extern unsigned char stamp_move_delay[8]; // Stamp move delay
+#pragma zpsym("stamp_move_delay")
 
 extern unsigned char laser_x[8];          // Laser X position
 #pragma zpsym("laser_x")
@@ -230,20 +232,23 @@ void player_in_field(void)
     }
 
   // Apply player movement. AI player moves at half speed.
-  switch(stamp_state[i])
+  if (stamp_move_delay[i]==0)
     {
-    case STATE_PLAYER_RIGHT:
-      stamp_x[i]+=(blue_worrior_ai==1&&i==1)?1:2;
-      break;
-    case STATE_PLAYER_LEFT:
-      stamp_x[i]-=(blue_worrior_ai==1&&i==1)?1:2;
-      break;
-    case STATE_PLAYER_UP:
-      stamp_y[i]-=(blue_worrior_ai==1&&i==1)?1:2;
-      break;
-    case STATE_PLAYER_DOWN:
-      stamp_y[i]+=(blue_worrior_ai==1&&i==1)?1:2;
-      break;
+      switch(stamp_state[i])
+	{
+	case STATE_PLAYER_RIGHT:
+	  stamp_x[i]+=(blue_worrior_ai==1&&i==1)?1:2;
+	  break;
+	case STATE_PLAYER_LEFT:
+	  stamp_x[i]-=(blue_worrior_ai==1&&i==1)?1:2;
+	  break;
+	case STATE_PLAYER_UP:
+	  stamp_y[i]-=(blue_worrior_ai==1&&i==1)?1:2;
+	  break;
+	case STATE_PLAYER_DOWN:
+	  stamp_y[i]+=(blue_worrior_ai==1&&i==1)?1:2;
+	  break;
+	}
     }
   
   // And set last state, if we aren't idle.
