@@ -32,6 +32,8 @@ extern unsigned char blue_worrior_ai;
 
 extern unsigned char score0[7];
 extern unsigned char score1[7];
+extern const unsigned char pixel_box_x[11];
+extern const unsigned char pixel_box_y[7];
 
 extern unsigned char stamp_x[8];          // Stamp X position
 #pragma zpsym("stamp_x")

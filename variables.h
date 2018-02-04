@@ -15,6 +15,12 @@ unsigned char score0[7];
 unsigned char score1[7]={1,1,1,1,1,1,1};
 unsigned char score2[7]={1,1,1,1,1,1,1};
 
+/**
+ * PIXEL_BOX_X and PIXEL_BOX_Y multiply table.
+ */
+const unsigned char pixel_box_x[11]={12,36,60,84,108,132,156,180,204,228,252};
+const unsigned char pixel_box_y[7]={18,42,66,90,114,138,162};
+
 /******************************************************
  * Zero Page Variables                                *
  ******************************************************/
