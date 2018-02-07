@@ -124,6 +124,5 @@
 #define LASER_Y_OFFSET_V                   0
 #define LASER_MONSTER_MAX                  2
 
-
 #endif /* CONSTANTS_H */
 

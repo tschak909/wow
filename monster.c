@@ -32,6 +32,8 @@ extern unsigned char blue_worrior_ai;
 
 extern unsigned char score0[7];
 extern unsigned char score1[7];
+extern const unsigned char pixel_box_x[11];
+extern const unsigned char pixel_box_y[7];
 
 extern unsigned char stamp_x[8];          // Stamp X position
 #pragma zpsym("stamp_x")
@@ -53,6 +55,7 @@ extern unsigned char stamp_pad[8];        // Stamp pad
 #pragma zpsym("stamp_pad")
 extern unsigned char stamp_shooting[8];   // Stamp shooting
 #pragma zpsym("stamp_shooting")
+extern unsigned char stamp_move_delay[8]; // stamp move delay
 
 extern unsigned char laser_x[8];          // Laser X position
 #pragma zpsym("laser_x")
@@ -68,6 +71,8 @@ extern unsigned char laser_offset_x[8];   // Laser X offset
 #pragma zpsym("laser_offset_x")
 extern unsigned char laser_offset_y[8];   // Laser Y offset
 #pragma zpsym("laser_offset_y")
+extern unsigned char frame_cnt;
+#pragma zpsym("frame_cnt")
 
 extern void add_points(unsigned char player);
 extern void player_laser_stop(unsigned char player);
@@ -192,17 +197,19 @@ void monster_move_all(void)
 	}
       
       // Handle state movement
-      if (stamp_state[i]==STATE_MONSTER_RIGHT)
-	stamp_x[i]++;
-      else if (stamp_state[i]==STATE_MONSTER_LEFT)
-	stamp_x[i]--;
-      else if (stamp_state[i]==STATE_MONSTER_UP)
-	stamp_y[i]--;
-      else if (stamp_state[i]==STATE_MONSTER_DOWN)
-	stamp_y[i]++;
-
+      if (stamp_move_delay[i]==0)
+	{
+	  if (stamp_state[i]==STATE_MONSTER_RIGHT)
+	    stamp_x[i]++;
+	  else if (stamp_state[i]==STATE_MONSTER_LEFT)
+	    stamp_x[i]--;
+	  else if (stamp_state[i]==STATE_MONSTER_UP)
+	    stamp_y[i]--;
+	  else if (stamp_state[i]==STATE_MONSTER_DOWN)
+	    stamp_y[i]++;
+	}
       stamp_last_state[i]=stamp_state[i];
-      monster_shoot();
+      /* monster_shoot(); */
     }
 }
 
@@ -242,28 +249,28 @@ void monster_shoot(void)
 	  if (BOX_WALL_RIGHT(h) && laser_x[i]==PIXEL_BOX_X(e))
 	    monster_laser_stop(i);
 	  else
-	    laser_x[i]+=4;
+	    laser_x[i]+=2;
 	}
       else if (laser_direction[i]==STATE_MONSTER_LEFT)
 	{
 	  if (BOX_WALL_LEFT(h) && laser_x[i]==PIXEL_BOX_X(e))
 	    monster_laser_stop(i);
 	  else
-	    laser_x[i]-=4;
+	    laser_x[i]-=2;
 	}
       else if (laser_direction[i]==STATE_MONSTER_DOWN)
 	{
 	  if (BOX_WALL_DOWN(h) && laser_y[i]==PIXEL_BOX_Y(f))
 	    monster_laser_stop(i);
 	  else
-	    laser_y[i]+=4;
+	    laser_y[i]+=2;
 	}
       else if (laser_direction[i]==STATE_MONSTER_UP)
 	{
 	  if (BOX_WALL_UP(h) && laser_y[i]==PIXEL_BOX_Y(f))
 	    monster_laser_stop(i);
 	  else
-	    laser_y[i]-=4;
+	    laser_y[i]-=2;
 	}
     }
 }

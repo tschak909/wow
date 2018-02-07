@@ -12,8 +12,8 @@
 #define PLAYER_PAD_START(x)  (PLAYER_PAD(x)&PAD_START)  // is player pressing start?
 #define PLAYER_PAD_IDLE(x)   ((PLAYER_PAD(x)&0x0F)==0)  // is player idle?
   
-#define PIXEL_BOX_X(x)       ((x*24)+STAMP_CENTER_BIAS_X)             // Convert Box X coordinates to pixels
-#define PIXEL_BOX_Y(x)       (((x*24)+8)+STAMP_CENTER_BIAS_Y)             // Convert Box Y coordinates to pixels
+#define PIXEL_BOX_X(x)       (pixel_box_x[x])             // Convert Box X coordinates to pixels
+#define PIXEL_BOX_Y(x)       (pixel_box_y[x])             // Convert Box Y coordinates to pixels
 #define BOX_PIXEL_X(x)       (div24(x-STAMP_CENTER_BIAS_X))           // Convert Stamp X coordinates to Box X
 #define BOX_PIXEL_Y(x)       ((div24(x-STAMP_CENTER_BIAS_Y)))           // Convert Stamp Y coordinates to Box Y
 

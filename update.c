@@ -53,7 +53,8 @@ extern unsigned char stamp_pad[8];        // Stamp pad
 #pragma zpsym("stamp_pad")
 extern unsigned char stamp_shooting[8];   // Stamp shooting
 #pragma zpsym("stamp_shooting")
-
+extern unsigned char stamp_move_delay[8]; // Stamp move delay.
+#pragma zpsym("stamp_move_delay")
 extern unsigned char laser_x[8];          // Laser X position
 #pragma zpsym("laser_x")
 extern unsigned char laser_y[8];          // Laser Y position
@@ -245,6 +246,11 @@ void update_stamps(void)
   oam_clear();
   for (i=0;i<STAMP_NUM_SLOTS;i++)
     {
+      if (stamp_move_delay[i]==0)
+	stamp_move_delay[i]=1;
+      else
+	stamp_move_delay[i]--;
+      
       if (stamp_state[i]==STATE_DEAD)
 	{
 	  stamp_x[i]=0xff;

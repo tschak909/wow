@@ -49,6 +49,8 @@ extern unsigned char player_shot_loop[2];
 extern unsigned char score0[7];
 extern unsigned char score1[7];
 extern unsigned char score2[7];
+extern const unsigned char pixel_box_x[11];
+extern const unsigned char pixel_box_y[7];
 
 extern unsigned char stamp_x[8];          // Stamp X position
 #pragma zpsym("stamp_x")
@@ -70,6 +72,8 @@ extern unsigned char stamp_pad[8];        // Stamp pad
 #pragma zpsym("stamp_pad")
 extern unsigned char stamp_shooting[8];   // Stamp shooting
 #pragma zpsym("stamp_shooting")
+extern unsigned char stamp_move_delay[8]; // Stamp move delay
+#pragma zpsym("stamp_move_delay")
 
 extern unsigned char laser_x[8];          // Laser X position
 #pragma zpsym("laser_x")
@@ -228,20 +232,23 @@ void player_in_field(void)
     }
 
   // Apply player movement. AI player moves at half speed.
-  switch(stamp_state[i])
+  if (stamp_move_delay[i]==0)
     {
-    case STATE_PLAYER_RIGHT:
-      stamp_x[i]+=(blue_worrior_ai==1&&i==1)?1:2;
-      break;
-    case STATE_PLAYER_LEFT:
-      stamp_x[i]-=(blue_worrior_ai==1&&i==1)?1:2;
-      break;
-    case STATE_PLAYER_UP:
-      stamp_y[i]-=(blue_worrior_ai==1&&i==1)?1:2;
-      break;
-    case STATE_PLAYER_DOWN:
-      stamp_y[i]+=(blue_worrior_ai==1&&i==1)?1:2;
-      break;
+      switch(stamp_state[i])
+	{
+	case STATE_PLAYER_RIGHT:
+	  stamp_x[i]+=(blue_worrior_ai==1&&i==1)?1:2;
+	  break;
+	case STATE_PLAYER_LEFT:
+	  stamp_x[i]-=(blue_worrior_ai==1&&i==1)?1:2;
+	  break;
+	case STATE_PLAYER_UP:
+	  stamp_y[i]-=(blue_worrior_ai==1&&i==1)?1:2;
+	  break;
+	case STATE_PLAYER_DOWN:
+	  stamp_y[i]+=(blue_worrior_ai==1&&i==1)?1:2;
+	  break;
+	}
     }
   
   // And set last state, if we aren't idle.
@@ -267,9 +274,9 @@ void player_in_field(void)
   if (rand8()>0xc0)
     if (blue_worrior_ai==1 && rand8()<0x08 && i==1 && laser_shooting[i]==0)
       {
-	stamp_shooting[1]=1;
-	stamp_frame[1]=0;
-	player_laser_fire(1);
+  	stamp_shooting[1]=1;
+  	stamp_frame[1]=0;
+  	player_laser_fire(1);
       }
   
   // Stop shooting animation if we're done.
@@ -286,28 +293,28 @@ void player_in_field(void)
 	  if (BOX_WALL_RIGHT(h) && laser_x[i]==PIXEL_BOX_X(e))
 	      player_laser_stop(i);
 	  else
- 	      laser_x[i]+=8;
+	    laser_x[i]+=frame_cnt&0x01?0:8;
 	}
       else if (laser_direction[i]==STATE_PLAYER_LEFT_SHOOTING || laser_direction[i]==STATE_PLAYER_LEFT || laser_direction[i]==STATE_PLAYER_LEFT_IDLE || laser_direction[i]==STATE_PLAYER_LEFT_IDLE_SHOOTING)
 	{
 	  if (BOX_WALL_LEFT(h) && laser_x[i]==PIXEL_BOX_X(e))
 	      player_laser_stop(i);
 	  else
-	      laser_x[i]-=8;
+	      laser_x[i]-=frame_cnt&0x01?0:8;
 	}
       else if (laser_direction[i]==STATE_PLAYER_DOWN_SHOOTING || laser_direction[i]==STATE_PLAYER_DOWN || laser_direction[i]==STATE_PLAYER_DOWN_IDLE || laser_direction[i]==STATE_PLAYER_DOWN_IDLE_SHOOTING)
 	{
 	  if (BOX_WALL_DOWN(h) && laser_y[i]==PIXEL_BOX_Y(f))
 	      player_laser_stop(i);
 	  else
-	      laser_y[i]+=8;
+	      laser_y[i]+=frame_cnt&0x01?0:8;
 	}
       else if (laser_direction[i]==STATE_PLAYER_UP_SHOOTING || laser_direction[i]==STATE_PLAYER_UP || laser_direction[i]==STATE_PLAYER_UP_IDLE || laser_direction[i]==STATE_PLAYER_UP_IDLE_SHOOTING)
 	{
 	  if (BOX_WALL_UP(h) && laser_y[i]==PIXEL_BOX_Y(f))
 	      player_laser_stop(i);
 	  else
-	      laser_y[i]-=8;
+	      laser_y[i]-=frame_cnt&0x01?0:8;
 	}
 
       if (BOX_PIXEL_X(stamp_x[0])==BOX_PIXEL_X(laser_x[1]) && BOX_PIXEL_Y(stamp_y[0])==BOX_PIXEL_Y(laser_y[1]) && stamp_state[0]<STATE_PLAYER_RIGHT_SHOT)

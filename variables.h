@@ -15,6 +15,12 @@ unsigned char score0[7];
 unsigned char score1[7]={1,1,1,1,1,1,1};
 unsigned char score2[7]={1,1,1,1,1,1,1};
 
+/**
+ * PIXEL_BOX_X and PIXEL_BOX_Y multiply table.
+ */
+const unsigned char pixel_box_x[11]={12,36,60,84,108,132,156,180,204,228,252};
+const unsigned char pixel_box_y[7]={18,42,66,90,114,138,162};
+
 /******************************************************
  * Zero Page Variables                                *
  ******************************************************/
@@ -51,6 +57,7 @@ unsigned char stamp_delay[8];      // STamp delay
 unsigned char stamp_timer[8];      // Stamp timer
 unsigned char stamp_pad[8];        // Stamp pad
 unsigned char stamp_shooting[8];   // Stamp shooting
+unsigned char stamp_move_delay[8]; // Stamp move delay
 
 unsigned char laser_x[8];          // Laser X position
 unsigned char laser_y[8];          // Laser Y position
