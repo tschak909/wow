@@ -55,6 +55,7 @@ extern unsigned char stamp_pad[8];        // Stamp pad
 #pragma zpsym("stamp_pad")
 extern unsigned char stamp_shooting[8];   // Stamp shooting
 #pragma zpsym("stamp_shooting")
+extern unsigned char stamp_move_delay[8]; // stamp move delay
 
 extern unsigned char laser_x[8];          // Laser X position
 #pragma zpsym("laser_x")
@@ -196,15 +197,17 @@ void monster_move_all(void)
 	}
       
       // Handle state movement
-      if (stamp_state[i]==STATE_MONSTER_RIGHT)
-	stamp_x[i]++;
-      else if (stamp_state[i]==STATE_MONSTER_LEFT)
-	stamp_x[i]--;
-      else if (stamp_state[i]==STATE_MONSTER_UP)
-	stamp_y[i]--;
-      else if (stamp_state[i]==STATE_MONSTER_DOWN)
-	stamp_y[i]++;
-
+      if (stamp_move_delay[i]==0)
+	{
+	  if (stamp_state[i]==STATE_MONSTER_RIGHT)
+	    stamp_x[i]++;
+	  else if (stamp_state[i]==STATE_MONSTER_LEFT)
+	    stamp_x[i]--;
+	  else if (stamp_state[i]==STATE_MONSTER_UP)
+	    stamp_y[i]--;
+	  else if (stamp_state[i]==STATE_MONSTER_DOWN)
+	    stamp_y[i]++;
+	}
       stamp_last_state[i]=stamp_state[i];
       /* monster_shoot(); */
     }
