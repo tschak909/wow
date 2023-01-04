@@ -56,7 +56,7 @@ extern unsigned char stamp_pad[8];        // Stamp pad
 extern unsigned char stamp_shooting[8];   // Stamp shooting
 #pragma zpsym("stamp_shooting")
 extern unsigned char stamp_move_delay[8]; // stamp move delay
-
+#pragma zpsym("stamp_move_delay")
 extern unsigned char laser_x[8];          // Laser X position
 #pragma zpsym("laser_x")
 extern unsigned char laser_y[8];          // Laser Y position
@@ -97,7 +97,7 @@ void monster_setup_all(void)
       b=rand8()&0x07;
       if (b>5)
 	goto randy;
-      
+
       stamp_x[i]=PIXEL_BOX_X(a);
       stamp_y[i]=PIXEL_BOX_Y(b);
       stamp_type[i]=STAMP_TYPE_BURWOR;
@@ -166,7 +166,7 @@ void monster_move_all(void)
 	    stamp_state[i]=STATE_MONSTER_DOWN;
 	  else
 	    stamp_state[i]=stamp_last_state[i];
-	  
+
 	}
 
       // Handle player laser to monster collision
@@ -195,7 +195,7 @@ void monster_move_all(void)
 	  stamp_frame[i]=0;
 	  stamp_shooting[i]=0;
 	}
-      
+
       // Handle state movement
       if (stamp_move_delay[i]==0)
 	{
@@ -321,7 +321,7 @@ void monster_laser_stop(unsigned char player)
   laser_offset_y[player]=0;
 }
 
-/** 
+/**
  * monster_dead_add_player_points(player)
  * Monster shot, add points to score
  * monster dead coming from i.
@@ -362,6 +362,6 @@ void monster_die(unsigned char player)
   stamp_frame[i]=0;
   monster_dead_add_player_points(player);
 
-  if (player==1 && blue_worrior_ai==1) 
+  if (player==1 && blue_worrior_ai==1)
     k=0; // Go tell AI to chase another monster, if applicable.
 }
