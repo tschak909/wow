@@ -3,7 +3,7 @@ CA65 = ca65
 LD65 = ld65
 NAME = wow
 CFG = nes.cfg
-LIB = runtime.lib
+LIB = nes.lib
 
 SRCS = $(NAME).s \
 	attract_monsters.s \
@@ -26,7 +26,7 @@ OBJS = $(NAME).o \
 
 all: $(NAME).nes 
 
-$(NAME).nes: $(OBJS) $(LIB) $(CFG)
+$(NAME).nes: $(OBJS) $(CFG)
 	$(LD65) -C $(CFG) -o $(NAME).nes $(OBJS) $(LIB)
 	@echo $(NAME).nes created
 
