@@ -8,7 +8,7 @@
  ******************************************************/
 
 /* BG Update Buffer */
-unsigned char update_buffer[80]; 
+unsigned char update_buffer[80];
 
 /* Score registers */
 unsigned char score0[7];
@@ -24,7 +24,7 @@ const unsigned char pixel_box_y[7]={18,42,66,90,114,138,162};
 /******************************************************
  * Zero Page Variables                                *
  ******************************************************/
-#pragma bssseg (push,"ZEROPAGE")
+#pragma bss-name (push,"ZEROPAGE")
 
 unsigned char i,j,a,b,c,d,e,f,g,h,k;          // Index counters or temporary
 unsigned char spr;                // Pointers
